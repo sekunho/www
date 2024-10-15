@@ -1,0 +1,24 @@
+templates_dir: templates
+dest_dir: public
+assets_dir: assets
+
+pages:
+  - name: .
+    template_path: layout/home.html
+
+  - name: contact
+    template_path: layout/contact.html
+
+  - name: blog
+    template_path: layout/blog.html
+
+    entries:
+      - source_dir: blog/posts
+        template_path: layout/post.html
+
+  - name: projects
+    template_path: layout/projects.html
+
+    entries:
+      - source_dir: projects
+        template_path: layout/project.html

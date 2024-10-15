@@ -1,0 +1,66 @@
+{% extends "layout/base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<section>
+  <h1>Welcome!</h1>
+
+  <p>
+    I'm sekun <em>(sek·un)</em>. I build stuff for fun, and if I learn something
+    interesting from the experience, I write about it in my blog. I experiment
+    with different languages/tools to gain new perspectives on how to solve problems.
+  </p>
+
+  <figure>
+    <img src="/assets/images/hiro.webp" alt=""/>
+    <figcaption>Hiro is sleeping! <em>Ssshhh...</em></figcaption>
+  </figure>
+</section>
+
+{% if pages.blog %}
+<section>
+  <h2>Recent posts</h2>
+  <ul>
+    {% for post in (pages.blog|sort(attribute="unix_created_at", reverse=true))[:8] %}
+      <li>
+        <time datetime="{{ post.created_at }}">{{ post.created_at|dateformat(format="short") }}</time> -
+        <a href="/blog/{{ post.file_name }}">
+          {{ post.title }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+
+{% if pages.projects %}
+<section>
+  <h2>Project showcase</h2>
+  <p>A collection of projects that I had fun working on, and found interesting.</p>
+
+  <ul>
+    {% for project in (pages.projects|sort(attribute="unix_created_at", reverse=true))[:5] %}
+      <li>
+        <a href="/projects/{{ project.file_name }}">{{ project.title }}</a>
+
+        {% if project.summary is not none %}
+          - {{ project.summary }}
+        {% endif %}
+      </li>
+    {% endfor %}
+
+    <li>
+      <a href="https://github.com/sekunho/hasql-effectful">hasql-effectful</a>
+      - A postgresql effect library using <code>effectful</code>
+    </li>
+  </ul>
+</section>
+{% endif %}
+
+<section>
+  <h2>I'm also on...</h2>
+
+  {% include "partial/social.html" %}
+</section>
+{% endblock %}

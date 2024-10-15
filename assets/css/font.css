@@ -1,0 +1,47 @@
+@font-face {
+  font-family: 'Berkeley Mono';
+  font-style: regular;
+  font-display: swap;
+  src:
+    url('../fonts/BerkeleyMonoVariable-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Berkeley Mono Bold';
+  font-display: swap;
+  font-style: bold;
+  src:
+    url('../fonts/BerkeleyMonoVariable-Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible Regular';
+  font-display: swap;
+  font-style: regular;
+  src:
+    url('../fonts/AtkinsonHyperlegible-Regular.woff2')
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible Bold';
+  font-display: swap;
+  font-style: bold;
+  src:
+    url('../fonts/AtkinsonHyperlegible-Bold.woff2')
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible Italic';
+  font-display: swap;
+  font-style: italic;
+  src:
+    url('../fonts/AtkinsonHyperlegible-Italic.woff2')
+}
+
+/* @font-face { */
+/*   font-family: 'Atkinson Hyperlegible'; */
+/*   font-display: swap; */
+/*   font-style: regular; */
+/*   src: */
+/*     url('../fonts/AtkinsonHyperlegible-Regular.woff2') */
+/* } */

@@ -1,0 +1,27 @@
+{% extends "layout/base.html" %}
+{% block title %}Projects{% endblock %}
+
+{% block content %}
+  <h1>Projects</h1>
+
+  {% if pages.blog %}
+    <ul>
+    {% for entry in pages.projects|sort(attribute="unix_created_at", reverse=true) %}
+      <li>
+        <a href="/projects/{{ entry.file_name }}">{{ entry.title }}</a>
+
+        {% if entry.tags != [] %}
+        ({%- for tag in entry.tags -%}
+          <code>{{ tag }}</code>
+          {%- if not loop.last -%}
+          ,
+          {% endif -%}
+        {%- endfor -%})
+        {% endif %}
+
+        - {{ entry.summary }}
+      </li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}

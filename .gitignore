@@ -1,0 +1,9 @@
+.direnv
+result
+target
+
+
+/target
+dist
+public/
+.DS_Store

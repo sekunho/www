@@ -1,0 +1,17 @@
+{% extends "layout/base.html" %}
+{% block title %}Blog{% endblock %}
+
+{% block content %}
+  <h1>Posts</h1>
+
+  {% if pages.blog %}
+    <ul>
+    {% for entry in pages.blog|sort(attribute="unix_created_at", reverse=true) %}
+      <li>
+        {{ entry.created_at|dateformat(format="short") }} -
+        <a href="/blog/{{ entry.file_name }}">{{ entry.title }}</a>
+      </li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}
