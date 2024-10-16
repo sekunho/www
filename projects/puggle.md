@@ -22,7 +22,6 @@ tags: ["rust", "jinja2"]
 `puggle` is a site generator for when you wish to turn your markdown files into
 a bunch of HTML pages.
 
-
 ## Features
 
 - **Flexible.** It doesn't fully rely on a [directory-based](https://gohugo.io/getting-started/directory-structure/)

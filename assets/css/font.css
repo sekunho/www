@@ -1,17 +1,17 @@
 @font-face {
-  font-family: 'Berkeley Mono';
+  font-family: 'JetBrains Mono Regular';
   font-style: regular;
   font-display: swap;
   src:
-    url('../fonts/BerkeleyMonoVariable-Regular.woff2') format('woff2');
+    url('../fonts/JetBrainsMono-Regular.woff2') format('woff2');
 }
 
 @font-face {
-  font-family: 'Berkeley Mono Bold';
-  font-display: swap;
+  font-family: 'JetBrains Mono Bold';
   font-style: bold;
+  font-display: swap;
   src:
-    url('../fonts/BerkeleyMonoVariable-Bold.woff2') format('woff2');
+    url('../fonts/JetBrainsMono-Bold.woff2') format('woff2');
 }
 
 @font-face {
@@ -37,11 +37,3 @@
   src:
     url('../fonts/AtkinsonHyperlegible-Italic.woff2')
 }
-
-/* @font-face { */
-/*   font-family: 'Atkinson Hyperlegible'; */
-/*   font-display: swap; */
-/*   font-style: regular; */
-/*   src: */
-/*     url('../fonts/AtkinsonHyperlegible-Regular.woff2') */
-/* } */

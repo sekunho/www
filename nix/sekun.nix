@@ -1,8 +1,8 @@
-{ pkgs, version, fonts, system, puggle }: pkgs.stdenv.mkDerivation {
+{ pkgs, version, system, puggle }: pkgs.stdenv.mkDerivation {
   inherit version;
   name = "sekun";
   src = ../.;
-  buildInputs = [ fonts.packages.${system}.berkeley-mono-1009 ];
+  buildInputs = [ ];
   nativeBuildInputs = with pkgs; [ esbuild gzip puggle ];
 
   buildPhase = ''
@@ -24,14 +24,10 @@
     mkdir $out/assets/images
 
     # Copy images and fonts
-    cp ./assets/images/*.webp $out/assets/images
-    cp ./assets/images/favicon* $out/assets/images
+    cp -r ./assets/images/* $out/assets/images
     cp ./assets/fonts/* $out/assets/fonts
 
-    ln -s ${fonts.packages.${system}.berkeley-mono-1009}/share/fonts/web/berkeley-mono-variable/WEB/BerkeleyMonoVariable-Regular.woff2 $out/assets/fonts/BerkeleyMonoVariable-Regular.woff2
-    ln -s ${fonts.packages.${system}.berkeley-mono-1009}/share/fonts/web/berkeley-mono-variable/WEB/BerkeleyMonoVariable-Italic.woff2 $out/assets/fonts/BerkeleyMonoVariable-Italic.woff2
-
     ${puggle}/bin/puggle build
-    cp -r public/* $out
+    mv public/* $out
   '';
 }
