@@ -8,7 +8,7 @@
     <ul>
     {% for entry in pages.blog|sort(attribute="unix_created_at", reverse=true) %}
       <li>
-        {{ entry.created_at|dateformat(format="short") }} -
+        <time datetime="{{ entry.created_at }}">{{ entry.created_at|dateformat(format="short") }} -</time>
         <a href="/blog/{{ entry.file_name }}">{{ entry.title }}</a>
       </li>
     {% endfor %}

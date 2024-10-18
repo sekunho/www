@@ -4,6 +4,15 @@ created_at: 2022-10-27T12:31:00Z
 updated_at:
 tags: ["nixos", "agenix"]
 cover: "/assets/images/posts/manage-secrets-in-nixos/cover.png"
+
+custom:
+    slug: manage-secrets-in-nixos
+    summary: |
+        Recently, I experimented with running NixOS on a DigitalOcean droplet (which I
+        will probably write about in the future), and migrated some of my toy projects
+        from App Platform. During the migration process, I realized that I would
+        have to somehow handle the DB certificate, and other sensitive credentials.
+        I can't just hardcode these!
 ---
 
 # Manage secrets in NixOS

@@ -4,6 +4,16 @@ created_at: 2022-03-06T04:11:00Z
 updated_at:
 tags: ["nix", "postgrest"]
 cover: "/assets/images/posts/packaging-prebuilt-binaries-with-nix/cover.jpg"
+
+custom:
+    slug: packaging-prebuilt-binaries-with-nix
+    summary: |
+        Here's the scenario: You have a nix environment all set up with all the
+        dependencies you need for working on your next awesome project. All but one.
+        `nixpkgs` doesn't have the version you want. Fortunately, there's a static
+        binary file on their GitHub page. So should you just manually download it
+        every time you set your project up, or should you write a Nix package that
+        builds it from source?
 ---
 
 # Packaging pre-built binaries with nix

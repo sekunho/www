@@ -17,7 +17,7 @@
 
         devShells = {
           default = pkgs.mkShell {
-            buildInputs = with pkgs; [ nixpkgs-fmt puggle nil ];
+            buildInputs = with pkgs; [ nixpkgs-fmt puggle nil watchexec ];
           };
         };
       });

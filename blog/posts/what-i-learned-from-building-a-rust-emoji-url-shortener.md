@@ -4,6 +4,16 @@ created_at: 2022-04-11T06:20:00Z
 updated_at:
 tags: ["nix", "postgresql", "rust", "axum"]
 cover: "/assets/images/posts/what-i-learned-from-building-a-rust-emoji-url-shortener/cover.png"
+
+custom:
+    slug: what-i-learned-from-building-a-rust-emoji-url-shortener
+
+    summary: |
+        Alright, that was a lot. I did learn a lot from this experience. I actually only
+        read until chapter 10 of the Rust Book, and skipped to some parts like advanced
+        traits, and other things. I really like the fact that there's a detailed book
+        that talks about some idiomatic Rust patterns, and even the more advanced stuff,
+        that's completely FREE. How crazy is that? My wallet is spared!
 ---
 
 # What I learned from building an emoji URL shortener in Rust

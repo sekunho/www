@@ -233,3 +233,7 @@ time {
   font-family: "JetBrains Mono Regular", monospace;
   font-weight: regular;
 }
+
+.footnote-definition > sup {
+  top: 0.5rem;
+}

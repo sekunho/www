@@ -6,6 +6,15 @@ tags: ["nix", "emojied", "docker", "rust", "github actions"]
 cover: "/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/cover.png"
 aliases:
     - create-static-binaries-and-docker-images-with-nix
+
+custom:
+    slug: create-rust-binaries-and-docker-images-with-nix
+    summary: |
+        While it did simplify things such as dependency management across different
+        environments, and the deploy process, setting up is pretty complicated. I had
+        to look through different references and the Nix matrix channel just to find a
+        description of an attribute. Things aren't as well-documented but there's a lot
+        of community effort to make this less painful.
 ---
 
 # Create Rust binaries, and Docker images with Nix
