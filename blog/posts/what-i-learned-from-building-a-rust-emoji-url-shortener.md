@@ -35,7 +35,7 @@ Some glowing ✨ reviews:
 
 > "What is wrong with you?" -- Jeff
 
-<img src="/assets/images/posts/what-i-learned-from-building-a-lust-emoji-url-shortener/stats.png" />
+<img src="/assets/images/posts/what-i-learned-from-building-a-rust-emoji-url-shortener/stats.png" />
 
 Here are some of the things I learned from building a simple project.
 
