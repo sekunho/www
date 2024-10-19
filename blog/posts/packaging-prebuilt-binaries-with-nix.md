@@ -18,7 +18,13 @@ custom:
 
 # Packaging pre-built binaries with nix
 
-<img class="cover" src="{{ metadata.cover }}"/>
+<div>
+{% from "component/img.html" import img %}
+</div>
+
+<div>
+{{ img(src=metadata.cover, alt="Text \"Packaging prebuilt static binaries with Nix flakes\"")}}
+</div>
 
 <span class="post-metadata">
   {{ metadata.created_at|published_on(format="short") }}

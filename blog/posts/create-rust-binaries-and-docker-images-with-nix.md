@@ -1,12 +1,11 @@
 ---
 title: "Create Rust binaries, and Docker images with Nix"
-created_at: 2022-04-11T06:20:00+00:00
-updated_at:
+created_at: 2022-04-11T06:20:00Z
+updated_at: 2024-10-19T14:21:52Z
 tags: ["nix", "emojied", "docker", "rust", "github actions"]
 cover: "/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/cover.png"
 aliases:
     - create-static-binaries-and-docker-images-with-nix
-
 custom:
     slug: create-rust-binaries-and-docker-images-with-nix
     summary: |
@@ -19,7 +18,13 @@ custom:
 
 # Create Rust binaries, and Docker images with Nix
 
-<img class="cover" src="{{ metadata.cover }}"/>
+<div>
+{% from "component/img.html" import img %}
+</div>
+
+<div>
+{{ img(src=metadata.cover, alt="Nix logo with arrows pointing from it to the Rust logo, and the Docker logo") }}
+</div>
 
 <span class="post-metadata">
   {{ metadata.created_at|published_on(format="short") }}
@@ -237,7 +242,9 @@ It's telling me that `cargo` can't resolve the `escape` module for `maud_macros`
 I took a look at the [source](https://github.com/lambda-fairy/maud/tree/main/maud_macros/src),
 and initially seemed like it's a submodule:
 
-![A list of directories with the `escape.rs` file being a submodule](/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/maud-dir.png)
+<div>
+{{ img(src="/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/maud-dir.png", alt="Screenshot of maud's GitHub repository") }}
+</div>
 
 Turns out there's a ticket ([#110](https://github.com/nix-community/naersk/issues/110))
 pointing out that submodules isn't supported by `naersk`. Fortunately, by the
@@ -277,7 +284,9 @@ PG__DBNAME="emojied_db" PG__HOST="localhost" PG__USER="sekun" PG__PORT="5432" \
 
 ...and I was greeted with this unstyled page:
 
-![screenshot of emojied with no style](/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/no-static-assets.png)
+<div>
+{{ img(src="/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/no-static-assets.png", alt="Unstyled emojied.net frontpage") }}
+</div>
 
 ## Problem 3: Static assets
 
@@ -366,7 +375,9 @@ PG__DBNAME="emojied_db" PG__HOST="localhost" PG__USER="sekun" PG__PORT="5432" \
   ./emojied
 ```
 
-![screenshot of emojied with style](/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/has-static-assets.png)
+<div>
+{{ img(src="/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/has-static-assets.png", alt="STyled emojied.net frontpage") }}
+</div>
 
 Beautiful.
 
@@ -690,7 +701,9 @@ as intended now that Nix is handling the important parts, which I can do
 locally. Not to say that Docker can't do the same thing, but I found that there
 were some differences with volumes that made it painful to debug.
 
-![A screenshot of a GitHub actions job](/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/sweet-green-gh-actions.png)
+<div>
+{{ img(src="/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/sweet-green-gh-actions.png", alt="A screenshot of a GitHub actions job") }}
+</div>
 
 ## Conclusion
 

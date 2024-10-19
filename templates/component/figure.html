@@ -1,0 +1,36 @@
+{% macro figure(src='', alt='', size='regular') %}
+  <x-figure>
+    <template shadowrootmode="open">
+      <figure>
+        <img src="{{ src }}" alt="{{ alt }}"/>
+        <figcaption><slot></slot></figcaption>
+      </figure>
+
+      <style>
+        figure {
+          {% if size == "sm" %}
+          width: 50%;
+          {% endif %}
+
+          {% if size == "base" %}
+          width: 100%;
+          {% endif %}
+
+          display: block;
+          margin: 1.5rem auto;
+
+          img {
+            width: 100%;
+          }
+
+          figcaption {
+            text-align: center;
+            color: #a89984;
+            font-style: italic;
+          }
+        }
+      </style>
+    </template>
+    {{ caller() }}
+  </x-figure>
+{% endmacro %}

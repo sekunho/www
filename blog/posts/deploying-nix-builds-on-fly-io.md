@@ -1,24 +1,31 @@
 ---
-title: "Deploying Nix builds to Fly.io"
-created_at: 2024-10-18T22:48:52Z
+title: "Deploying Nix builds on Fly.io"
+created_at: 2024-10-18T14:48:52Z
 updated_at:
 tags: ["nix", "fly.io"]
 cover: "/assets/images/posts/deploying-nix-builds-to-fly-io/cover.jpg"
-
+aliases:
+    - deploying-nix-builds-to-fly-io
 custom:
-    slug: deploying-nix-builds-to-fly-io
+    slug: deploying-nix-builds-on-fly-io
     summary: |
         The current approach Fly.io recommends doing is you write a Dockerfile to
         build, and run your app on their platform. However, if you've already packaged
         your application with nix, it would be nice to capitalize on that, and
         throw it into a docker image somehow instead of having to create a
         separate build process.
-
 ---
 
 # {{ metadata.title }}
 
-<img class="cover" src="{{ metadata.cover }}"/>
+<div>
+{% from "component/img.html" import img %}
+{% from "component/figure.html" import figure %}
+</div>
+
+<div>
+{{ img(src=metadata.cover, alt="Fly.io, and NixOS logos shaking hands") }}
+</div>
 
 <span class="post-metadata">
   {{ metadata.created_at|published_on(format="short") }}
@@ -174,12 +181,17 @@ Which we packaged with `nix` like so
 
 We can run `webecho` with `nix run .#webecho`, and then visit `http://localhost:8080/echo`.
 
-<img src="/assets/images/posts/deploying-nix-builds-to-fly-io/webecho_bruh.png" />
+<div>
+{{ img(src="/assets/images/posts/deploying-nix-builds-to-fly-io/webecho_bruh.png", alt="") }}
+</div>
 
-and `APP_ECHO_ME="nix fixes this" nix run .#webecho` to imitate the average nixos
-user on twitter dot com.
+and `APP_ECHO_ME="nix fixes this" nix run .#webecho`
 
-<img src="/assets/images/posts/deploying-nix-builds-to-fly-io/webecho_nix_fixes_this.png" />
+<div>
+{% call figure(src="/assets/images/posts/deploying-nix-builds-to-fly-io/webecho_nix_fixes_this.png", alt="") %}
+    now you sound like the average nixos user on twitter dot com
+{% endcall %}
+</div>
 
 ## Building the container image with nix
 
@@ -243,7 +255,9 @@ Loaded image: webecho:latest
 
 You can look around the image with `dive webecho:latest`.
 
-<img src="/assets/images/posts/deploying-nix-builds-to-fly-io/webecho_dive.png" />
+<div>
+{{ img(src="/assets/images/posts/deploying-nix-builds-to-fly-io/webecho_dive.png", alt="") }}
+</div>
 
 Then you can run this image as if it were any other image created from a `Dockerfile`!
 
@@ -332,7 +346,9 @@ And deploy!
 $ flyctl deploy -c fly.toml -a webecho
 ```
 
-<img src="/assets/images/posts/deploying-nix-builds-to-fly-io/webecho_bruh_on_fly.png" />
+<div>
+{{ img(src="/assets/images/posts/deploying-nix-builds-to-fly-io/webecho_bruh_on_fly.png", alt="") }}
+</div>
 
 > Your app's URL will vary depending on what they give you. Check your app's
 > dashboard just to be sure.
@@ -343,7 +359,9 @@ Right. Forgot to set the environment variable!
 $ fly secrets set "APP_ECHO_ME=nix fixes this" -c fly.toml -a webecho
 ```
 
-<img src="/assets/images/posts/deploying-nix-builds-to-fly-io/webecho_nix_fixes_this_on_fly.png" />
+<div>
+{{ img(src="/assets/images/posts/deploying-nix-builds-to-fly-io/webecho_nix_fixes_this_on_fly.png", alt="") }}
+</div>
 
 ## Footnotes
 

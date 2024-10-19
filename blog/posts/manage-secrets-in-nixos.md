@@ -4,7 +4,6 @@ created_at: 2022-10-27T12:31:00Z
 updated_at:
 tags: ["nixos", "agenix"]
 cover: "/assets/images/posts/manage-secrets-in-nixos/cover.png"
-
 custom:
     slug: manage-secrets-in-nixos
     summary: |
@@ -17,7 +16,14 @@ custom:
 
 # Manage secrets in NixOS
 
-<img class="cover" src="{{ metadata.cover }}"/>
+<div>
+{% from "component/img.html" import img %}
+{% from "component/figure.html" import figure %}
+</div>
+
+<div>
+{{ img(src=metadata.cover, alt="NixOS logo, and a lock icon") }}
+</div>
 
 <span class="post-metadata">
   {{ metadata.created_at|published_on(format="short") }}
@@ -140,7 +146,9 @@ $ agenix -e emojiedDBCACert.age
 
 This opens a text editor for you to put the secret in.
 
-<img src="/assets/images/posts/manage-secrets-in-nixos/agenix-edit.png"/>
+<div>
+{{ img(src="/assets/images/posts/manage-secrets-in-nixos/agenix-edit.png", alt="Screenshot of a text editor showing the secret censored") }}
+</div>
 
 If you need to add public keys for existing age files, update the `secrets.nix`
 file accordingly, and run `agenix -r`. Make sure you're in the same directory
@@ -149,7 +157,7 @@ as the `secrets.nix`, and age files.
 It would show you something like this if it succeeds:
 
 ```
-sekun@ichi /s/S/d/secrets (main)> agenix -r
+$ agenix -r
 rekeying emojiedDBCACert.age...
 rekeying emojiedDBPassword.age...
 ```
@@ -346,4 +354,6 @@ the following new units were started: run-agenix.d.mount
 
 Which gives me this beautiful creation:
 
-<img src="/assets/images/posts/manage-secrets-in-nixos/emojied-leaderboard.png"/>
+<div>
+{{ img(src="/assets/images/posts/manage-secrets-in-nixos/emojied-leaderboard.png", alt="Screenshot of emojied.net's leaderboard") }}
+</div>

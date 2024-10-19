@@ -18,7 +18,13 @@ custom:
 
 # What I learned from building an emoji URL shortener in Rust
 
-<img class="cover" src="{{ metadata.cover }}"/>
+<div>
+{% from "component/img.html" import img %}
+</div>
+
+<div>
+{{ img(src=metadata.cover, alt="HackerNews URL pointing to a shortened emojied.net URL") }}
+</div>
 
 <span class="post-metadata">
   {{ metadata.created_at|published_on(format="short") }}
@@ -45,7 +51,9 @@ Some glowing ✨ reviews:
 
 > "What is wrong with you?" -- Jeff
 
-<img src="/assets/images/posts/what-i-learned-from-building-a-rust-emoji-url-shortener/stats.png" />
+<div>
+{{img(src="/assets/images/posts/what-i-learned-from-building-a-rust-emoji-url-shortener/stats.png", alt="Cloudflare stats page for emojied.net", size="sm")}}
+</div>
 
 Here are some of the things I learned from building a simple project.
 

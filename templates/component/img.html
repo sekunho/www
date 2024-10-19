@@ -1,0 +1,26 @@
+{% macro img(class="cover", src="", alt="", size="base") %}
+  <x-img>
+    <template shadowrootmode="open">
+      <img src="{{ src }}" alt="{{ alt }}"/>
+
+      <style>
+        x-img-foo:not(:defined) > template[shadowrootmode] ~ * {
+          display: none;
+        }
+
+        img {
+          {% if size == "sm" %}
+          width: 50%;
+          {% endif %}
+
+          {% if size == "base" %}
+          width: 100%;
+          {% endif %}
+
+          display: block;
+          margin: 1rem auto;
+        }
+      </style>
+    </template>
+  </x-img>
+{% endmacro %}

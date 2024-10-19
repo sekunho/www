@@ -1,4 +1,5 @@
 {% extends "layout/base.html" %}
+{% from "component/figure.html" import figure %}
 {% block title %}Home{% endblock %}
 
 {% block content %}
@@ -11,10 +12,9 @@
     with different languages/tools to gain new perspectives on how to solve problems.
   </p>
 
-  <figure>
-    <img src="/assets/images/hiro.webp" alt=""/>
-    <figcaption>Hiro is sleeping! <em>Ssshhh...</em></figcaption>
-  </figure>
+  {% call figure(src="/assets/images/hiro.webp", alt="Hiro the shiba inu, sleeping", size="sm") %}
+    <span>Hiro is sleeping! <em>Ssshhh...</em></span>
+  {% endcall %}
 </section>
 
 {% if pages.blog %}
