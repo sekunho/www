@@ -206,7 +206,7 @@ interested in a couple of them. Specifically these:
 pkgs.streamLayeredImage {
     name = "webecho";
     tag = "latest";
-    contents = [];
+    contents = [ self.packages.${system}.webecho ];
 
     config = {
       Cmd = [ "/bin/webecho" ];
