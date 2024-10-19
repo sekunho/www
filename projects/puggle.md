@@ -11,13 +11,16 @@ tags: ["rust", "jinja2"]
 
 [GitHub](https://github.com/sekunho/puggle)
 
-<figure>
-    <img src="{{ metadata.cover }}" alt="A drawing of an ant eater" />
-    <figcaption>
-        Anteater from Im australischen Busch und an den Küsten des Korallenmeeres. Reiseerlebnisse und Beobachtungen eines Naturforschers in Australien, Neu Guinea und den Molukken (1866) -
-        <a href="https://creazilla.com/media/traditional-art/3446271/anteater-from-im-australischen-busch-und-an-den-kusten-des-korallenmeeres.-reiseerlebnisse-und-beobachtungen-eines-naturforschers-in-australien-neu-guinea-und-den-molukken-1866-published-by-richard-wolfgang-semon.">Source</a>
-    </figcaption>
-</figure>
+<div>
+{% from "component/figure.html" import figure %}
+</div>
+
+<div>
+{% call figure(src=metadata.cover, alt="A drawing of an ant eater") %}
+    Anteater from Im australischen Busch und an den Küsten des Korallenmeeres. Reiseerlebnisse und Beobachtungen eines Naturforschers in Australien, Neu Guinea und den Molukken (1866) -
+    <a href="https://creazilla.com/media/traditional-art/3446271/anteater-from-im-australischen-busch-und-an-den-kusten-des-korallenmeeres.-reiseerlebnisse-und-beobachtungen-eines-naturforschers-in-australien-neu-guinea-und-den-molukken-1866-published-by-richard-wolfgang-semon.">Source</a>
+{% endcall %}
+</div>
 
 `puggle` is a site generator for when you wish to turn your markdown files into
 a bunch of HTML pages.
