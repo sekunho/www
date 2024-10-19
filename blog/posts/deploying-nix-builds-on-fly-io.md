@@ -1,7 +1,7 @@
 ---
 title: "Deploying Nix builds on Fly.io"
 created_at: 2024-10-18T14:48:52Z
-updated_at:
+updated_at: 2024-10-19T14:45:48Z
 tags: ["nix", "fly.io"]
 cover: "/assets/images/posts/deploying-nix-builds-to-fly-io/cover.jpg"
 aliases:
@@ -47,6 +47,8 @@ The current approach Fly.io recommends doing is you write a `Dockerfile` to
 build, and run your app on their platform. However, if you've already packaged
 your application with `nix`, it would be nice to capitalize on that, and throw
 it into a docker image somehow instead of having to create a separate build process.
+This means reusing the exact tooling present in your nix dev shell down to the
+exact commit.
 
 But do not fret, you _can_ do something like that! Just with slightly more work.
 
@@ -170,8 +172,9 @@ Which we packaged with `nix` like so
     {
       packages.${system} = { inherit webecho; };
 
-      # This part is optional if you want to format your nix files, or have
-      # a nix LSP in your dev environment. Feel free to ignore otherwise.
+      # `nixpkgs-fmt`, and `nil` are optional. They're just helpful for working
+      # with nix source files. Though `dive`, and `flyctl` are tools used in this
+      # article.
       devShells.${system}.default = craneLib.devShell {
         packages = with pkgs; [ nixpkgs-fmt nil dive flyctl ];
       };
