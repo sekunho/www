@@ -1,7 +1,7 @@
 ---
 title: "Deploying Nix builds on Fly.io"
 created_at: 2024-10-18T14:48:52Z
-updated_at: 2024-10-19T14:45:48Z
+updated_at: 2024-10-20T06:10:25Z
 tags: ["nix", "fly.io"]
 cover: "/assets/images/posts/deploying-nix-builds-to-fly-io/cover.jpg"
 aliases:
@@ -200,18 +200,25 @@ and `APP_ECHO_ME="nix fixes this" nix run .#webecho`
 
 `nix` has a few options for creating images[^1] but the one we'll be using is
 `pkgs.streamLayeredImage`[^2]. It has a bunch of attributes in it but we're only
-interested in a couple of them. Specifically these:
+interested in a couple of them.
+
+Let's define a new binding `webechoImg` that's going to be our container image:
 
 ```nix
-pkgs.streamLayeredImage {
-    name = "webecho";
-    tag = "latest";
-    contents = [ self.packages.${system}.webecho ];
+# flake.nix
+let
+  # previous let..in bindings
+  webechoImg = pkgs.streamLayeredImage {
+      name = "webecho";
+      tag = "latest";
+      contents = [ self.packages.${system}.webecho ];
 
-    config = {
-      Cmd = [ "/bin/webecho" ];
-    };
-}
+      config = {
+        Cmd = [ "/bin/webecho" ];
+      };
+  }
+in
+# snip
 ```
 
 So the NixOS manual says this about the `contents` attribute:
@@ -227,15 +234,29 @@ So the NixOS manual says this about the `contents` attribute:
 Which is something we want for our `webecho` application since it's what gets
 executed when the container runs.
 
-And build it like how we build `webecho` earlier. Only this time, this will build
-both the `webecho` application, and the image.
+Now we add a new binding to `packages`:
+
+```nix
+# flake.nix
+# ... snip
+in
+{
+  packages.${system} = { inherit webecho webechoImg; };
+# ... snip
+```
+
+> `inherit webecho;` is a shorthand for `webecho = webecho;`. If the name is the
+> same, it can be useful for chaining a bunch of bindings instead of having to
+> manually name, and bind values to it.
+
+and like `webecho`, this can be built like so:
 
 ```sh
 $ nix build .#webechoImg
 ```
 
-The generated image is stored in a `tar` file which we have to load into `docker`
-as an image.
+The generated image is stored in a `tar` file named as `result` which we have
+To load into `docker` as an image.
 
 ```sh
 $ ./result | docker image load
@@ -366,8 +387,11 @@ $ fly secrets set "APP_ECHO_ME=nix fixes this" -c fly.toml -a webecho
 {{ img(src="/assets/images/posts/deploying-nix-builds-to-fly-io/webecho_nix_fixes_this_on_fly.png", alt="") }}
 </div>
 
+> If you would like to check out the final result of everything in this article,
+> give this [GitHub repository](https://github.com/sekunho/webecho) a look!
+
 ## Footnotes
 
-[^1]: [https://ryantm.github.io/nixpkgs/builders/images/dockertools](https://ryantm.github.io/nixpkgs/builders/images/dockertools)
+[^1]: [`ryantm`'s NixOS manual](https://ryantm.github.io/nixpkgs/builders/images/dockertools)
 
-[^2]: [https://nixos.org/manual/nixpkgs/unstable/#ssec-pkgs-dockerTools-streamLayeredImage](https://nixos.org/manual/nixpkgs/unstable/#ssec-pkgs-dockerTools-streamLayeredImage)
+[^2]: [Official NixOS manual for `streamLayeredImage`](https://nixos.org/manual/nixpkgs/unstable/#ssec-pkgs-dockerTools-streamLayeredImage)
