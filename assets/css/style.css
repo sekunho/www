@@ -224,14 +224,17 @@ strong {
 
 h1:before {
   content: "# ";
+  color: #fe8019;
 }
 
 h2:before {
   content: "## ";
+  color: #fe8019;
 }
 
 h3:before {
   content: "### ";
+  color: #fe8019;
 }
 
 time {
