@@ -1,0 +1,9 @@
+$bp-sm: 40rem;
+
+.foo {
+  color: blue;
+
+  @media (min-width: $bp-sm) {
+    color: red;
+  }
+}

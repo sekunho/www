@@ -31,6 +31,11 @@ custom:
   {{ metadata.created_at|published_on(format="short") }}
 </span>
 
+<div>
+{% from "component/tags.html" import tags %}
+{{ tags(metadata.tags) }}
+</div>
+
 _In 9 days it would've been 2 years since I last posted. Wow time does... **Fly**_.
 
 

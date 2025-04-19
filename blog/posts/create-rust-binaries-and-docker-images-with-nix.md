@@ -30,6 +30,11 @@ custom:
   {{ metadata.created_at|published_on(format="short") }}
 </span>
 
+<div>
+{% from "component/tags.html" import tags %}
+{{ tags(metadata.tags) }}
+</div>
+
 ## Introduction
 
 A few days ago, I [released](/posts/what-i-learned-from-building-a-rust-emoji-url-shortener)

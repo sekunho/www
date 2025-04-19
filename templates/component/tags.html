@@ -1,0 +1,7 @@
+{% macro tags(ts) %}
+  <div class="tags">
+  {% for tag in ts %}
+    <span>{{ tag }}</span>
+  {% endfor %}
+  </div>
+{% endmacro %}

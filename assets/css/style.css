@@ -12,6 +12,17 @@ body {
   font-weight: regular;
 }
 
+.tags {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+
+  span {
+    padding: 0.25rem 0.5rem;
+    background-color: #282828;
+  }
+}
+
 @media (width <= 768px) {
   body {
     width: 85%;

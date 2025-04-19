@@ -29,6 +29,11 @@ custom:
   {{ metadata.created_at|published_on(format="short") }}
 </span>
 
+<div>
+{% from "component/tags.html" import tags %}
+{{ tags(metadata.tags) }}
+</div>
+
 Recently, I experimented with running NixOS on a DigitalOcean droplet (which I
 will probably write about in the future), and migrated some of my toy projects
 from App Platform. During the migration process, I realized that I would

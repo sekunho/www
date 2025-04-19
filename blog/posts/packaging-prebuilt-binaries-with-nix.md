@@ -30,6 +30,11 @@ custom:
   {{ metadata.created_at|published_on(format="short") }}
 </span>
 
+<div>
+{% from "component/tags.html" import tags %}
+{{ tags(metadata.tags) }}
+</div>
+
 Here's the scenario: You have a nix environment all set up with all the
 dependencies you need for working on your next awesome project. All but one.
 `nixpkgs` doesn't have the version you want. Fortunately, there's a static

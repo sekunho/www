@@ -30,6 +30,11 @@ custom:
   {{ metadata.created_at|published_on(format="short") }}
 </span>
 
+<div>
+{% from "component/tags.html" import tags %}
+{{ tags(metadata.tags) }}
+</div>
+
 So, I made an emoji URL shortener with Rust and shared it in some places
 including the [Rust community](https://old.reddit.com/r/rust/comments/tznryk/i_made_my_first_project_with_rust_its_a_url/).
 And oh man this is the first thing I made that got this many visitors which is
