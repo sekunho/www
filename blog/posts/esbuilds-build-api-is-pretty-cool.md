@@ -312,3 +312,6 @@ Now we can run `nix build`, which gets us this:
 ```
 
 So now I'm able to use these as a dependency of another `nix` derivation. Neat!
+
+> If you would like to check out the final result of everything in this article,
+> you may find it under the [`examples/esbuild-build-api`](https://github.com/sekunho/sekun.net/tree/main/examples/esbuild-build-api) directory.
