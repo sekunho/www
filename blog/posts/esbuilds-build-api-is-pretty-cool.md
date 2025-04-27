@@ -64,7 +64,7 @@ Run `npm init`, and add `esbuild` to your project's dependencies.
 
 Then create our `esbuild` build file
 
-```javascript
+```js
 // build.js
 import * as esbuild from 'esbuild'
 
@@ -93,7 +93,7 @@ Then in the `package.json` file, add an entry to `scripts` that executes our
 
 Let's try running `npm run build` with this assets directory:
 
-```
+```sh
  4096 B    ┌─ style.css
  4096 B ┌─ css
  4096 B │  ┌─ script.js
@@ -166,6 +166,7 @@ let ctx = await esbuild.build({
 }
 ```
 
+> [!NOTE]
 > 1 & 2 are not necessary but I just added it to show that you could do more stuff
 > as well.
 
@@ -269,7 +270,7 @@ buildInputs = with pkgs; [ prefetch-npm-deps nodejs_22 git ];
 
 And run it
 
-```
+```sh
 $ prefetch-npm-deps package-lock.json
 sha256-xF5hnIqw3atLZCa8H88sVOF8nrHXH5Qfh9I1mfTpFvo=
 ```
@@ -300,7 +301,7 @@ sha256-xF5hnIqw3atLZCa8H88sVOF8nrHXH5Qfh9I1mfTpFvo=
 
 Now we can run `nix build`, which gets us this:
 
-```
+```sh
  4096 B       ┌─ style.css
  4096 B    ┌─ css
  4096 B    │  ┌─ script.js

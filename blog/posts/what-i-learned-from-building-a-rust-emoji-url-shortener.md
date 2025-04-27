@@ -141,7 +141,7 @@ need a convenient enough way to do that otherwise I'm gonna have a difficult tim
 
 Let's say I have two errors, a database one, and an application one.
 
-```rust
+```rs
 enum AppError {
   Foo,
   Baz
@@ -193,7 +193,7 @@ error somehow. The method I ended up using is to just add a field to the
 the `AppError` enum. I mean, it's fine for this one since it doesn't have that
 many, but it becomes.
 
-```rust
+```rs
 enum AppError {
     DbError(DbError), // Hooray!
     Foo,
@@ -203,7 +203,7 @@ enum AppError {
 
 And then I can create a `From<DbError>` instance:
 
-```rust
+```rs
 impl From<DbError> for AppError {
     fn from(e: DbError) -> Self {
         AppError::DbError(e)
@@ -238,7 +238,7 @@ flexible enough to change database credentials.
 
 Here's `emojied`'s config for it to run:
 
-```rust
+```rs
 pub struct AppConfig {
     /// Application host
     pub host: String,
@@ -262,7 +262,7 @@ Handling` section. Then I can use Rust's `std::env` module to get a var's value!
 
 Here's a tiny example:
 
-```rust
+```rs
 use std::env;
 
 struct AppConfig {
@@ -286,7 +286,7 @@ impl AppConfig {
 I created this database handle that has all the things I need to communicate
 with the database server:
 
-```rust
+```rs
 pub struct Handle {
     pub pool: Pool,
 }
@@ -301,7 +301,7 @@ things in it. `client(&self) -> Result<Pool, Error>` expects a reference to
 `self`, which is `Handle` in this case. This uses the DB pool to create a new
 client. From this client, you can do DB queries with it.
 
-```rust
+```rs
 // Grabs a client from the pool
 let client = handle.client().await?;
 
@@ -328,7 +328,7 @@ in `controllers::leaderboard`.
 > I'm only calling it a controller since it's a common concept. `axum` doesn't
 > call it that.
 
-```rust
+```rs
 let app = Router::new()
     .route("/leaderboard", routing::get(controllers::leaderboard));
 ```
@@ -342,7 +342,7 @@ with its error messages.
 
 I'll try to move `handle` instead:
 
-```rust
+```rs
 use axum::{extract::Extension, routing::get, Router};
 use std::net::SocketAddr;
 
@@ -384,7 +384,7 @@ every new request?
 
 So what happens if I _do_ derive `Clone`?
 
-```rust
+```rs
 #[derive(Clone)]
 struct Handle {
   pub pool: Pool
@@ -393,7 +393,7 @@ struct Handle {
 
 Then I need to make sure that the function's type signature matches:
 
-```rust
+```rs
 pub async fn leaderboard(
     Extension(handle): Extension<db::Handle>
  // ^ Here! axum seems to know exactly where to apply it to the args. Not sure
@@ -414,7 +414,7 @@ is that I'm required to derive `Clone` for `Handle` since there's no way to do
 shared ownership. So what it does is that it ends up cloning it every time. But,
 what if I don't want to clone it? What if I just pass around references?
 
-```rust
+```rs
 pub async fn run(handle: db::Handle) -> Result<(), hyper::Error> {
     let app = Router::new()
         .route("/leaderboard", routing::get(controllers::leaderboard))
@@ -459,7 +459,7 @@ reaches the end of its scope while the server is still running.
 Wait, what about `app` then? Won't this get dropped as well? I wanted to confirm
 if this did get moved, or if it did some other trickery I had no idea about:
 
-```rust
+```rs
     let app = Router::new()
         .route("/leaderboard", routing::get(controllers::leaderboard))
         .layer(Extension(handle));
@@ -480,7 +480,7 @@ if this did get moved, or if it did some other trickery I had no idea about:
 So if `app` does get moved, then `rustc` should complain about me accessing a
 variable with no ownership; which it does:
 
-```rust
+```rs
 error[E0382]: borrow of moved value: `app`
    --> src/lib.rs:46:22
     |
@@ -502,7 +502,7 @@ learn a lot of things since the compiler is quite helpful.
 Okay, since I didn't want this to get cloned all the time, I will just follow
 what `axum` used in its examples - the usage of `Arc<T>`:
 
-```rust
+```rs
 pub async fn run(handle: db::Handle) -> Result<(), hyper::Error> {
     let handle = Arc::new(handle);
     //  ^ Shadow previous binding with `Arc<db::Handle>`
@@ -523,7 +523,7 @@ pub async fn run(handle: db::Handle) -> Result<(), hyper::Error> {
 
 And then I'll remove the `Clone` derivation:
 
-```rust
+```rs
 pub struct Handle {
     pub pool: Pool,
 }
@@ -532,7 +532,7 @@ pub struct Handle {
 So if I'm not mistaken, which I probably am, `Arc<T>` should allow me to share
 ownership of `db::Handle` without having to clone it [^3].
 
-```rust
+```rs
 pub async fn leaderboard(
     Extension(handle): Extension<Arc<db::Handle>>
 ) -> (StatusCode, Markup) {
@@ -547,7 +547,7 @@ pub async fn leaderboard(
 
 Then in `leaderboard::fetch/1`:
 
-```rust
+```rs
 pub async fn fetch_url(
     handle: &db::Handle,
     identifier: String
@@ -611,7 +611,7 @@ like one that contains the certificate contents, exist.
 
 This seems to be a pretty standard process, although this is fairly tedious.
 
-```rust
+```rs
 // src/config.rs
 use tokio_postgres::config::SslMode;
 
@@ -637,7 +637,7 @@ let ca_cert_path = match env::var("PG__CA_CERT") {
 I allowed it to continue running without the cert path in `PG__CA_CERT` for
 dev environments.
 
-```rust
+```rs
 // Somewhere in src/db.rs
 
 let manager = match app_config.ca_cert_path {
@@ -745,7 +745,7 @@ maud = { git = "https://github.com/lambda-fairy/maud", branch = "main", features
 
 So with this, I could do stuff like:
 
-```rust
+```rs
 fn foo() -> Markup {
   html! {
     ("Hello")
@@ -766,7 +766,7 @@ So I ended up making heavy use of the `<noscript>` tag, since it allowed me to
 display alternative content when the browser has JS disabled. You'll see it
 littered all over the codebase, like so:
 
-```rust
+```rs
 @match data {
     RootData::Auto(_) => {
         noscript {

@@ -74,7 +74,7 @@ So, what are these rules?
 
 Let's see what the `agenix` CLI says:
 
-```
+```sh
 $ agenix
 agenix - edit and rekey age secret files
 
@@ -110,7 +110,7 @@ Specifically:
 In the aforementioned file, we're able to say whose key can decrypt what age file.
 Let's create this file first.
 
-```
+```sh
 # We'll store the rules, and age files in the `secrets` folder
 mkdir secrets
 
@@ -145,7 +145,7 @@ the user from doing so, and will complain about there not being any matching key
 We'll need the `agenix` CLI to create an age file containing our encrypted secret,
 and run this:
 
-```
+```sh
 $ agenix -e emojiedDBCACert.age
 ```
 
@@ -161,7 +161,7 @@ as the `secrets.nix`, and age files.
 
 It would show you something like this if it succeeds:
 
-```
+```sh
 $ agenix -r
 rekeying emojiedDBCACert.age...
 rekeying emojiedDBPassword.age...
@@ -324,7 +324,7 @@ the decrypted age files' paths.
 Now we can move the `secrets` folder, and the SSH key (if it's not already there)
 from our host machine to the remote server.
 
-```
+```sh
 $ scp secrets root@<SERVER_IP>:/root/
 $ scp ~/.ssh/<YOUR_KEY> root@<SERVER_IP>:/root/.ssh/id_ed25519
 $ scp ~/.ssh/<YOUR_KEY>.pub root@<SERVER_IP>:/root/.ssh/id_ed25519.pub
@@ -332,7 +332,7 @@ $ scp ~/.ssh/<YOUR_KEY>.pub root@<SERVER_IP>:/root/.ssh/id_ed25519.pub
 
 Then hit build and apply the config:
 
-```
+```sh
 $ nixos-rebuild switch \
   --flake .#peepeepoopoo \
   --target-host root@<SERVER_IP> \

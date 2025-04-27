@@ -12,6 +12,10 @@ body {
   font-weight: regular;
 }
 
+pre {
+  background: none!important;
+}
+
 .tags {
   display: flex;
   gap: 0.5rem;

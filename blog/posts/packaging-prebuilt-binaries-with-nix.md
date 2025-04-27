@@ -63,7 +63,7 @@ I need to import the `postgrest` flake to an existing flake of another project.
 The project's directory has a `nix` folder for all the packages that don't
 exist in `nixpkgs`, like so:
 
-```
+```sh
 nix
 └── postgrest
     ├── flake.lock
@@ -235,7 +235,7 @@ src = pkgs.fetchurl {
 
 and run `nix build` in the directory with this `flake.nix` file.
 
-```
+```sh
 sekun@nixos ~/P/g/n/postgrest (feature/postgrest)> nix build
 warning: Git tree '/home/sekun/Projects/gnawex' is dirty
 warning: found empty hash, assuming 'sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA='
@@ -309,7 +309,7 @@ unsure if I needed it. Let's leave that out for now. We do need `installPhase`
 since we have to send it off to the Nix store. It looks like I can reuse this
 without much changes.
 
-```
+```sh
 installPhase = ''
 install -m755 -D postgrest $out/bin/postgrest
 '';
@@ -325,7 +325,7 @@ Time to run `nix build` again to see if this works.
 
 ...and it doesn't.
 
-```
+```sh
 sekun@nixos ~/P/g/n/postgrest (feature/postgrest) [1]> nix build
 warning: Git tree '/home/sekun/Projects/gnawex' is dirty
 error: builder for '/nix/store/jsxk8q3handkprh5ma102v8y1dig9k77-postgrest-9.0.0.drv' failed with exit code 1;
@@ -456,7 +456,7 @@ inputs = {
 confusion with the actual `postgrest` package. Then, for convenience, I added
 this in the `let` expression:
 
-```
+```nix
 postgrest = postgrestPkg.defaultPackage.${system};
 ```
 
@@ -494,7 +494,7 @@ This binds `postgres-9-0-0` to `postgrest`, which I use in `devShell`'s
 
 Now `postgrest` is available in the shell environment:
 
-```
+```sh
 direnv: loading ~/Projects/gnawex/.envrc
 direnv: using flake
 warning: Git tree '/home/sekun/Projects/gnawex' is dirty

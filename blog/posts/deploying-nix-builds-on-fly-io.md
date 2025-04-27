@@ -99,7 +99,7 @@ The gist of it is `webecho` looks for the environment variable `APP_ECHO_ME`,
 and renders it into an HTML page that's served by axum.
 
 
-```rust
+```rs
 // main.rs
 use axum::{response::Html, routing, Router};
 

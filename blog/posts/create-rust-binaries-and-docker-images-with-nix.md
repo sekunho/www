@@ -133,7 +133,7 @@ can be built in the future in the exact same way as now.
 
 If you peek into `flake.lock`, you'll find something like this:
 
-```
+```json
 "naersk": {
   "inputs": {
     "nixpkgs": "nixpkgs"
@@ -179,7 +179,7 @@ So, I run `nix build` and...
 
 Bam.
 
-```
+```sh
 error: builder for '/nix/store/pv9szkam1rawk40ywp3v89k53zg4b1l4-emojied-deps-0.1.0.drv' failed with exit code 101;
        last 10 log lines:
        >   It looks like you're compiling on Linux and also targeting Linux. Currently this
@@ -212,7 +212,7 @@ Ran `nix build`, and I'm greeted with another problem!
 
 ## Problem 1: `git` submodule woes
 
-```
+```sh
 Compiling maud_macros v0.23.0 (https://github.com/lambda-fairy/maud?branch=main#e6787cd6)
 error: could not compile `maud_macros` due to 3 previous errors
 warning: build failed, waiting for other jobs to finish...
@@ -389,7 +389,7 @@ Beautiful.
 Okay, so that seems to work but I have to run `emojied` in the same directory as
 `public/` cause otherwise it won't find anything. Which is expected because:
 
-```rust
+```rs
 pub async fn stylesheet() -> (StatusCode, HeaderMap, String) {
     let mut headers = HeaderMap::new();
 
@@ -444,7 +444,7 @@ APP__STATIC_ASSETS="/foo/bar/public/" \
 I added another field to `AppConfig`, and checked if there's an argument called
 `static_assets_path`:
 
-```rust
+```rs
 // src/config.rs
 
 struct AppConfig {
@@ -455,7 +455,7 @@ struct AppConfig {
 
 Loaded it from the environment:
 
-```rust
+```rs
 // src/config.rs
 
 let static_assets_path = env::var("APP__STATIC_ASSETS")
@@ -471,7 +471,7 @@ Ok(AppConfig {
 
 Add `AppConfig` to the middleware:
 
-```rust
+```rs
 // ...
 let config = Arc::new(config);
 
@@ -482,7 +482,7 @@ let app = Router::new()
 
 And in the functions serving the files:
 
-```rust
+```rs
 pub async fn js(
     Extension(config): Extension<Arc<AppConfig>> // New
 ) -> (StatusCode, HeaderMap, String) {
@@ -545,7 +545,7 @@ right? Currently, it's not very convenient to do it every time it's called with
 So I'll get the "wrapped" version of emojied with `nix build`, which has the
 static assets path already applied. Doing so gets me this:
 
-```
+```sh
 sekun@nixos ~/P/emojiurl (chore/nixify-package)> nix build
 sekun@nixos ~/P/emojiurl (chore/nixify-package)> ls -la result/bin
 total 20
@@ -663,7 +663,7 @@ Sweet!
 All that's left is to update the CI for these new steps, which is on the simpler
 side of things now:
 
-```yml
+```
 name: CI/CD
 
 on:
