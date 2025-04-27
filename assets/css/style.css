@@ -142,6 +142,102 @@ a {
   }
 }
 
+h1 a {
+  text-decoration: none;
+  cursor: pointer;
+  color: inherit;
+
+  &:hover {
+    text-decoration: underline;
+    background: inherit;
+  }
+
+  &:visited {
+    background: inherit;
+    color: inherit;
+  }
+}
+
+h2 a {
+  text-decoration: none;
+  cursor: pointer;
+  color: inherit;
+
+  &:hover {
+    text-decoration: underline;
+    background: inherit;
+  }
+
+  &:visited {
+    background: inherit;
+    color: inherit;
+  }
+}
+
+h3 a {
+  text-decoration: none;
+  cursor: pointer;
+  color: inherit;
+
+  &:hover {
+    text-decoration: underline;
+    background: inherit;
+  }
+
+  &:visited {
+    background: inherit;
+    color: inherit;
+  }
+}
+
+h4 a {
+  text-decoration: none;
+  cursor: pointer;
+  color: inherit;
+
+  &:hover {
+    text-decoration: underline;
+    background: inherit;
+  }
+
+  &:visited {
+    background: inherit;
+    color: inherit;
+  }
+}
+
+h5 a {
+  text-decoration: none;
+  cursor: pointer;
+  color: inherit;
+
+  &:hover {
+    text-decoration: underline;
+    background: inherit;
+  }
+
+  &:visited {
+    background: inherit;
+    color: inherit;
+  }
+}
+
+h6 a {
+  text-decoration: none;
+  cursor: pointer;
+  color: inherit;
+
+  &:hover {
+    text-decoration: underline;
+    background: inherit;
+  }
+
+  &:visited {
+    background: inherit;
+    color: inherit;
+  }
+}
+
 pre {
   overflow-x: auto;
   padding: 0 0.5rem;

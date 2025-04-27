@@ -207,11 +207,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1745758218,
-        "narHash": "sha256-biHjqYuwjGD7Q7h03Sheq202htDNq+PNI0bsGcWqtcc=",
+        "lastModified": 1745771813,
+        "narHash": "sha256-scXsmXFN8VfiLHVNMWOf64sUASwpGkBGQMrMnJLBqLQ=",
         "owner": "sekunho",
         "repo": "puggle",
-        "rev": "2e1695f461630aa93136d0f0ef36b9c387231612",
+        "rev": "b12807f1ef05bbc5f646b8fd2f13baee9d7aff8b",
         "type": "github"
       },
       "original": {
