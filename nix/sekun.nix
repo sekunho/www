@@ -3,16 +3,11 @@
   name = "sekun";
   src = ../.;
   buildInputs = [ ];
-  nativeBuildInputs = with pkgs; [ esbuild gzip puggle ];
+  nativeBuildInputs = with pkgs; [ esbuild gzip puggle brotli ];
 
   buildPhase = ''
     mkdir -p $out/assets/css
-    # mkdir $out/assets/js
     mkdir $out/assets/fonts
-
-    # esbuild \
-    #   `find ./assets/js \( -name '*.js' \)` \
-    #   --minify --outdir=$out/assets/js
 
     ${pkgs.esbuild}/bin/esbuild \
       ./assets/css/style.css \
@@ -28,6 +23,9 @@
     cp ./assets/fonts/* $out/assets/fonts
 
     ${puggle}/bin/puggle build
+
     mv public/* $out
+    ${pkgs.brotli}/bin/brotli -q 11 $out/public/**/*.html -f
+    ${pkgs.brotli}/bin/brotli -q 11 $out/public/**/*.css -f
   '';
 }

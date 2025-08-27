@@ -1,7 +1,7 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
-    puggle-flake.url = "github:sekunho/puggle";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    puggle-flake.url = "github:sekunho/puggle?ref=feat/minifier";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -17,7 +17,7 @@
 
         devShells = {
           default = pkgs.mkShell {
-            buildInputs = with pkgs; [ nixpkgs-fmt puggle nil watchexec ];
+            buildInputs = with pkgs; [ nixpkgs-fmt puggle nil watchexec brotli git ];
           };
         };
       });
