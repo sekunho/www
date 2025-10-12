@@ -1,4 +1,4 @@
-{ pkgs, version, system, puggle }: pkgs.stdenv.mkDerivation {
+{ pkgs, version, system, puggle, minhtml }: pkgs.stdenv.mkDerivation {
   inherit version;
   name = "sekun";
   src = ../.;
@@ -24,8 +24,34 @@
 
     ${puggle}/bin/puggle build
 
-    mv public/* $out
-    ${pkgs.brotli}/bin/brotli -q 11 $out/public/**/*.html -f
-    ${pkgs.brotli}/bin/brotli -q 11 $out/public/**/*.css -f
+    ${minhtml}/bin/minhtml \
+      --minify-js \
+      --minify-css \
+      public/**/*.html
+
+    # compression stuff
+    ## brotli
+    ${pkgs.brotli}/bin/brotli --best public/blog/**/*.html -f
+    ${pkgs.brotli}/bin/brotli --best public/blog/*.html -f
+    ${pkgs.brotli}/bin/brotli --best public/contact/**/*.html -f
+    ${pkgs.brotli}/bin/brotli --best public/contact/*.html -f
+    ${pkgs.brotli}/bin/brotli --best public/projects/**/*.html -f
+    ${pkgs.brotli}/bin/brotli --best public/projects/*.html -f
+    ${pkgs.brotli}/bin/brotli --best public/*.html -f
+    ${pkgs.brotli}/bin/brotli --best public/**/*.css -f
+    ${pkgs.brotli}/bin/brotli --best public/*.css -f
+
+    # gzip
+    ${pkgs.gzip}/bin/gzip --best --keep public/blog/**/*.html -f
+    ${pkgs.gzip}/bin/gzip --best --keep public/blog/*.html -f
+    ${pkgs.gzip}/bin/gzip --best --keep public/contact/**/*.html -f
+    ${pkgs.gzip}/bin/gzip --best --keep public/contact/*.html -f
+    ${pkgs.gzip}/bin/gzip --best --keep public/projects/**/*.html -f
+    ${pkgs.gzip}/bin/gzip --best --keep public/projects/*.html -f
+    ${pkgs.gzip}/bin/gzip --best --keep public/*.html -f
+    ${pkgs.gzip}/bin/gzip --best --keep public/**/*.css -f
+    ${pkgs.gzip}/bin/gzip --best --keep public/*.css -f
+
+    cp -r public $out
   '';
 }
