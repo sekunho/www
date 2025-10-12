@@ -10,11 +10,14 @@
     mkdir $out/assets/fonts
 
     ${pkgs.esbuild}/bin/esbuild \
-      ./assets/css/style.css \
-      --bundle \
+      ./assets/css/**/*.css \
       --minify \
-      --outfile=$out/assets/css/style.css \
-      --external:'*.woff2'
+      --outdir=$out/assets/css
+
+    ${pkgs.esbuild}/bin/esbuild \
+      ./assets/css/*.css \
+      --minify \
+      --outdir=$out/assets/css
 
     mkdir $out/assets/images
 
@@ -52,6 +55,6 @@
     ${pkgs.gzip}/bin/gzip --best --keep public/**/*.css -f
     ${pkgs.gzip}/bin/gzip --best --keep public/*.css -f
 
-    cp -r public $out
+    mv public/* $out
   '';
 }
