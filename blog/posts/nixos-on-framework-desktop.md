@@ -6,10 +6,7 @@ tags: ["nixos", "nix", "computer", "framework"]
 cover: "/assets/images/posts/nixos-on-framework-desktop/cover.webp"
 custom:
     summary: |
-      Hi, it's been a while (again). I've been feeling better over the past few weeks.
-      Coincidentally, my Framework Desktop finally arrived. It's a cute lil machine
-      that I really love. Like any other machine I get my hands on (except macbooks
-      lol), I install NixOS in it!
+      Hi, it's been a while (again). I've been feeling better over the past few weeks. Coincidentally, my Framework Desktop finally arrived. It's a cute lil machine that I really love. Like any other machine I get my hands on (except macbooks lol), I install NixOS in it!
 
 ---
 
@@ -115,22 +112,22 @@ your SSID, and connect to it.
 > add_network
 0
 <3>CTRL-EVENT-NETWORK-ADDED 0
-> set_network 0 ssid "<YOUR_SSID_NAME_HERE>"
+> set_network 0 ssid "YOUR_SSID_NAME_HERE"
 OK
-> set_network 0 psk "<YOUR_WIFI_PASSWORD_HERE>"
+> set_network 0 psk "YOUR_WIFI_PASSWORD_HERE"
 OK
 > enable_network 0
 OK
 <3>CTRL-EVENT-SCAN-STARTED
 <3>CTRL-EVENT-SCAN-RESULTS
 <3>WPS-AP-AVAILABLE
-<3>SME: Trying to authenticate with <MAC_ADDRESS> (SSID='<SSID_NAME' freq=5500 MHz)
-<3>Associated with <MAC_ADDRESS>
+<3>SME: Trying to authenticate with YOUR_ROUTER_MAC_ADDRESS (SSID='YOUR_SSID_NAME' freq=5500 MHz)
+<3>Associated with YOUR_ROUTER_MAC_ADDRESS
 <3>CTRL-EVENT-SUBNET-STATUS-UPDATE status=0
-<3>CTRL-EVENT-REGDOM-CHANGE init=COUNTRY_IE type=COUNTRY alpha2=<COUNTRY_CODE>
+<3>CTRL-EVENT-REGDOM-CHANGE init=COUNTRY_IE type=COUNTRY alpha2=YOUR_COUNTRY_CODE
 <3>Channel list changed: 6 GHz was enabled
-<3>WPA: Key negotiation completed with <MAC_ADDRESS> [PKT=CCMP GTK=CCMP]
-<3>CTRL-EVENT-CONNECTED - Connection to <MAC_ADDRESS> completed [id=0 id_str=]
+<3>WPA: Key negotiation completed with YOUR_ROUTER_MAC_ADDRESS [PKT=CCMP GTK=CCMP]
+<3>CTRL-EVENT-CONNECTED - Connection to YOUR_ROUTER_MAC_ADDRESS completed [id=0 id_str=]
 > ping google.com
 PONG
 ```
@@ -670,6 +667,8 @@ Well that was a lot. The nice thing is you more or less only have to set up the
 configuration once. After this, it's best you keep it somewhere easily accessible
 (like GitHub) so that you can download it, and just run the disk partitioning,
 and OS install.
+
+I also like that there aren't as much "imperative" steps to setting up NixOS.
 
 ---
 
