@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>NixOS on the Framework Desktop - sekun</title>
+
+    
+<link rel="stylesheet" href="/assets/css/pages/post.css">
+
+
+    <link rel="stylesheet" href="/assets/css/style.css"/>
+    <link rel="stylesheet" href="/assets/css/vendors/normalize.min.css"/>
+
+    <link rel="icon" href="/assets/images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+    <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+    <link rel="mask-icon" href="/assets/images/safari-pinned-tab.svg">
+
+    <meta name="color-scheme" content="light dark">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    
+  <meta name="title" content="NixOS on the Framework Desktop">
+  <meta name="description" content="Hi, it's been a while (again). I've been feeling better over the past few weeks.
+Coincidentally, my Framework Desktop finally arrived. It's a cute lil machine
+that I really love. Like any other machine I get my hands on (except macbooks
+lol), I install NixOS in it!
+">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://metatags.io/">
+  <meta property="og:title" content="NixOS on the Framework Desktop">
+  <meta property="og:description" content="Hi, it's been a while (again). I've been feeling better over the past few weeks.
+Coincidentally, my Framework Desktop finally arrived. It's a cute lil machine
+that I really love. Like any other machine I get my hands on (except macbooks
+lol), I install NixOS in it!
+">
+  <meta property="og:image" content="https://sekun.net/assets/images/posts/nixos-on-framework-desktop/cover.webp">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://metatags.io/">
+  <meta property="twitter:title" content="NixOS on the Framework Desktop">
+  <meta property="twitter:description" content="Hi, it's been a while (again). I've been feeling better over the past few weeks.
+Coincidentally, my Framework Desktop finally arrived. It's a cute lil machine
+that I really love. Like any other machine I get my hands on (except macbooks
+lol), I install NixOS in it!
+">
+  <meta property="twitter:image" content="https://sekun.net/assets/images/posts/nixos-on-framework-desktop/cover.webp">
+
+  </head>
+
+  <body>
+    <nav class="nav">
+  <ul>
+    <li><a href="/">λsekun.net</a></li>
+    <li><a href="/blog">/blog</a></li>
+    <li><a href="/projects">/projects</a></li>
+    <li><a href="/contact">/contact</a></li>
+  </ul>
+</nav>
+    
+<h1 id="NixOS on the Framework Desktop"><a href="#NixOS on the Framework Desktop">NixOS on the Framework Desktop</a></h1><picture>
+    <img src="/assets/images/posts/nixos-on-framework-desktop/cover.webp">
+</picture>
+<span class="post-metadata">
+  Published on <time datetime="2025-10-12T18:07:52+00:00">2025-10-12 18:07 UTC</time>
+</span>
+<div>
+
+
+  <div class="tags">
+  
+    <span>nixos</span>
+  
+    <span>nix</span>
+  
+    <span>computer</span>
+  
+    <span>framework</span>
+  
+  </div>
+
+</div>
+<p>Hi, it’s been a while (again). I’ve been feeling better over the past few weeks.
+Coincidentally, my Framework Desktop finally arrived. It’s a cute lil machine
+that I really love. Like any other machine I get my hands on (except macbooks
+lol), I install NixOS in it!</p>
+<p>I also redid bits and pieces of my website. I think as time goes on, the more
+utilitarian I become. But this is probably as barebones as it gets in terms of
+design.</p>
+<hr />
+<p>You’ll need:</p>
+<ol>
+<li>a USB drive with a <code>NixOS</code> <a href="https://nixos.org/download">minimal ISO</a> flashed into it
+<ul>
+<li>We’ll also be using the minimal ISO just because. Idk. Maybe you’re installing
+one remotely? Who knows!</li>
+</ul>
+</li>
+<li>a Framework Desktop</li>
+<li>internet</li>
+</ol>
+<blockquote class="markdown-alert-note">
+<p>For this installation, I won’t be using secure boot. If you do wish to use secure
+boot, you can use <a href="https://github.com/nix-community/lanzaboote"><code>nix-community/lanzaboote</code></a>.
+If not, you can disable secure boot in your Framework’s BIOS. Spam <code>F2</code> while
+you’re booting up your computer, and you’ll find the option under Secure boot.</p>
+</blockquote>
+<p>Here you’ll be greeted with the boot selector (just choose any of the kernel versions)</p>
+<picture>
+  <source srcset="/assets/images/posts/nixos-on-framework-desktop/boot-selector.webp" type="image/webp">
+  <img src="/assets/images/posts/nixos-on-framework-desktop/boot-selector.png">
+</picture>
+<p>after choosing one, you’ll see the terminal</p>
+<picture>
+  <source srcset="/assets/images/posts/nixos-on-framework-desktop/terminal.webp" type="image/webp">
+  <img src="/assets/images/posts/nixos-on-framework-desktop/terminal.png">
+</picture>
+<p>Great!</p>
+<h2 id="connecting-through-wi-fi"><a href="#connecting-through-wi-fi">Connecting through Wi-Fi</a></h2>
+<p>Since I haven’t gotten around to running an ethernet cable just yet, I need to
+connect to the internet through Wi-Fi. We’ll need the <code>wpa_supplicant</code> service
+for this.</p>
+<pre><span>[nixos@nixos:~]$ sudo systemctl start wpa_supplicant</span>
+<span>[nixos@nixos:~]$ wpa_cli</span>
+<span>wpa_cli v2.11</span>
+<span>Copyright (c) 2004-2024, Jouni Malinen <j@w1.fi> and contributors</span>
+<span></span>
+<span>This software may be distributed under the terms of the BSD license.</span>
+<span>See README for more details.</span>
+<span></span>
+<span>Selected interface 'wlp192s0'</span>
+<span></span>
+<span>Interactive mode</span>
+<span></span>
+<span>></span>
+<span></span>
+</pre>
+<p>First scan for available Wi-Fi networks</p>
+<pre><span>> scan</span>
+<span>OK</span>
+<span><3>CTRL-EVENT-SCAN-STARTED</span>
+<span><3>CTRL-EVENT-REGDOM-CHANGE init=BEACON_HINT type=UNKNOWN</span>
+<span><3>CTRL-EVENT-REGDOM-BEACON-HINT before freq=5240 max_tx_power=2000 no_ir=1</span>
+<span><3>CTRL-EVENT-REGDOM-BEACON-HINT after freq=5240 max_tx_power=2000</span>
+<span><3>CTRL-EVENT-SCAN-RESULTS</span>
+<span><3>WPS-AP-AVAILABLE</span>
+<span><3>CTRL-EVENT-NETWORK-NOT-FOUND</span>
+<span>> scan_results</span>
+<span>bssid / frequency / signal level / flags / ssid</span>
+<span>MAC ADDRESS    FREQUENCY   FLAGS  [WPA2-PSK-CCMP]     SSID_NAME</span>
+<span></span>
+</pre>
+<p>You’ll find your SSID at the end of each row. Just pick out which one matches
+your SSID, and connect to it.</p>
+<pre><span>> add_network</span>
+<span>0</span>
+<span><3>CTRL-EVENT-NETWORK-ADDED 0</span>
+<span>> set_network 0 ssid "<YOUR_SSID_NAME_HERE>"</span>
+<span>OK</span>
+<span>> set_network 0 psk "<YOUR_WIFI_PASSWORD_HERE>"</span>
+<span>OK</span>
+<span>> enable_network 0</span>
+<span>OK</span>
+<span><3>CTRL-EVENT-SCAN-STARTED</span>
+<span><3>CTRL-EVENT-SCAN-RESULTS</span>
+<span><3>WPS-AP-AVAILABLE</span>
+<span><3>SME: Trying to authenticate with <MAC_ADDRESS> (SSID='<SSID_NAME' freq=5500 MHz)</span>
+<span><3>Associated with <MAC_ADDRESS></span>
+<span><3>CTRL-EVENT-SUBNET-STATUS-UPDATE status=0</span>
+<span><3>CTRL-EVENT-REGDOM-CHANGE init=COUNTRY_IE type=COUNTRY alpha2=<COUNTRY_CODE></span>
+<span><3>Channel list changed: 6 GHz was enabled</span>
+<span><3>WPA: Key negotiation completed with <MAC_ADDRESS> [PKT=CCMP GTK=CCMP]</span>
+<span><3>CTRL-EVENT-CONNECTED - Connection to <MAC_ADDRESS> completed [id=0 id_str=]</span>
+<span>> ping google.com</span>
+<span>PONG</span>
+<span></span>
+</pre>
+<p>Looks like we have internet now. :)</p>
+<h2 id="declarative-disk-partitioning"><a href="#declarative-disk-partitioning">Declarative disk partitioning</a></h2>
+<p>When I first installed NixOS a few years ago, I manually set up the partitions
+which wasn’t too bad but I always thought that it would be nice to have some
+kind of declarative configuration for this since it didn’t seem so dynamic in
+nature. Fast forward to today, and we now have <code>disko</code>!</p>
+<p>Let’s yoink one of the example configurations on <code>disko</code>’s repository:</p>
+<pre><span>[nixos@nixos:~]$ curl \</span>
+<span>  https://raw.githubusercontent.com/nix-community/disko/master/example/zfs-encrypted-root.nix \</span>
+<span>  -o /tmp/disk-config.nix</span>
+<span></span>
+</pre>
+<p>This one is a sample configuration for a <code>zfs</code> pool with an encrypted root. In
+the <code>disk</code> attribute, we need to define the physical devices in the system, and
+the logical partitions we would like them to have. I only have one physical disk
+under the name <code>/dev/nvme0n1</code> which I can verify with <code>lsblk</code>.</p>
+<p>For this disk, I need 2 partitions: a boot partition (<code>ESP</code>) for the bootloader,
+and a <code>zfs</code> partition for our pool.</p>
+<pre><span>{</span>
+<span>  disko.devices = {</span>
+<span>    disk = {</span>
+<span>      root = {</span>
+<span>        type = "disk";</span>
+<span>        device = "/dev/nvme0n1";</span>
+<span>        content = {</span>
+<span>          type = "gpt";</span>
+<span>          partitions = {</span>
+<span>            ESP = {</span>
+<span>              size = "1G";</span>
+<span>              type = "EF00";</span>
+<span>              content = {</span>
+<span>                type = "filesystem";</span>
+<span>                format = "vfat";</span>
+<span>                mountpoint = "/boot";</span>
+<span style="background: red; color: white;">-               mountOptions = [ "nofail" ];</span>
+<span style="background: green; color: white;">+               mountOptions = [ "umask=0077" ];</span>
+<span>              };</span>
+<span>            };</span>
+<span>            zfs = {</span>
+<span>              size = "100%";</span>
+<span>              content = {</span>
+<span>                type = "zfs";</span>
+<span>                pool = "zroot";</span>
+<span>              };</span>
+<span>            };</span>
+<span>          };</span>
+<span>        };</span>
+<span>      };</span>
+<span>    };</span>
+<details><summary>   zpool = {</summary><span>      zroot = {</span>
+<span>        type = "zpool";</span>
+<span>        rootFsOptions = {</span>
+<span>          mountpoint = "none";</span>
+<span>          compression = "zstd";</span>
+<span>          acltype = "posixacl";</span>
+<span>          xattr = "sa";</span>
+<span>          "com.sun:auto-snapshot" = "true";</span>
+<span>        };</span>
+<span>        options.ashift = "12";</span>
+<span>        datasets = {</span>
+<span>          "root" = {</span>
+<span>            type = "zfs_fs";</span>
+<span>            options = {</span>
+<span>              encryption = "aes-256-gcm";</span>
+<span>              keyformat = "passphrase";</span>
+<span>              #keylocation = "file:///tmp/secret.key";</span>
+<span>              keylocation = "prompt";</span>
+<span>            };</span>
+<span>            mountpoint = "/";</span>
+<span></span>
+<span>          };</span>
+<span>          "root/nix" = {</span>
+<span>            type = "zfs_fs";</span>
+<span>            options.mountpoint = "/nix";</span>
+<span>            mountpoint = "/nix";</span>
+<span>          };</span>
+<span></span>
+<span>          # README MORE: https://wiki.archlinux.org/title/ZFS#Swap_volume</span>
+<span>          "root/swap" = {</span>
+<span>            type = "zfs_volume";</span>
+<span>            size = "10M";</span>
+<span>            content = {</span>
+<span>              type = "swap";</span>
+<span>            };</span>
+<span>            options = {</span>
+<span>              volblocksize = "4096";</span>
+<span>              compression = "zle";</span>
+<span>              logbias = "throughput";</span>
+<span>              sync = "always";</span>
+<span>              primarycache = "metadata";</span>
+<span>              secondarycache = "none";</span>
+<span>              "com.sun:auto-snapshot" = "false";</span>
+<span>            };</span>
+<span>          };</span>
+<span>        };</span>
+<span>      };</span>
+</details><span>    };</span>
+<span>  };</span>
+<span>}</span>
+<span></span>
+</pre>
+<blockquote class="markdown-alert-note">
+<p>I changed the <code>mountOptions</code> since I couldn’t get it to boot with <code>nofail</code>.</p>
+</blockquote>
+<p>For the <code>zfs</code> pool I want encryption, and compression enabled. I’m not going to
+use <code>zfs</code>’ <code>dedup</code> since <code>nix</code> has it built-in, and people generally caution from
+using it. So for my datasets, I want:</p>
+<ul>
+<li><code>root</code></li>
+<li><code>root/nix</code></li>
+<li><code>root/home</code></li>
+<li><code>root/persist</code></li>
+</ul>
+<p>You could add more if you need it for other purposes like movies/film that have
+much larger file sizes that may benefit from a larger <code>recordsize</code>.</p>
+<pre><span>{</span>
+<span>  disko.devices = {</span>
+<details><summary>   disk = {</summary><span>      root = {</span>
+<span>        type = "disk";</span>
+<span>        device = "/dev/nvme0n1";</span>
+<span>        content = {</span>
+<span>          type = "gpt";</span>
+<span>          partitions = {</span>
+<span>            ESP = {</span>
+<span>              size = "1G";</span>
+<span>              type = "EF00";</span>
+<span>              content = {</span>
+<span>                type = "filesystem";</span>
+<span>                format = "vfat";</span>
+<span>                mountpoint = "/boot";</span>
+<span>                mountOptions = [ "umask=0077" ];</span>
+<span>              };</span>
+<span>            };</span>
+<span>            zfs = {</span>
+<span>              size = "100%";</span>
+<span>              content = {</span>
+<span>                type = "zfs";</span>
+<span>                pool = "zroot";</span>
+<span>              };</span>
+<span>            };</span>
+<span>          };</span>
+<span>        };</span>
+<span>      };</span>
+</details><span>    };</span>
+<span>    zpool = {</span>
+<span>      zroot = {</span>
+<span>        type = "zpool";</span>
+<span>        rootFsOptions = {</span>
+<span>          mountpoint = "none";</span>
+<span>          compression = "zstd";</span>
+<span>          acltype = "posixacl";</span>
+<span>          xattr = "sa";</span>
+<span style="background: red; color: white;">-         "com.sun:auto-snapshot" = "true";</span>
+<span style="background: green; color: white;">+         atime = "off";</span>
+<span style="background: green; color: white;">+         # Encryption</span>
+<span style="background: green; color: white;">+         encryption = "aes-256-gcm";</span>
+<span style="background: green; color: white;">+         keyformat = "passphrase";</span>
+<span style="background: green; color: white;">+         keylocation = "prompt";</span>
+<span>        };</span>
+<span>        options.ashift = "12";</span>
+<span>        datasets = {</span>
+<span>          "root" = {</span>
+<span>            type = "zfs_fs";</span>
+<span style="background: red; color: white;">-           options = {</span>
+<span style="background: red; color: white;">-             encryption = "aes-256-gcm";</span>
+<span style="background: red; color: white;">-             keyformat = "passphrase";</span>
+<span style="background: red; color: white;">-             #keylocation = "file:///tmp/secret.key";</span>
+<span style="background: red; color: white;">-             keylocation = "prompt";</span>
+<span style="background: red; color: white;">-           };</span>
+<span style="background: green; color: white;">+           options."com.sun:auto-snapshot" = "false";</span>
+<span>            mountpoint = "/";</span>
+<span style="background: red; color: white;">-</span>
+<span style="background: green; color: white;">+           postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zroot/root@blank$' || zfs snapshot zroot/root@blank";</span>
+<span>          };</span>
+<span>          "root/nix" = {</span>
+<span>            type = "zfs_fs";</span>
+<span style="background: red; color: white;">-           options.mountpoint = "/nix";</span>
+<span>            mountpoint = "/nix";</span>
+<span style="background: green; color: white;">+           options."com.sun:auto-snapshot" = "false";</span>
+<span>          };</span>
+<span style="background: red; color: white;">-         # README MORE: https://wiki.archlinux.org/title/ZFS#Swap_volume</span>
+<span style="background: red; color: white;">-         "root/swap" = {</span>
+<span style="background: red; color: white;">-           type = "zfs_volume";</span>
+<span style="background: red; color: white;">-           size = "10M";</span>
+<span style="background: red; color: white;">-           content = {</span>
+<span style="background: red; color: white;">-             type = "swap";</span>
+<span style="background: red; color: white;">-           };</span>
+<span style="background: red; color: white;">-           options = {</span>
+<span style="background: red; color: white;">-             volblocksize = "4096";</span>
+<span style="background: red; color: white;">-             compression = "zle";</span>
+<span style="background: red; color: white;">-             logbias = "throughput";</span>
+<span style="background: red; color: white;">-             sync = "always";</span>
+<span style="background: red; color: white;">-             primarycache = "metadata";</span>
+<span style="background: red; color: white;">-             secondarycache = "none";</span>
+<span style="background: red; color: white;">-             "com.sun:auto-snapshot" = "false";</span>
+<span style="background: red; color: white;">-           };</span>
+<span style="background: green; color: white;">+         "root/home" = {</span>
+<span style="background: green; color: white;">+           type = "zfs_fs";</span>
+<span style="background: green; color: white;">+           mountpoint = "/home";</span>
+<span style="background: green; color: white;">+           options."com.sun:auto-snapshot" = "true";</span>
+<span style="background: green; color: white;">+         };</span>
+<span style="background: green; color: white;">+         "root/persist" = {</span>
+<span style="background: green; color: white;">+           type = "zfs_fs";</span>
+<span style="background: green; color: white;">+           mountpoint = "/persist";</span>
+<span style="background: green; color: white;">+           options."com.sun:auto-snapshot" = "true";</span>
+<span>          };</span>
+<span>        };</span>
+<span>      };</span>
+<span>  };</span>
+<span>}</span>
+<span></span>
+</pre>
+<p>Some notes:</p>
+<ul>
+<li>Set <code>atime="off"</code> for performance <a href="https://www.unixtutorial.org/zfs-performance-basics-disable-atime/">reasons</a></li>
+<li>Added <code>root/nix</code> for all <code>nix</code> purposes</li>
+<li>Removed <code>root/swap</code> since there’s this <a href="https://github.com/openzfs/zfs/issues/7734">issue</a></li>
+<li>Added encryption for root</li>
+</ul>
+<p>If it all looks good, we can run <code>disko</code></p>
+<pre><span>[nixos@nixos:~]$ sudo nix --experimental-features "nix-command flakes" run \</span>
+<span>  github:nix-community/disko/latest -- \</span>
+<span>  --mode destroy,format,mount \</span>
+<span>  /tmp/disk-config.nix</span>
+<span></span>
+</pre>
+<p>…and somewhere along the process, it’s going to prompt you for the passphrase for
+encryption. So keep it somewhere safe (like a password manager)!</p>
+<pre><span>+ zpool create -f zroot -R /mnt -o ashift=12 -0 acltype=posixacl -0 atime=off -O compression=zstd -O encryption=aes-256-gcm -O keyformat=passphrase -O keylocation=prompt -O mountpoint=none -O xattr=sa /dev/disk/by-partitionlabel/disk-root-zfs</span>
+<span>Enter new passphrase:</span>
+<span></span>
+</pre>
+<p>After all that, double check with <code>lsblk</code> if your disk is present with 2 partitions,
+and all the datasets defined.</p>
+<picture>
+  <source srcset="/assets/images/posts/nixos-on-framework-desktop/disk-check.webp" type="image/webp">
+  <img src="/assets/images/posts/nixos-on-framework-desktop/disk-check.png">
+</picture>
+<p>So far everything looks good!</p>
+<blockquote class="markdown-alert-note">
+<p>I added a <code>root/media</code> dataset but did not include it in the post.</p>
+</blockquote>
+<h2 id="os-configuration"><a href="#os-configuration">OS configuration</a></h2>
+<p>The fun part about NixOS is that majority of it can be configured with <code>nix</code>!</p>
+<p>For demonstration purposes, we’ll set up a basic, and minimal configuration for
+booting into NixOS. Feel free to add more things later, or if you prefer to have
+some other desktop environment for example.</p>
+<p>First we need to generate some boilerplate configuration, and do a hardware scan
+for NixOS to work. Normally, the hardware scan will include disks, and their
+partitions. But since we’re using <code>disko</code> to provide filesystem metadata, we
+need to skip this.</p>
+<p>Here are the important flags in <code>man nixos-generate-config</code>:</p>
+<ul>
+<li><code>--root &lt;ROOT&gt;</code>: If this option is given, treat the directory <code>&lt;ROOT&gt;</code> as the root of
+the file system. This means that configuration files will be written to <code>&lt;ROOT&gt;/etc/nixos</code>,
+and that any file systems outside of <code>&lt;ROOT&gt;</code> are ignored for the purpose of generating the <code>fileSystems</code>
+option.</li>
+<li><code>--no-filesystems</code>: Omit everything concerning file systems and swap devices
+from the hardware configuration.</li>
+<li><code>--flake</code>: Also generate <code>/etc/nixos/flake.nix</code></li>
+</ul>
+<blockquote class="markdown-alert-note">
+<p>If you already have an existing flake configuration, you can skip <code>--flake</code>,
+and instead use the generated <code>configuration.nix</code>, <code>hardware-configuration.nix</code>,
+and <code>disk-config.nix</code> in a new <code>nixosConfigurations</code> attribute.</p>
+</blockquote>
+<p>So to generate the initial config files:</p>
+<pre><span>[nixos@nixos:~]$ sudo nixos-generate-config --no-filesystems --flake --root /mnt</span>
+<span>writing /mnt/etc/nixos/hardware-configuration.nix...</span>
+<span>writing /mnt/etc/nixos/flake.nix...</span>
+<span>writing /mnt/etc/nixos/configuration.nix...</span>
+<span>For more hardware-specific settings, see https://github.com/NixOS/nixos-hardware</span>
+<span></span>
+</pre>
+<p>The last line tells us something interesting. It makes sense that for pre-built
+machines, there has to be some bundle of configurations that already exists,
+preferably from the manufacturer, to make it run smoothly. It turns out for
+Framework machines, they have a bunch!</p>
+<p>Finally, copy the <code>disk-config.nix</code> to the same directory as all the other files.</p>
+<pre><span>[nixos@nixos:~]$ sudo cp /tmp/disk-config.nix /mnt/etc/nixos/disk-config.nix</span>
+<span></span>
+</pre><h3 id="integrating-<code>disko</code>-into-nixos-for-hardware-discovery"><a href="#integrating-<code>disko</code>-into-nixos-for-hardware-discovery">Integrating <code>disko</code> into NixOS for hardware discovery</a></h3>
+<p>Earlier, we used <code>disko</code> to create partitions, and manage the <code>zfs</code> pool. But
+we also need to integrate it into the NixOS configuration to make NixOS aware of
+the filesystem configuration. You can follow <code>nix-communituy/disko</code> for the
+latest setup guide but at the time of writing, add <code>disko</code> to the flake inputs,
+and add it to the list of <code>modules</code> in the <code>nixosConfiguration</code> entry:</p>
+<pre><span># flake.nix</span>
+<span>{</span>
+<span>  inputs = {</span>
+<span>    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";</span>
+<span></span>
+<span>    disko = {</span>
+<span>      url = "github:nix-community/disko";</span>
+<span>      inputs.nixpkgs.follows = "nixpkgs";</span>
+<span>    };</span>
+<span>  };</span>
+<span>  outputs = inputs@{ self, nixpkgs, disko, ... }: {</span>
+<span>    nixosConfigurations.litten = nixpkgs.lib.nixosSystem {</span>
+<span>      system = "x86_64-linux";</span>
+<span></span>
+<span>      modules = [</span>
+<span>        ./configuration.nix</span>
+<span>        disko.nixosModules.disko</span>
+<span>      ];</span>
+<span>    };</span>
+<span>  };</span>
+<span>}</span>
+<span></span>
+</pre>
+<blockquote class="markdown-alert-warning">
+<p>The default <code>flake.nix</code> comes with only an unstable version of <code>nixpkgs</code> included.
+Generally it’s preferable to have the latest release for the base instead, and
+use unstable for a select few programs. Generally ones you need the latest versions
+for.</p>
+<p>At the time of writing, the latest stable is <code>nixos-25.05</code>.</p>
+</blockquote>
+<p>NixOS also has to be aware of the <code>disk-config.nix</code> file. To do so, in the
+<code>configuration.nix</code> file, add <code>./disk-config.nix</code> in the list of imports:</p>
+<pre><span>  imports =</span>
+<span>    [</span>
+<span>      ./hardware-configuration.nix</span>
+<span style="background: green; color: white;">+     ./disk-config.nix</span>
+<span>    ];</span>
+<span></span>
+</pre>
+<p>and we want to tell <code>initrd</code> to load the <code>zfs</code> module:</p>
+<pre><span>boot.loader.systemd-boot.enable = true;</span>
+<span>boot.loader.efi.canTouchEfiVariables = true;</span>
+<span style="background: green; color: white;">+ boot.supportedFilesystems = [ "zfs" ];</span>
+<span style="background: green; color: white;">+ boot.initrd.kernelModules = [ "zfs" ];</span>
+<span></span>
+</pre>
+<blockquote class="markdown-alert-caution">
+<p>You need to make sure that the current kernel version is supported by <code>zfs</code>.
+If you’re using the current stable in NixOS, chances are it’s fine. But double
+check if you are manually setting the <code>boot.kernelPackages</code> attribute.</p>
+<p><code>zfs</code> indicates the upper bound of supported kernel versions in their
+<a href="https://github.com/openzfs/zfs/releases">releases</a> page.</p>
+</blockquote>
+<p>Finally, NixOS will complain if we don’t <a href="https://wiki.nixos.org/wiki/ZFS#Installation">specify a host ID</a>
+so we need to specify that.</p>
+<p>So this <a href="https://search.nixos.org/options?channel=25.05&amp;show=networking.hostId&amp;query=hostId">bit</a>
+says you can generate one like so:</p>
+<pre><span>head -c4 /dev/urandom | od -A none -t x4</span>
+<span></span>
+</pre>
+<p>and while we’re at it, you can also set your preferred host name. I named this
+one <code>litten</code> cause it’s tiny, and has a similar color scheme cause of its tiles
+lol.</p>
+<pre><span># networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";</span>
+<span style="background: green; color: white;">+ networking.hostName = "litten";</span>
+<span style="background: green; color: white;">+ networking.hostId = "REPLACE_ME";</span>
+<span></span>
+</pre>
+<p>On to the next!</p>
+<h3 id="framework-specific-configuration"><a href="#framework-specific-configuration">Framework-specific configuration</a></h3>
+<p>So circling back to existing configurations for the Framework Desktop, turns out
+there’s already one for it, and we just need to set it up in a similar way as
+<code>disko</code>. Pretty convenient!</p>
+<pre><span># flake.nix</span>
+<span>{</span>
+<span>  inputs = {</span>
+<span>    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";</span>
+<span style="background: green; color: white;">+   nixos-hardware.url = "github:NixOS/nixos-hardware";</span>
+<span></span>
+<span>    disko = {</span>
+<span>      url = "github:nix-community/disko";</span>
+<span>      inputs.nixpkgs.follows = "nixpkgs";</span>
+<span>    };</span>
+<span>  };</span>
+<span style="background: red; color: white;">- outputs = inputs@{ self, nixpkgs, disko, ... }: {</span>
+<span style="background: green; color: white;">+ outputs = inputs@{ self, nixpkgs, disko, nixos-hardware, ... }: {</span>
+<span>    nixosConfigurations.litten = nixpkgs.lib.nixosSystem {</span>
+<span>      system = "x86_64-linux";</span>
+<span></span>
+<span>      modules = [</span>
+<span>        ./configuration.nix</span>
+<span>        disko.nixosModules.disko</span>
+<span style="background: green; color: white;">+       nixos-hardware.nixosModules.framework-desktop-amd-ai-max-300-series</span>
+<span>      ];</span>
+<span>    };</span>
+<span>  };</span>
+<span>}</span>
+<span></span>
+</pre>
+<p>We’ll want to enable <code>networkmanager</code> to use Wi-Fi.</p>
+<pre><span># Pick only one of the below networking options.</span>
+<span># networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.</span>
+<span style="background: red; color: white;">- # networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.</span>
+<span style="background: green; color: white;">+ networking.networkmanager.enable = true;</span>
+<span></span>
+</pre>
+<p>That’s pretty much it.</p>
+<h3 id="setting-up-a-user"><a href="#setting-up-a-user">Setting up a user</a></h3>
+<p>We’ll need a user to boot into</p>
+<pre><span># Define a user account. Don't forget to set a password with `passwd`.</span>
+<span style="background: red; color: white;">- # users.users.alice = {</span>
+<span style="background: red; color: white;">- #   isNormalUser = true;</span>
+<span style="background: red; color: white;">- #   extraGroups = [ "wheel" ] # Enable `sudo` for the user.</span>
+<span style="background: red; color: white;">- #   packages = with pkgs; [</span>
+<span style="background: red; color: white;">- #     tree</span>
+<span style="background: red; color: white;">- #   ];</span>
+<span style="background: red; color: white;">- # };</span>
+<span style="background: green; color: white;">+ users.users.sekun = {</span>
+<span style="background: green; color: white;">+   isNormalUser = true;</span>
+<span style="background: green; color: white;">+   extraGroups = [ "wheel" "networkmanager" ];</span>
+<span style="background: green; color: white;">+   packages = with pkgs; [];</span>
+<span style="background: green; color: white;">+ };</span>
+<span></span>
+</pre>
+<p>Replace my name with whatever you want unless you’re also sekun then, woah.</p>
+<h3 id="desktop-environment"><a href="#desktop-environment">Desktop environment</a></h3>
+<p>Switching desktop environments is probably one of the easiest things to do in
+NixOS compared to other distros. Personally, I like KDE so I’m sticking with it.
+Gnome has too much padding for my taste. Looks pretty though.</p>
+<pre><span style="background: red; color: white;">- # Enable the X11 windowing system.</span>
+<span style="background: red; color: white;">- # services.xserver.enable = true;</span>
+<span style="background: green; color: white;">+ services = {</span>
+<span style="background: green; color: white;">+   xserver.enable = true;</span>
+<span style="background: green; color: white;">+</span>
+<span style="background: green; color: white;">+   displayManager.sddm.enable = true;</span>
+<span style="background: green; color: white;">+   displayManager.sddm.wayland.enable = true;</span>
+<span style="background: green; color: white;">+   desktopManager.plasma6.enable = true;</span>
+<span style="background: green; color: white;">+ };</span>
+<span></span>
+</pre>
+<p>I still like leaving <code>X11</code> available just in case I need something that doesn’t
+work on wayland.</p>
+<blockquote class="markdown-alert-note">
+<p>If you want to read up more on what DEs are available in NixOS:
+<a href="https://wiki.nixos.org/wiki/Category:Desktop_environment">Category:Desktop environment</a>.</p>
+<p>You can also browse the available <a href="https://search.nixos.org/options?query=desktopManager">options</a>.</p>
+</blockquote>
+<h2 id="installation"><a href="#installation">Installation</a></h2>
+<p>Do go over the <code>configuration.nix</code> file to see what else you would like enabled!
+If it all looks good, we’re ready to install NixOS!</p>
+<pre><span>sudo nixos-install --root /mnt --flake '/mnt/etc/nixos#litten'</span>
+<span></span>
+</pre>
+<p>and at the end of the installation, it’ll ask you to set the <code>root</code> user’s password.
+It should look something like this if everything goes well. <code>sudo reboot</code>, and
+boot into NixOS!</p>
+<picture>
+  <source srcset="/assets/images/posts/nixos-on-framework-desktop/installation-done.webp" type="image/webp">
+  <img src="/assets/images/posts/nixos-on-framework-desktop/installation-done.png">
+</picture>
+<p>Here it asks us for the <code>zfs</code> pool’s encryption passphrase. Nice.</p>
+<picture>
+  <source srcset="/assets/images/posts/nixos-on-framework-desktop/root-unlock.webp" type="image/webp">
+  <img src="/assets/images/posts/nixos-on-framework-desktop/root-unlock.png">
+</picture>
+<picture>
+  <source srcset="/assets/images/posts/nixos-on-framework-desktop/login-screen.webp" type="image/webp">
+  <img src="/assets/images/posts/nixos-on-framework-desktop/login-screen.png">
+</picture>
+<h2 id="conclusion"><a href="#conclusion">Conclusion</a></h2>
+<p>Well that was a lot. The nice thing is you more or less only have to set up the
+configuration once. After this, it’s best you keep it somewhere easily accessible
+(like GitHub) so that you can download it, and just run the disk partitioning,
+and OS install.</p>
+<hr />
+<p>So below are the complete files for <code>flake.nix</code>, <code>configuration.nix</code>, and <code>disk-config.nix</code>.
+Or checkout my configuration in <a href="https://github.com/sekunho/dotfiles"><code>sekunho/dotfiles</code></a>.</p>
+<pre><span># flake.nix</span>
+<span>{</span>
+<span>  inputs = {</span>
+<span>    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";</span>
+<span>    nixos-hardware.url = "github:NixOS/nixos-hardware";</span>
+<span>    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";</span>
+<span></span>
+<span>    disko = {</span>
+<span>      url = "github:nix-community/disko";</span>
+<span>      inputs.nixpkgs.follows = "nixpkgs";</span>
+<span>    };</span>
+<span>  };</span>
+<span>  outputs = inputs@{ self, nixpkgs, determinate, disko, nixos-hardware, ... }: {</span>
+<span>    nixosConfigurations.litten = nixpkgs.lib.nixosSystem {</span>
+<span>      system = "x86_64-linux";</span>
+<span></span>
+<span>      modules = [</span>
+<span>        ./configuration.nix</span>
+<span>        disko.nixosModules.disko</span>
+<span>        nixos-hardware.nixosModules.framework-desktop-amd-ai-max-300-series</span>
+<span>        determinate.nixosModules.default</span>
+<span>      ];</span>
+<span>    };</span>
+<span>  };</span>
+<span>}</span>
+<span></span>
+</pre><pre><span># configuration.nix</span>
+<span>{ config, lib, pkgs, ... }: {</span>
+<span>  imports =</span>
+<span>    [</span>
+<span>      ./hardware-configuration.nix</span>
+<span>      ./disk-config.nix</span>
+<span>    ];</span>
+<span></span>
+<span>  boot = {</span>
+<span>    kernelPackages = pkgs.linuxPackages_6_16;</span>
+<span></span>
+<span>    # Use the systemd-boot EFI boot loader.</span>
+<span>    loader.systemd-boot.enable = true;</span>
+<span>    loader.efi.canTouchEfiVariables = true;</span>
+<span></span>
+<span>    supportedFilesystems = [ "zfs" ];</span>
+<span>    initrd.kernelModules = [ "zfs" ];</span>
+<span>  };</span>
+<span></span>
+<span>  # Set your time zone.</span>
+<span>  time.timeZone = "Europe/Amsterdam";</span>
+<span></span>
+<span>  nixpkgs.config.allowUnfree = true;</span>
+<span></span>
+<span></span>
+<span>  nix = {</span>
+<span>    settings.trusted-public-keys = [</span>
+<span>      "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="</span>
+<span>    ];</span>
+<span></span>
+<span>    settings.substituters = [</span>
+<span>      "https://nix-community.cachix.org"</span>
+<span>    ];</span>
+<span>  };</span>
+<span></span>
+<span>  networking = {</span>
+<span>    hostName = "litten";</span>
+<span>    hostId = "REPLACE_ME";</span>
+<span>    networkmanager.enable = true;</span>
+<span>  };</span>
+<span></span>
+<span>  services = {</span>
+<span>    xserver.enable = true;</span>
+<span></span>
+<span>    displayManager.sddm.enable = true;</span>
+<span>    displayManager.sddm.wayland.enable = true;</span>
+<span>    desktopManager.plasma6.enable = true;</span>
+<span></span>
+<span>    # Enable sound</span>
+<span>    pipewire = {</span>
+<span>      enable = true;</span>
+<span>      pulse.enable = true;</span>
+<span>    };</span>
+<span>  };</span>
+<span></span>
+<span>  users = {</span>
+<span>    users.sekun = {</span>
+<span>      isNormalUser = true;</span>
+<span>      extraGroups = [ "wheel" "networkmanager" ];</span>
+<span>      packages = with pkgs; [</span>
+<span>        tree</span>
+<span>      ];</span>
+<span>    };</span>
+<span>  };</span>
+<span></span>
+<span>  environment.systemPackages = with pkgs; [ vim ];</span>
+<span>  system.stateVersion = "25.05"; # Did you read the comment?</span>
+<span>}</span>
+<span></span>
+</pre><pre><span># disk-config.nix</span>
+<span>{</span>
+<span>  disko.devices = {</span>
+<span>    disk = {</span>
+<span>      root = {</span>
+<span>        type = "disk";</span>
+<span>        device = "/dev/nvme0n1";</span>
+<span>        content = {</span>
+<span>          type = "gpt";</span>
+<span>          partitions = {</span>
+<span>            ESP = {</span>
+<span>              size = "1G";</span>
+<span>              type = "EF00";</span>
+<span>              content = {</span>
+<span>                type = "filesystem";</span>
+<span>                format = "vfat";</span>
+<span>                mountpoint = "/boot";</span>
+<span>                mountOptions = [ "umask=0077" ];</span>
+<span>              };</span>
+<span>            };</span>
+<span>            zfs = {</span>
+<span>              size = "100%";</span>
+<span>              content = {</span>
+<span>                type = "zfs";</span>
+<span>                pool = "zroot";</span>
+<span>              };</span>
+<span>            };</span>
+<span>          };</span>
+<span>        };</span>
+<span>      };</span>
+<span>    };</span>
+<span>    zpool = {</span>
+<span>      zroot = {</span>
+<span>        type = "zpool";</span>
+<span>        rootFsOptions = {</span>
+<span>          acltype = "posixacl";</span>
+<span>          atime = "off";</span>
+<span>          compression = "zstd";</span>
+<span>          mountpoint = "none";</span>
+<span>          encryption = "aes-256-gcm";</span>
+<span>          keyformat = "passphrase";</span>
+<span>          #keylocation = "file:///tmp/secret.key";</span>
+<span>          keylocation = "prompt";</span>
+<span>          xattr = "sa";</span>
+<span>        };</span>
+<span>        options.ashift = "12";</span>
+<span>        datasets = {</span>
+<span>          "root" = {</span>
+<span>            type = "zfs_fs";</span>
+<span>            options."com.sun:auto-snapshot" = "false";</span>
+<span>            mountpoint = "/";</span>
+<span>            postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zroot/root@blank$' || zfs snapshot zroot/root@blank";</span>
+<span>          };</span>
+<span>          "root/nix" = {</span>
+<span>            type = "zfs_fs";</span>
+<span>            mountpoint = "/nix";</span>
+<span>            options."com.sun:auto-snapshot" = "false";</span>
+<span>          };</span>
+<span></span>
+<span>          "root/home" = {</span>
+<span>            type = "zfs_fs";</span>
+<span>            mountpoint = "/home";</span>
+<span>            options."com.sun:auto-snapshot" = "true";</span>
+<span>          };</span>
+<span></span>
+<span>          "root/persist" = {</span>
+<span>            type = "zfs_fs";</span>
+<span>            mountpoint = "/persist";</span>
+<span>            options."com.sun:auto-snapshot" = "true";</span>
+<span>          };</span>
+<span>        };</span>
+<span>      };</span>
+<span>    };</span>
+<span>  };</span>
+<span>}</span>
+<span></span>
+</pre><img style="width: 8rem;" src="/assets/images/not-by-ai.png">
+
+
+    <footer>
+  <div>
+    Copyright <a href="https://github.com/sekunho">SEKUN</a> 2022-2025.
+    Generated by <a href="https://github.com/sekunho/puggle"><code>puggle</code></a>.
+  </div>
+</footer>
+
+    <a rel="me" href="https://mastodon.social/@sekun" style="display: none;">Mastodon</a>
+    <script>
+      (function attachShadowRoots(root) {
+        root.querySelectorAll("template[shadowrootmode]").forEach(template => {
+          const mode = template.getAttribute("shadowrootmode");
+          const shadowRoot = template.parentNode.attachShadow({ mode });
+
+          shadowRoot.appendChild(template.content);
+          template.remove();
+          attachShadowRoots(shadowRoot);
+        });
+      })(document);
+    </script>
+  </body>
+</html>

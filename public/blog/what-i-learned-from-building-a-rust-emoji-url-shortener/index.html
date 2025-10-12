@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>What I learned from building an emoji URL shortener in Rust - sekun</title>
+
+    
+<link rel="stylesheet" href="/assets/css/pages/post.css">
+
+
+    <link rel="stylesheet" href="/assets/css/style.css"/>
+    <link rel="stylesheet" href="/assets/css/vendors/normalize.min.css"/>
+
+    <link rel="icon" href="/assets/images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+    <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+    <link rel="mask-icon" href="/assets/images/safari-pinned-tab.svg">
+
+    <meta name="color-scheme" content="light dark">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    
+  <meta name="title" content="What I learned from building an emoji URL shortener in Rust">
+  <meta name="description" content="Alright, that was a lot. I did learn a lot from this experience. I actually only
+read until chapter 10 of the Rust Book, and skipped to some parts like advanced
+traits, and other things. I really like the fact that there's a detailed book
+that talks about some idiomatic Rust patterns, and even the more advanced stuff,
+that's completely FREE. How crazy is that? My wallet is spared!
+">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://metatags.io/">
+  <meta property="og:title" content="What I learned from building an emoji URL shortener in Rust">
+  <meta property="og:description" content="Alright, that was a lot. I did learn a lot from this experience. I actually only
+read until chapter 10 of the Rust Book, and skipped to some parts like advanced
+traits, and other things. I really like the fact that there's a detailed book
+that talks about some idiomatic Rust patterns, and even the more advanced stuff,
+that's completely FREE. How crazy is that? My wallet is spared!
+">
+  <meta property="og:image" content="https://sekun.net/assets/images/posts/what-i-learned-from-building-a-rust-emoji-url-shortener/cover.png">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://metatags.io/">
+  <meta property="twitter:title" content="What I learned from building an emoji URL shortener in Rust">
+  <meta property="twitter:description" content="Alright, that was a lot. I did learn a lot from this experience. I actually only
+read until chapter 10 of the Rust Book, and skipped to some parts like advanced
+traits, and other things. I really like the fact that there's a detailed book
+that talks about some idiomatic Rust patterns, and even the more advanced stuff,
+that's completely FREE. How crazy is that? My wallet is spared!
+">
+  <meta property="twitter:image" content="https://sekun.net/assets/images/posts/what-i-learned-from-building-a-rust-emoji-url-shortener/cover.png">
+
+  </head>
+
+  <body>
+    <nav class="nav">
+  <ul>
+    <li><a href="/">λsekun.net</a></li>
+    <li><a href="/blog">/blog</a></li>
+    <li><a href="/projects">/projects</a></li>
+    <li><a href="/contact">/contact</a></li>
+  </ul>
+</nav>
+    
+<h1 id="what-i-learned-from-building-an-emoji-url-shortener-in-rust"><a href="#what-i-learned-from-building-an-emoji-url-shortener-in-rust">What I learned from building an emoji URL shortener in Rust</a></h1><div>
+
+</div>
+<div>
+
+  <x-img>
+    <template shadowrootmode="open">
+      <img src="/assets/images/posts/what-i-learned-from-building-a-rust-emoji-url-shortener/cover.png" alt="HackerNews URL pointing to a shortened emojied.net URL"/>
+
+      <style>
+        x-img-foo:not(:defined) > template[shadowrootmode] ~ * {
+          display: none;
+        }
+
+        img {
+          
+
+          
+          width: 100%;
+          
+
+          display: block;
+          margin: 1rem auto;
+        }
+      </style>
+    </template>
+  </x-img>
+
+</div>
+<span class="post-metadata">
+  Published on <time datetime="2022-04-11T06:20:00+00:00">2022-04-11 06:20 UTC</time>
+</span>
+<div>
+
+
+  <div class="tags">
+  
+    <span>nix</span>
+  
+    <span>postgresql</span>
+  
+    <span>rust</span>
+  
+    <span>axum</span>
+  
+  </div>
+
+</div>
+<p>So, I made an emoji URL shortener with Rust and shared it in some places
+including the <a href="https://old.reddit.com/r/rust/comments/tznryk/i_made_my_first_project_with_rust_its_a_url/">Rust community</a>.
+And oh man this is the first thing I made that got this many visitors which is
+pretty nice knowing that people were curious enough to try it <del>despite them probably
+feeling disgusted from me bringing such a thing to existence</del>.</p>
+<ul>
+<li>Repo: <a href="https://github.com/sekunho/emojied">https://github.com/sekunho/emojied</a></li>
+<li>Website: <a href="https://emojied.net">https://emojied.net</a></li>
+</ul>
+<p>Some glowing ✨ reviews:</p>
+<blockquote>
+<p>“Thanks, I hate it.” – Pay08, 2022</p>
+</blockquote>
+<blockquote>
+<p>“downvoted for being a menace to society.” – MultiplyAccumulate, 2022</p>
+</blockquote>
+<blockquote>
+<p>“blursed “ – Jaxius3</p>
+</blockquote>
+<blockquote>
+<p>““Made with regret.” Hahahaha. Excellent.” – IronWhiskers, 2022</p>
+</blockquote>
+<blockquote>
+<p>“What is wrong with you?” – Jeff</p>
+</blockquote>
+<div>
+
+  <x-img>
+    <template shadowrootmode="open">
+      <img src="/assets/images/posts/what-i-learned-from-building-a-rust-emoji-url-shortener/stats.png" alt="Cloudflare stats page for emojied.net"/>
+
+      <style>
+        x-img-foo:not(:defined) > template[shadowrootmode] ~ * {
+          display: none;
+        }
+
+        img {
+          
+          width: 50%;
+          
+
+          
+
+          display: block;
+          margin: 1rem auto;
+        }
+      </style>
+    </template>
+  </x-img>
+
+</div>
+<p>Here are some of the things I learned from building a simple project.</p>
+<h2 id="tech-stack"><a href="#tech-stack">Tech Stack</a></h2>
+<p>After looking around, I decided to go with the following:</p>
+<ul>
+<li><code>axum</code> (web server)</li>
+<li><code>maud</code> (HTML templates via Rust macros)</li>
+<li><code>postgres</code> (persistent data storage and business logic)</li>
+<li><code>sqitch</code> (database schema migration tool)</li>
+<li><code>typescript</code> (you know what this is)</li>
+<li><code>docker</code> (“simple” deploys)</li>
+<li><code>nix</code> (reproducible environments)</li>
+</ul>
+<h2 id="postgresql-procedures"><a href="#postgresql-procedures">PostgreSQL Procedures</a></h2>
+<p>Procedures are <em>extremely</em> cool although this isn’t exactly new to me. I’ve been
+experimenting with this in one of my previous, unfinished projects called GNAWEX
+<sup class="footnote-reference"><a href="#1">1</a></sup> (One day I will finish it don’t you worry).</p>
+<p>This allows you to implement some business logic in SQL, without having to
+implement it in the application level. If ever PostgreSQL is a constant in your
+project, and intend to rewrite the app from scratch, you might just end up having
+to rewrite the glue rather than your business logic. <code>emojied</code> isn’t doing
+anything too exciting though, so I can’t really demonstrate all that is cool
+about it.</p>
+<p>Okay, an example would be fetching a URL given an identifier, and incrementing
+the <code>clicks</code> column by one. Here’s an example of a procedure that does exactly
+that:</p>
+<pre><span>CREATE FUNCTION app.get_url(query TEXT)</span>
+<span>                          -- ^ This contains the emoji sequence `identifier`</span>
+<span>  RETURNS TEXT</span>
+<span>  LANGUAGE sql</span>
+<span>  AS $$</span>
+<span>    -- Considered as a "clicked" link whenever this gets triggered</span>
+<span>    UPDATE app.links</span>
+<span>      SET clicks = clicks + 1</span>
+<span>      WHERE links.identifier = $1;</span>
+<span></span>
+<span>    -- Builds the URL so that I don't have to do this in the web server</span>
+<span>    SELECT concat(scheme, '://', hosts.name, path) AS url</span>
+<span>      FROM app.links</span>
+<span>      JOIN app.hosts</span>
+<span>      ON links.host = hosts.host_id</span>
+<span>      WHERE links.identifier = $1;</span>
+<span>  $$;</span>
+<span></span>
+</pre>
+<p>It’s a simple function that uses SQL as the language that expects any <code>TEXT</code>,
+and returns a <code>TEXT</code> as well, which is a sequence of emojis, and the URL it
+maps to respectively. Since whatever happens in this procedure is in the same
+transaction as what called it, e.g (<code>SELECT * FROM app.get_url('🍊🌐')</code>), if any
+of this fails, then it rolls back everything, including the incrementing of
+<code>clicks</code>. If this was at the application level, I’d have to reach for whatever
+transaction implementation it uses (like <code>Ecto.Multi</code>) which doesn’t make sense
+in this case cause Postgres already natively supports transactions.</p>
+<p>I try to make heavy use of stored procedures as long as it’s applicable.
+Inserting to multiple tables with one function, fetching leaderboard entries,
+etc.</p>
+<h2 id="error-handling-with-implicit-<code>from<t></code>"><a href="#error-handling-with-implicit-<code>from<t></code>">Error handling with implicit <code>From<T></code></a></h2>
+<p>Error handling is pretty nice with Rust, especially since I was never a fan of
+exceptions since it made control flow so weird. Although that may be because I
+never really invested that much time working with them. In Rust, I like that
+you can do two things for errors: errors encoded as ADTs, or panic (unrecoverable).
+Although I’m not entirely sure if all errors can be encoded in sum types, and
+what can be done if ever one needs to recover from a panic. But for <code>emojied</code>,
+I definitely don’t have to think about that.</p>
+<p>What I did have to deal with was finding a more convenient way when dealing with
+other <code>Error</code> types. For instance, there’s <code>tokio_postgres::Error</code>, then there’s
+<code>env::VarError</code>, and if I need to bubble up these errors to the binary, I’m gonna
+need a convenient enough way to do that otherwise I’m gonna have a difficult time.</p>
+<p>Let’s say I have two errors, a database one, and an application one.</p>
+<pre><span>enum AppError {</span>
+<span>  Foo,</span>
+<span>  Baz</span>
+<span>}</span>
+<span></span>
+<span>enum DbError {</span>
+<span>    FailedToConnect,</span>
+<span>    InvalidTLSCert</span>
+<span>}</span>
+<span></span>
+<span>fn some_db_action() -> Result<String, DbError> {</span>
+<span>    Err(DbError::FailedToConnect)</span>
+<span>}</span>
+<span></span>
+<span>fn some_app_action() -> Result<String, AppError> {</span>
+<span>    let result1 = some_db_action()?;</span>
+<span>    let result2 = some_db_action()?;</span>
+<span></span>
+<span>    Ok(result1)</span>
+<span>}</span>
+<span></span>
+</pre>
+<p>This fails to compile, here’s what <code>rustc</code> says:</p>
+<pre><span>error[E0277]: `?` couldn't convert the error to `AppError`</span>
+<span>    |</span>
+<span>212 | fn app_action() -> Result<String, AppError> {</span>
+<span>    |                    ------------------------ expected `AppError` because of this</span>
+<span>213 |     let result1 = db_action()?;</span>
+<span>214 |     let result2 = db_action()?;</span>
+<span>    |                              ^ the trait `From<url::DbError>` is not implemented for `AppError`</span>
+<span>    |</span>
+<span>    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `Fro</span>
+<span>m` trait</span>
+<span>    = note: required because of the requirements on the impl of `FromResidual<Result<Infallible, url::DbError>>`</span>
+<span> for `Result<std::string::String, AppError>`</span>
+<span></span>
+<span>For more information about this error, try `rustc --explain E0277`.</span>
+<span></span>
+</pre>
+<p>So it tells me that using <code>?</code> implicitly converts <code>DbError</code> to <code>AppError</code> via
+the <code>From</code> trait. And because I do not have a trait instance like
+<code>impl From&lt;DbError&gt; for AppError</code>, it fails.</p>
+<p>Another thing is I somehow need to bubble up <code>DbError</code> up to the application
+error somehow. The method I ended up using is to just add a field to the
+<code>AppError</code> record. It’s a bit tiring to copy all the <code>DbError</code> variants over to
+the <code>AppError</code> enum. I mean, it’s fine for this one since it doesn’t have that
+many, but it becomes.</p>
+<pre><span>enum AppError {</span>
+<span>    DbError(DbError), // Hooray!</span>
+<span>    Foo,</span>
+<span>    Baz</span>
+<span>}</span>
+<span></span>
+</pre>
+<p>And then I can create a <code>From&lt;DbError&gt;</code> instance:</p>
+<pre><span>impl From<DbError> for AppError {</span>
+<span>    fn from(e: DbError) -> Self {</span>
+<span>        AppError::DbError(e)</span>
+<span>    }</span>
+<span>}</span>
+<span></span>
+</pre>
+<p>Which compiles!</p>
+<p>If I wanted to avoid <code>From</code>, I could do this:</p>
+<pre><span>let result1 = db_action().map_err(|_| AppError::Foo)?;</span>
+<span></span>
+</pre>
+<p>Except it’s kinda annoying cause I have to do this at every call site. Although
+there are times when I did end up using this.</p>
+<h2 id="application-configuration"><a href="#application-configuration">Application configuration</a></h2>
+<p>While convenient, I can’t just hard-code everything into the application,
+especially for a public project. There are a lot of sensitive data like certs,
+and sometimes it’s just <em>more</em> convenient for whoever is using the application
+to change stuff without touching the source code. In my case, I had to make it
+flexible enough to change database credentials.</p>
+<blockquote>
+<p>A common way to do it is through environment variables.</p>
+<p>e.g <code>PG__HOST="db.example.com" emojied</code>. So whenever I need to update stuff, all
+I have to do is just change the environment variable, and I’m spared from
+touching the source code!</p>
+</blockquote>
+<p>Here’s <code>emojied</code>’s config for it to run:</p>
+<pre><span>pub struct AppConfig {</span>
+<span>    /// Application host</span>
+<span>    pub host: String,</span>
+<span></span>
+<span>    /// PostgreSQL config</span>
+<span>    pub pg: tokio_postgres::Config,</span>
+<span></span>
+<span>    /// Pool manager config</span>
+<span>    pub manager: ManagerConfig,</span>
+<span></span>
+<span>    /// Pool size</span>
+<span>    pub pool_size: usize,</span>
+<span></span>
+<span>    pub ca_cert_path: Option<String>,</span>
+<span>}</span>
+<span></span>
+</pre>
+<p>Then I created an associated function for it called <code>from_env/0</code> which returns
+a <code>Result&lt;AppConfig, Error&gt;</code>. I’ll talk about the <code>Error</code> part in the <code>Error Handling</code> section. Then I can use Rust’s <code>std::env</code> module to get a var’s value!</p>
+<p>Here’s a tiny example:</p>
+<pre><span>use std::env;</span>
+<span></span>
+<span>struct AppConfig {</span>
+<span>  pg_host: String,</span>
+<span>}</span>
+<span></span>
+<span>impl AppConfig {</span>
+<span>  fn from_env() -> Result<AppConfig, Error> {</span>
+<span>      let host = env::var("PG__HOST")?;</span>
+<span></span>
+<span>      Ok(AppConfig { pg_host: host })</span>
+<span>  }</span>
+<span>}</span>
+<span></span>
+</pre>
+<blockquote>
+<p>Side note: This kinda looks monadic, where it binds <code>AppConfig</code> to <code>host</code>, and
+evaluates to <code>Error</code> and “exits” otherwise.</p>
+</blockquote>
+…<h2 id="handling-databasehandler-in-<code>axum</code>"><a href="#handling-databasehandler-in-<code>axum</code>">Handling databasehandler in <code>axum</code></a></h2>
+<p>I created this database handle that has all the things I need to communicate
+with the database server:</p>
+<pre><span>pub struct Handle {</span>
+<span>    pub pool: Pool,</span>
+<span>}</span>
+<span></span>
+</pre>
+<p>It’s pretty simple. It’s a struct that has a <code>pool</code> field. Then I created two
+more functions to make things more convenient: <code>new/1</code>, and <code>client/1</code>.</p>
+<p><code>new(config: AppConfig) -&gt; Result&lt;Handle, Error&gt;</code> expects an <code>AppConfig</code> as an
+argument, and if all goes well, then a new database handle with all the important
+things in it. <code>client(&amp;self) -&gt; Result&lt;Pool, Error&gt;</code> expects a reference to
+<code>self</code>, which is <code>Handle</code> in this case. This uses the DB pool to create a new
+client. From this client, you can do DB queries with it.</p>
+<pre><span>// Grabs a client from the pool</span>
+<span>let client = handle.client().await?;</span>
+<span></span>
+<span>// Runs a query that gets a URL's stats</span>
+<span>let data = client</span>
+<span>    .query("SELECT * FROM app.get_url_stats($1)", &[&identifier])</span>
+<span>    .await?;</span>
+<span></span>
+<span>// Manually maps the row to a leaderboard entry</span>
+<span>let db_id = data[0].try_get(0)?;</span>
+<span>let db_clicks = data[0].try_get(1)?;</span>
+<span>let db_url = data[0].try_get(2)?;</span>
+<span></span>
+<span>Ok(leaderboard::Entry {</span>
+<span>    identifier: db_id,</span>
+<span>    clicks: db_clicks,</span>
+<span>    url: db_url,</span>
+<span>})</span>
+<span></span>
+</pre>
+<p>Okay, so I somehow need access to the database handle in the “controllers”, like
+in <code>controllers::leaderboard</code>.</p>
+<blockquote>
+<p>I’m only calling it a controller since it’s a common concept. <code>axum</code> doesn’t
+call it that.</p>
+</blockquote>
+<pre><span>let app = Router::new()</span>
+<span>    .route("/leaderboard", routing::get(controllers::leaderboard));</span>
+<span></span>
+</pre>
+<p><code>axum</code> recommends <sup class="footnote-reference"><a href="#2">2</a></sup> mentions that you could use “request extensions” which
+looks like it acts like middleware. It recommends to have <code>Arc</code> inhabit
+<code>Extension</code> (<code>Extension&lt;Arc&lt;T&gt;&gt;</code>), but why?</p>
+<p>Time to do it in some wrong ways. This is fine since <code>rustc</code> is quite helpful
+with its error messages.</p>
+<p>I’ll try to move <code>handle</code> instead:</p>
+<pre><span>use axum::{extract::Extension, routing::get, Router};</span>
+<span>use std::net::SocketAddr;</span>
+<span></span>
+<span>pub async fn run(handle: db::Handle) -> Result<(), hyper::Error> {</span>
+<span>    let app = Router::new()</span>
+<span>        .route("/leaderboard", routing::get(controllers::leaderboard))</span>
+<span>        .layer(Extension(handle));</span>
+<span>                      // ^ Here</span>
+<span></span>
+<span>    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));</span>
+<span></span>
+<span>    axum::Server::bind(&addr)</span>
+<span>        .serve(app.into_make_service())</span>
+<span>        .with_graceful_shutdown(signal_shutdown())</span>
+<span>        .await</span>
+<span>}</span>
+<span></span>
+</pre>
+<p>Doing that gives me this error:</p>
+<pre><span>error[E0277]: the trait bound `db::Handle: Clone` is not satisfied</span>
+<span>  --> src/lib.rs:36:16</span>
+<span>   |</span>
+<span>36 |         .layer(Extension(handle));</span>
+<span>   |          ----- ^^^^^^^^^^^^^^^^^ the trait `Clone` is not implemented for `db::Handle`</span>
+<span>   |          |</span>
+<span>   |          required by a bound introduced by this call</span>
+<span>   |</span>
+<span>   = note: required because of the requirements on the impl of `tower_layer::Layer<Route<_>>` for `Extension<db::</span>
+<span>Handle>`</span>
+<span></span>
+<span>For more information about this error, try `rustc --explain E0277`.</span>
+<span></span>
+</pre>
+<p>It seems like I need to derive <code>Clone</code> for <code>db::Handle</code> since it probably gets
+cloned every time, although I’m not sure exactly when it does get cloned. In
+every new request?</p>
+<p>So what happens if I <em>do</em> derive <code>Clone</code>?</p>
+<pre><span>#[derive(Clone)]</span>
+<span>struct Handle {</span>
+<span>  pub pool: Pool</span>
+<span>}</span>
+<span></span>
+</pre>
+<p>Then I need to make sure that the function’s type signature matches:</p>
+<pre><span>pub async fn leaderboard(</span>
+<span>    Extension(handle): Extension<db::Handle></span>
+<span> // ^ Here! axum seems to know exactly where to apply it to the args. Not sure</span>
+<span> // how this is done (yet).</span>
+<span>) -> (StatusCode, Markup) {</span>
+<span>    match leaderboard::fetch(&handle).await {</span>
+<span>        Ok(entries) => {</span>
+<span>            (StatusCode::OK, views::leaderboard::render(entries))</span>
+<span>        },</span>
+<span>        Err(_e) => (StatusCode::INTERNAL_SERVER_ERROR, maud::html! {}),</span>
+<span>    }</span>
+<span>}</span>
+<span></span>
+</pre>
+<p>Well, it seems to compile just fine. The leaderboard page works fine as well.
+I don’t really have that much experience with this yet but my current assumption
+is that I’m required to derive <code>Clone</code> for <code>Handle</code> since there’s no way to do
+shared ownership. So what it does is that it ends up cloning it every time. But,
+what if I don’t want to clone it? What if I just pass around references?</p>
+<pre><span>pub async fn run(handle: db::Handle) -> Result<(), hyper::Error> {</span>
+<span>    let app = Router::new()</span>
+<span>        .route("/leaderboard", routing::get(controllers::leaderboard))</span>
+<span>        .layer(Extension(&handle));</span>
+<span>                      // ^ Here</span>
+<span></span>
+<span>    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));</span>
+<span></span>
+<span>    axum::Server::bind(&addr)</span>
+<span>        .serve(app.into_make_service())</span>
+<span>        .with_graceful_shutdown(signal_shutdown())</span>
+<span>        .await</span>
+<span></span>
+</pre>
+<p>Compiles with this helpful error message:</p>
+<pre><span>error[E0597]: `handle` does not live long enough</span>
+<span>  --> src/lib.rs:36:26</span>
+<span>   |</span>
+<span>22 |       let app = Router::new()</span>
+<span>   |  _______________-</span>
+<span>23 | |         .route("/leaderboard", routing::get(controllers::leaderboard))</span>
+<span>24 | |         .layer(Extension(&handle));</span>
+<span>   | |__________________________^^^^^^^_- argument requires that `handle` is borrowed for `'static`</span>
+<span>   |                            |</span>
+<span>   |                            borrowed value does not live long enough</span>
+<span>...</span>
+<span>44 |   }</span>
+<span>   |   - `handle` dropped here while still borrowed</span>
+<span></span>
+<span>For more information about this error, try `rustc --explain E0597`.</span>
+<span></span>
+</pre>
+<p>Unfortunately, I’m not too familiar with how lifetimes work in <code>async</code>/<code>await</code>.
+But it looks like since it’s non-blocking, <code>handle</code> gets dropped since the function
+reaches the end of its scope while the server is still running.</p>
+<blockquote>
+<p>This is all just somewhat smart guessing though. I’m gonna need to do more
+reading on this topic.</p>
+</blockquote>
+<p>Wait, what about <code>app</code> then? Won’t this get dropped as well? I wanted to confirm
+if this did get moved, or if it did some other trickery I had no idea about:</p>
+<pre><span>    let app = Router::new()</span>
+<span>        .route("/leaderboard", routing::get(controllers::leaderboard))</span>
+<span>        .layer(Extension(handle));</span>
+<span></span>
+<span>    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));</span>
+<span></span>
+<span>    let foo =</span>
+<span>        axum::Server::bind(&addr)</span>
+<span>            .serve(app.into_make_service())</span>
+<span>            .with_graceful_shutdown(signal_shutdown())</span>
+<span>            .await;</span>
+<span></span>
+<span>    println!("{:?}", app);</span>
+<span></span>
+<span>    foo</span>
+<span></span>
+</pre>
+<p>So if <code>app</code> does get moved, then <code>rustc</code> should complain about me accessing a
+variable with no ownership; which it does:</p>
+<pre><span>error[E0382]: borrow of moved value: `app`</span>
+<span>   --> src/lib.rs:46:22</span>
+<span>    |</span>
+<span>22  |     let app = Router::new()</span>
+<span>    |         --- move occurs because `app` has type `Router`, which does not implement the `Copy` trait</span>
+<span>...</span>
+<span>42  |             .serve(app.into_make_service())</span>
+<span>    |                        ------------------- `app` moved due to this method call</span>
+<span>...</span>
+<span>46  |     println!("{:?}", app);</span>
+<span>    |                      ^^^ value borrowed here after move</span>
+<span>    |</span>
+<span>note: this function takes ownership of the receiver `self`, which moves `app`</span>
+<span></span>
+</pre>
+<p>Phew! It’s almost like I’m encouraged to try out all the failed scenarios to
+learn a lot of things since the compiler is quite helpful.</p>
+<p>Okay, since I didn’t want this to get cloned all the time, I will just follow
+what <code>axum</code> used in its examples - the usage of <code>Arc&lt;T&gt;</code>:</p>
+<pre><span>pub async fn run(handle: db::Handle) -> Result<(), hyper::Error> {</span>
+<span>    let handle = Arc::new(handle);</span>
+<span>    //  ^ Shadow previous binding with `Arc<db::Handle>`</span>
+<span></span>
+<span>    let app = Router::new()</span>
+<span>        .route("/leaderboard", routing::get(controllers::leaderboard))</span>
+<span>        .layer(Extension(handle));</span>
+<span>                      // ^ Here</span>
+<span></span>
+<span>    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));</span>
+<span></span>
+<span>    axum::Server::bind(&addr)</span>
+<span>        .serve(app.into_make_service())</span>
+<span>        .with_graceful_shutdown(signal_shutdown())</span>
+<span>        .await</span>
+<span>}</span>
+<span></span>
+</pre>
+<p>And then I’ll remove the <code>Clone</code> derivation:</p>
+<pre><span>pub struct Handle {</span>
+<span>    pub pool: Pool,</span>
+<span>}</span>
+<span></span>
+</pre>
+<p>So if I’m not mistaken, which I probably am, <code>Arc&lt;T&gt;</code> should allow me to share
+ownership of <code>db::Handle</code> without having to clone it <sup class="footnote-reference"><a href="#3">3</a></sup>.</p>
+<pre><span>pub async fn leaderboard(</span>
+<span>    Extension(handle): Extension<Arc<db::Handle>></span>
+<span>) -> (StatusCode, Markup) {</span>
+<span>    match leaderboard::fetch(&*handle).await {</span>
+<span>        Ok(entries) => {</span>
+<span>            (StatusCode::OK, views::leaderboard::render(entries))</span>
+<span>        },</span>
+<span>        Err(_e) => (StatusCode::INTERNAL_SERVER_ERROR, maud::html! {}),</span>
+<span>    }</span>
+<span>}</span>
+<span></span>
+</pre>
+<p>Then in <code>leaderboard::fetch/1</code>:</p>
+<pre><span>pub async fn fetch_url(</span>
+<span>    handle: &db::Handle,</span>
+<span>    identifier: String</span>
+<span>) -> Result<String, Error> {</span>
+<span>    let client = handle.client().await?;</span>
+<span>    let row = client</span>
+<span>        .query_one("SELECT app.get_url($1)", &[&identifier])</span>
+<span>        .await?;</span>
+<span></span>
+<span>    row.try_get(0).map_err(|e| Error::from(e))</span>
+<span>}</span>
+<span></span>
+</pre>
+<p>Although, I had to manually dereference it to get the reference to <code>Handle</code>. It’s
+also a good thing that I don’t have to mutate <code>handle</code> at all because otherwise
+this would’ve been a more painful experience.</p>
+<h2 id="connecting-to-a-managed-database"><a href="#connecting-to-a-managed-database">Connecting to a managed database</a></h2>
+<p>Initially, I used <code>sqlx</code> as the db library since it gets recommended in almost
+every post about SQL libraries on the Rust subreddit. It worked fine for me
+until I had to get it to connect to DO’s managed DB. It required me to connect
+to it via TLS, and it wasn’t a pleasant experience trying to debug what’s wrong
+with <code>sqlx</code>, so I ditched it settled with <code>tokio-postgres</code>, <code>deadpool-postgres</code>,
+and <code>native-tls</code>. Oh, I also had a difficult time <sup class="footnote-reference"><a href="#9">4</a></sup> with <code>rustls</code> since it
+didn’t seem to like DO’s CA certificate, which is why I settled with <code>native-tls</code>.</p>
+<p><code>native-tls</code> needed OpenSSL setup, which I was able to do with Nix (for the
+dev environment):</p>
+<pre><span>  # ...</span>
+<span>        devShell = pkgs.mkShell {</span>
+<span>          # inherit (self.checks.${system}.pre-commit-check) shellHook;</span>
+<span></span>
+<span>          buildInputs = with pkgs; [</span>
+<span>            # Back-end</span>
+<span>            pkgs.rustc</span>
+<span>            pkgs.cargo</span>
+<span></span>
+<span>            pkgs.openssl</span>
+<span>            pkgs.pkg-config</span>
+<span>          ];</span>
+<span></span>
+<span>          PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";</span>
+<span>        };</span>
+<span></span>
+<span>  # ...</span>
+<span></span>
+</pre>
+<p>So I had to provide the CA cert during runtime, not build-time since: 1) it’ll
+be easier to distribute the static binary and Docker image, and 2) some CA certs
+are only given during runtime (like DO if ever you’re using app platform). This
+was my process:</p>
+<ol>
+<li>Build static binary &amp; image without CA certs and other DB secrets</li>
+<li>When the image runs, it’s assumed that the necessary environment variables,
+like one that contains the certificate contents, exist.</li>
+<li>Write the certificate contents to a file.</li>
+<li>Run <code>emojied</code></li>
+</ol>
+<p>This seems to be a pretty standard process, although this is fairly tedious.</p>
+<pre><span>// src/config.rs</span>
+<span>use tokio_postgres::config::SslMode;</span>
+<span></span>
+<span>let mut pg_config = tokio_postgres::Config::new();</span>
+<span></span>
+<span>// I also read other PG values like hostname, DB name, user, etc. but excluded</span>
+<span>// those for brevity.</span>
+<span></span>
+<span>// Not providing CA_CERT is fine</span>
+<span>let ca_cert_path = match env::var("PG__CA_CERT") {</span>
+<span>    Ok(path) => {</span>
+<span>        // I think `Prefer` is fine as well, which is the default</span>
+<span>        // for `tokio-postgres`.</span>
+<span>        pg_config.ssl_mode(SslMode::Require);</span>
+<span>        Some(path)</span>
+<span>    },</span>
+<span>    Err(_e) => {</span>
+<span>        None</span>
+<span>    }</span>
+<span>};</span>
+<span></span>
+</pre>
+<p>I allowed it to continue running without the cert path in <code>PG__CA_CERT</code> for
+dev environments.</p>
+<pre><span>// Somewhere in src/db.rs</span>
+<span></span>
+<span>let manager = match app_config.ca_cert_path {</span>
+<span>    Some(ca_cert_path) => {</span>
+<span>        // Read file into byte vector</span>
+<span>        let cert = std::fs::read(ca_cert_path)</span>
+<span>            .map_err(|e| Error::CACertFileError(e))?;</span>
+<span></span>
+<span>        // Create a certificate from a PEM file</span>
+<span>        let ntls_cert = Certificate::from_pem(&cert)</span>
+<span>            .map_err(|_| Error::InvalidCACert)?;</span>
+<span></span>
+<span>        let tls = TlsConnector::builder()</span>
+<span>            .add_root_certificate(ntls_cert)</span>
+<span>            .build()</span>
+<span>            .map_err(|_| Error::FailedToBuildTlsConnector)?;</span>
+<span></span>
+<span>        let conn = MakeTlsConnector::new(tls);</span>
+<span></span>
+<span>        Manager::from_config(app_config.pg, conn, app_config.manager)</span>
+<span>    }</span>
+<span>    None => Manager::from_config(app_config.pg, NoTls, app_config.manager),</span>
+<span>};</span>
+<span></span>
+<span>// Since we need a `manager` to build a pool</span>
+<span>let pool = Pool::builder(manager)</span>
+<span>    .max_size(app_config.pool_size)</span>
+<span>    .build()</span>
+<span>    .map_err(|_| Error::FailedToBuildPool)?;</span>
+<span></span>
+</pre>
+<blockquote>
+<p>The process was quite similar with SQLx but there was something, that I don’t
+really remember anymore, which made it so frustrating to work with.</p>
+</blockquote>
+<p>Unfortunately, DO doesn’t support multiline environment variables, for some
+reason, so cramming everything including the <code>BEGIN CERTIFICATE</code> and <code>END CERTIFICATE</code>
+into one line resulted in it getting rejected. So, I just got what’s in between,
+and manually appended it to the file instead.</p>
+<pre><span>echo "Dumping CA certificate to /app/ca-certificate.crt"</span>
+<span>echo "-----BEGIN CERTIFICATE-----" > /app/ca-certificate.crt</span>
+<span>echo $CA_CERT >> /app/ca-certificate.crt</span>
+<span>echo "-----END CERTIFICATE-----" >> /app/ca-certificate.crt</span>
+<span></span>
+<span>echo "Executing emojied"</span>
+<span></span>
+<span>./emojied</span>
+<span></span>
+</pre>
+<p>Kind of hacky, and inconvenient especially if I forget. But it works!</p>
+<h2 id="url-redirect-woes"><a href="#url-redirect-woes">URL redirect woes</a></h2>
+<p>This is a short one. For the redirect, I returned an HTTP status 301 <sup class="footnote-reference"><a href="#4">5</a></sup> with
+a response containing the URL to redirect to. So the process goes something
+like this:</p>
+<ol>
+<li>Enter <a href="https://emojied.net/%F0%9F%8D%8A%F0%9F%8C%90">https://emojied.net/🍊🌐</a> in the browser.</li>
+<li><code>emojied</code> looks for an entry with <code>🍊🌐</code>, and gets the associated URL.</li>
+<li>Respond with an HTTP 301 and the URL</li>
+<li>Browser automatically performs the redirect</li>
+</ol>
+<p>Unfortunately, and I spent 30mins on this scratching my head why this was
+happening, the request would get cached, and this is bad! It’s bad because I
+had to increment the <code>clicks</code> column every time the link is visited. But if it’s
+cached, then the server won’t bother to call the functions it needs to call!</p>
+<p>Then, I found out that <code>301</code> gets cached automatically by the browser <sup class="footnote-reference"><a href="#5">6</a></sup>,
+and that I needed to use <code>302</code>.</p>
+<h2 id="html-templating-with-<code>maud</code>"><a href="#html-templating-with-<code>maud</code>">HTML templating with <code>maud</code></a></h2>
+<p>I had a pleasant experience with server-side templating while I was building
+a Haskell project called <a href="https://swoogle.sekun.dev">swoogle</a>. I used <code>lucid</code>
+<sup class="footnote-reference"><a href="#6">7</a></sup> which was a pretty darn elegant HTML DSL.</p>
+<pre><span>-- Category options</span>
+<span>select_</span>
+<span>  [ id_ "category-options"</span>
+<span>  , name_ "resource"</span>
+<span>  , class_ "bg-white font-semibold dark:bg-su-dark-bg-alt text-su-fg dark:text-su-dark-fg"</span>
+<span>  , required_ "required"</span>
+<span>  ] $ do</span>
+<span>  option_ [disabled_ "disabled", selected_ "selected", value_ ""] "Category"</span>
+<span>  option_ [value_ "people"] "People"</span>
+<span>  option_ [value_ "film"] "Film"</span>
+<span>  option_ [value_ "starship"] "Starship"</span>
+<span>  option_ [value_ "vehicle"] "Vehicle"</span>
+<span>  option_ [value_ "species"] "Species"</span>
+<span>  option_ [value_ "planet"] "Planet"</span>
+<span></span>
+</pre>
+<p>Well, I wanted something like that in Rust, and I found <code>maud</code> <sup class="footnote-reference"><a href="#7">8</a></sup>. I did run
+into a problem when I tried to use its latest version with <code>axum</code> since something
+must’ve changed in <code>axum</code>, so I had to pull from the <code>main</code> instead:</p>
+<pre><span>[dependencies]</span>
+<span>...</span>
+<span>maud = { git = "https://github.com/lambda-fairy/maud", branch = "main", features = ["axum"] }</span>
+<span>...</span>
+<span></span>
+</pre>
+<p>So with this, I could do stuff like:</p>
+<pre><span>fn foo() -> Markup {</span>
+<span>  html! {</span>
+<span>    ("Hello")</span>
+<span>    h1 class="text-red-500" { ("Hello!") }</span>
+<span></span>
+<span>    h2 class=("font-semibold") { ("Hey") }</span>
+<span>  }</span>
+<span>}</span>
+<span></span>
+</pre><h2 id="<code><noscript></code>-tag,-and-problems-with-js-toggling-extensions"><a href="#<code><noscript></code>-tag,-and-problems-with-js-toggling-extensions"><code><noscript></code> tag, and problems with JS toggling extensions</a></h2>
+<p>I wanted to have the website work with JS disabled because, well, it was a very
+simple website. There was no reason why I couldn’t make all the important features
+work without JS!</p>
+<p>So I ended up making heavy use of the <code>&lt;noscript&gt;</code> tag, since it allowed me to
+display alternative content when the browser has JS disabled. You’ll see it
+littered all over the codebase, like so:</p>
+<pre><span>@match data {</span>
+<span>    RootData::Auto(_) => {</span>
+<span>        noscript {</span>
+<span>            div class="w-full sm:w-4/5 mt-2 mx-auto text-su-fg-1 dark:text-su-dark-fg-1" {</span>
+<span>                a href="?custom_url=t" type="button" class="font-medium underline" {</span>
+<span>                    "Custom URL"</span>
+<span>                }</span>
+<span>            }</span>
+<span>        }</span>
+<span>    }</span>
+<span></span>
+<span>    RootData::Custom(_) => {</span>
+<span>        noscript {</span>
+<span>            div class="w-full sm:w-4/5 mt-2 mx-auto text-su-fg-1 dark:text-su-dark-fg-1" {</span>
+<span>                a href="/" type="button" class="font-medium underline" {</span>
+<span>                    "Autogenerate a custom URL for me"</span>
+<span>                }</span>
+<span>            }</span>
+<span>        }</span>
+<span>    }</span>
+<span>}</span>
+<span></span>
+</pre>
+<p>These only get rendered by the browser when JS is disabled. But what do browser
+extensions like <code>NoScript</code> when it “disables” JS? It’s something like this:</p>
+<ol>
+<li>Block requests for JS files via CSP (Content Security Policies)</li>
+<li>Replace <code>noscript</code> tags to <code>span</code> or <code>div</code> tags</li>
+</ol>
+<p>The problem I ended up with was in #2. Why? Because the <code>noscript</code> tag attributes
+weren’t copied over to the new <code>span</code>/<code>div</code> tags. And that breaks a lot of stuff.</p>
+<p>So while <code>emojied</code> does work without JS, it won’t work due to how the extensions
+work <sup class="footnote-reference"><a href="#8">9</a></sup>.</p>
+<h2 id="conclusion"><a href="#conclusion">Conclusion</a></h2>
+<p>Alright, that was a lot. I did learn a lot from this experience. I actually only
+read until chapter 10 of the Rust Book, and skipped to some parts like advanced
+traits, and other things. I really like the fact that there’s a detailed book
+that talks about some idiomatic Rust patterns, and even the more advanced stuff,
+that’s completely <strong>FREE</strong>. How crazy is that? My wallet is spared!</p>
+<p>I usually try to avoid failure, even in Haskell, cause its error messages are
+pretty bad. When I started out, it was pretty much worthless to read GHC’s error
+messages since it would just confuse me even more. It was only until I had people
+guide me (like justosophy, thank you) that I slowly got to understand what GHC
+was trying to tell me. With Rust though, it’s a completely different experience.</p>
+<p>I like <em>failing</em> because Rust is very helpful with its error messages. In fact,
+I discover new things by reading it so I’m not punished for trying out different
+things that don’t work just to gain more insight.</p>
+<p>I also like that it’s fairly easy on resources. I didn’t even bother optimizing
+this at all since I mostly have no idea what I’m doing, and I’m trying to avoid
+having to deal with lifetimes as much as possible. I’m hosting this on a 1x shared
+vCPU + 512MB RAM, and it didn’t break a sweat during peak load.</p>
+<p>Anyway, so far, so good! I’m pretty ecstatic to continue learning Rust.</p>
+<h2 id="footnotes"><a href="#footnotes">Footnotes</a></h2>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p><a href="https://github.com/gnawex/gnawex">https://github.com/gnawex/gnawex</a></p>
+</div>
+<div class="footnote-definition" id="2"><sup class="footnote-definition-label">2</sup>
+<p><a href="https://docs.rs/axum/0.5.1/axum/#using-request-extensions">https://docs.rs/axum/0.5.1/axum/#using-request-extensions</a></p>
+</div>
+<div class="footnote-definition" id="3"><sup class="footnote-definition-label">3</sup>
+<p><a href="https://doc.rust-lang.org/std/sync/struct.Arc.html">https://doc.rust-lang.org/std/sync/struct.Arc.html</a></p>
+</div>
+<div class="footnote-definition" id="4"><sup class="footnote-definition-label">5</sup>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301">https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301</a></p>
+</div>
+<div class="footnote-definition" id="5"><sup class="footnote-definition-label">6</sup>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching#targets_of_caching_operations">https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching#targets_of_caching_operations</a></p>
+</div>
+<div class="footnote-definition" id="6"><sup class="footnote-definition-label">7</sup>
+<p><a href="https://hackage.haskell.org/package/lucid">https://hackage.haskell.org/package/lucid</a></p>
+</div>
+<div class="footnote-definition" id="7"><sup class="footnote-definition-label">8</sup>
+<p><a href="https://github.com/lambda-fairy/maud">https://github.com/lambda-fairy/maud</a></p>
+</div>
+<div class="footnote-definition" id="8"><sup class="footnote-definition-label">9</sup>
+<p><a href="https://github.com/hackademix/noscript/issues/238">https://github.com/hackademix/noscript/issues/238</a></p>
+</div>
+<div class="footnote-definition" id="9"><sup class="footnote-definition-label">4</sup>
+<p><a href="https://old.reddit.com/r/rust/comments/txglob/need_help_regarding_deadpoolpostgres_rustls_and/">https://old.reddit.com/r/rust/comments/txglob/need_help_regarding_deadpoolpostgres_rustls_and/</a></p>
+</div>
+<div class="footnote-definition" id="10"><sup class="footnote-definition-label">10</sup>
+<p><a href="https://www.manning.com/books/rust-in-action">https://www.manning.com/books/rust-in-action</a></p>
+</div>
+
+
+    <footer>
+  <div>
+    Copyright <a href="https://github.com/sekunho">SEKUN</a> 2022-2025.
+    Generated by <a href="https://github.com/sekunho/puggle"><code>puggle</code></a>.
+  </div>
+</footer>
+
+    <a rel="me" href="https://mastodon.social/@sekun" style="display: none;">Mastodon</a>
+    <script>
+      (function attachShadowRoots(root) {
+        root.querySelectorAll("template[shadowrootmode]").forEach(template => {
+          const mode = template.getAttribute("shadowrootmode");
+          const shadowRoot = template.parentNode.attachShadow({ mode });
+
+          shadowRoot.appendChild(template.content);
+          template.remove();
+          attachShadowRoots(shadowRoot);
+        });
+      })(document);
+    </script>
+  </body>
+</html>

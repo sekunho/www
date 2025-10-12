@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>esbuild's build API is pretty cool - sekun</title>
+
+    
+<link rel="stylesheet" href="/assets/css/pages/post.css">
+
+
+    <link rel="stylesheet" href="/assets/css/style.css"/>
+    <link rel="stylesheet" href="/assets/css/vendors/normalize.min.css"/>
+
+    <link rel="icon" href="/assets/images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+    <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+    <link rel="mask-icon" href="/assets/images/safari-pinned-tab.svg">
+
+    <meta name="color-scheme" content="light dark">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    
+  <meta name="title" content="esbuild's build API is pretty cool">
+  <meta name="description" content="Exploring the basics of esbuild's build API, to build SASS, CSS, and JS.
+As a sweet treat, how to package these all up with nix.
+">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://metatags.io/">
+  <meta property="og:title" content="esbuild's build API is pretty cool">
+  <meta property="og:description" content="Exploring the basics of esbuild's build API, to build SASS, CSS, and JS.
+As a sweet treat, how to package these all up with nix.
+">
+  <meta property="og:image" content="https://sekun.net/assets/images/posts/esbuilds-build-api-is-pretty-cool/cover.jpg">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://metatags.io/">
+  <meta property="twitter:title" content="esbuild's build API is pretty cool">
+  <meta property="twitter:description" content="Exploring the basics of esbuild's build API, to build SASS, CSS, and JS.
+As a sweet treat, how to package these all up with nix.
+">
+  <meta property="twitter:image" content="https://sekun.net/assets/images/posts/esbuilds-build-api-is-pretty-cool/cover.jpg">
+
+  </head>
+
+  <body>
+    <nav class="nav">
+  <ul>
+    <li><a href="/">λsekun.net</a></li>
+    <li><a href="/blog">/blog</a></li>
+    <li><a href="/projects">/projects</a></li>
+    <li><a href="/contact">/contact</a></li>
+  </ul>
+</nav>
+    
+<h1 id="esbuild's build API is pretty cool"><a href="#esbuild's build API is pretty cool">esbuild's build API is pretty cool</a></h1><div>
+
+</div>
+<div>
+
+  <x-img>
+    <template shadowrootmode="open">
+      <img src="/assets/images/posts/esbuilds-build-api-is-pretty-cool/cover.jpg" alt="2 esbuild logo side by side in white and dark backgrounds"/>
+
+      <style>
+        x-img-foo:not(:defined) > template[shadowrootmode] ~ * {
+          display: none;
+        }
+
+        img {
+          
+
+          
+          width: 100%;
+          
+
+          display: block;
+          margin: 1rem auto;
+        }
+      </style>
+    </template>
+  </x-img>
+
+</div>
+<span class="post-metadata">
+  Published on <time datetime="2025-04-19T12:56:17+00:00">2025-04-19 12:56 UTC</time>
+</span>
+<div>
+
+
+  <div class="tags">
+  
+    <span>esbuild</span>
+  
+    <span>sass</span>
+  
+    <span>javascript</span>
+  
+    <span>nix</span>
+  
+  </div>
+
+</div>
+<p>Happy new year (for this blog)! I know I’m 4 months late but hey, it’s fine.</p>
+<p>Lately I’ve been messing around with <code>scss</code> after experiencing a few paper cuts
+with vanilla CSS. Being able to use variables in media queries, and having mixins
+are quite nice to have. Using <code>sass</code> in your existing project is straightforward
+because of its CLI, but I use <code>esbuild</code> for most of my pet projects for bundling
+and/or minifying CSS/JS files. I’d rather not have to run two CLI programs just
+to prepare everything for me. Running one <code>esbuild</code> script is just more convenient.</p>
+<p>But first, a basic build file!</p>
+<p>Run <code>npm init</code>, and add <code>esbuild</code> to your project’s dependencies.</p>
+<pre><span>// package.json</span>
+<span>{</span>
+<span>  "name": "foo",</span>
+<span>  "version": "1.0.0",</span>
+<span>  "main": "watch.js",</span>
+<span>  "scripts": {</span>
+<span>    "test": "echo \"Error: no test specified\" && exit 1"</span>
+<span>  },</span>
+<span>  "type": "module",</span>
+<span>  "author": "",</span>
+<span>  "license": "ISC",</span>
+<span>  "description": "",</span>
+<span>  "dependencies": {</span>
+<span>    "esbuild": "^0.25.2",</span>
+<span>  }</span>
+<span>}</span>
+<span></span>
+</pre>
+<p>Then create our <code>esbuild</code> build file</p>
+<pre><span>// build.js</span>
+<span>import * as esbuild from 'esbuild'</span>
+<span></span>
+<span>let result = await esbuild.build({</span>
+<span>    entryPoints: ["assets/**/*"],</span>
+<span>    outdir: "public",</span>
+<span>})</span>
+<span></span>
+</pre>
+<p>This watches the <code>assets</code> directory for any changes, and spits out the “final”
+assets in the <code>public</code> directory as is. Nothing too interesting at the moment.</p>
+<p>Then in the <code>package.json</code> file, add an entry to <code>scripts</code> that executes our
+<code>esbuild</code> script:</p>
+<pre><span>//package.json</span>
+<span></span>
+<span>// ...</span>
+<span>"scripts": {</span>
+<span>  "build": "node build.js", // new!</span>
+<span>  "test": "echo \"Error: no test specified\" && exit 1"</span>
+<span>},</span>
+<span>// ...</span>
+<span></span>
+</pre>
+<p>Let’s try running <code>npm run build</code> with this assets directory:</p>
+<pre><span> 4096 B    ┌─ style.css</span>
+<span> 4096 B ┌─ css</span>
+<span> 4096 B │  ┌─ script.js</span>
+<span> 4096 B ├─ script</span>
+<span> 4096 B │  ┌─ style.scss</span>
+<span> 4096 B ├─ sass</span>
+<span>12288 B assets</span>
+<span></span>
+</pre>
+<p>Well, I ran into this error:</p>
+<pre><span>> foo@1.0.0 watch</span>
+<span>> node watch.js</span>
+<span></span>
+<span>✘ [ERROR] No loader is configured for ".scss" files: assets/sass/style.scss</span>
+<span></span>
+<span>./node_modules/esbuild/lib/main.js:1477</span>
+<span>  let error = new Error(text);</span>
+<span>              ^</span>
+<span></span>
+<span>Error: Build failed with 1 error:</span>
+<span>error: No loader is configured for ".scss" files: assets/sass/style.scss</span>
+<span>    at failureErrorWithLog (./node_modules/esbuild/lib/main.js:1477:15)</span>
+<span>    at ./node_modules/esbuild/lib/main.js:946:25</span>
+<span>    at ./node_modules/esbuild/lib/main.js:898:52</span>
+<span>    at buildResponseToResult (./node_modules/esbuild/lib/main.js:944:7)</span>
+<span>    at ./node_modules/esbuild/lib/main.js:971:16</span>
+<span>    at responseCallbacks.<computed> (./node_modules/esbuild/lib/main.js:623:9)</span>
+<span>    at handleIncomingPacket (./node_modules/esbuild/lib/main.js:678:12)</span>
+<span>    at Socket.readFromStdout (./node_modules/esbuild/lib/main.js:601:7)</span>
+<span>    at Socket.emit (node:events:518:28)</span>
+<span>    at addChunk (node:internal/streams/readable:561:12) {</span>
+<span>  errors: [Getter/Setter],</span>
+<span>  warnings: [Getter/Setter]</span>
+<span>}</span>
+<span></span>
+<span>Node.js v22.14.0</span>
+<span></span>
+</pre>
+<p>The error message does make sense. <code>esbuild</code> by default does not handle <code>scss</code>
+files. I suppose it should only care about “native” web technologies so fair
+enough. Fortunately, they have a <code>plugins</code> property in their API as well. Even
+better, someone already wrote a loader for it!</p>
+<pre><span>// package.json</span>
+<span></span>
+<span>// ...</span>
+<span>"dependencies": {</span>
+<span>  "esbuild-sass-plugin": "^3.3.1"</span>
+<span>}</span>
+<span>// ...</span>
+<span></span>
+</pre>
+<p>The <code>esbuild</code> API has a <code>plugins</code> key that allows us to specify callbacks whenever
+the file matches the filter set by the plugin. For <code>esbuild-sass-plugin</code>, its
+default pattern is <code>/.(s[ac]ss|css)$/</code> which in this case works just fine.</p>
+<pre><span>import * as esbuild from 'esbuild'</span>
+<span>import { sassPlugin } from 'esbuild-sass-plugin'</span>
+<span></span>
+<span>let ctx = await esbuild.build({</span>
+<span>  entryPoints: ["assets/**/*"],</span>
+<span>  outdir: "public",</span>
+<span>  minify: true, // <-- 1</span>
+<span>  treeShaking: true, // <-- 2</span>
+<span>  plugins: [sassPlugin()],</span>
+<span>}</span>
+<span></span>
+</pre>
+<blockquote class="markdown-alert-note">
+<p>1 &amp; 2 are not necessary but I just added it to show that you could do more stuff
+as well.</p>
+</blockquote>
+<p>Runnng <code>npm run build</code> creates a <code>public</code> directory with our assets built, and
+transformed by <code>esbuild</code>!</p>
+<pre><span> 4096 B    ┌─ style.css</span>
+<span> 4096 B ┌─ css</span>
+<span> 4096 B │  ┌─ script.js</span>
+<span> 4096 B ├─ script</span>
+<span> 4096 B │  ┌─ style.css</span>
+<span> 4096 B ├─ sass</span>
+<span>12288 B public</span>
+<span></span>
+</pre>
+<p>And we can verify this by taking a look at <code>./public/sass</code></p>
+<pre><span>.foo{color:#00f}@media (min-width: 40rem){.foo{color:red}}</span>
+<span></span>
+</pre><h2 id="packaging-the-build-script-with-<code>nix</code>"><a href="#packaging-the-build-script-with-<code>nix</code>">Packaging the build script with <code>nix</code></a></h2>
+<p>The script has two dependencies: <code>esbuild</code>, and a <code>sass</code> loader plugin
+<code>esbuild-sass-plugin</code>. I could use <code>npm install</code> to fetch these dependencies for
+me (like a normal person) but I’m too far gone to do anything normally, and that’s
+no fun!</p>
+<p>Create a <code>flake.nix</code> file with this:</p>
+<pre><span># flake.nix</span>
+<span>{</span>
+<span>  inputs = {</span>
+<span>    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";</span>
+<span>  };</span>
+<span></span>
+<span>  outputs = { self, nixpkgs }: {</span>
+<span>    devShells.x86_64-linux.default =</span>
+<span>      let</span>
+<span>        pkgs = import nixpkgs { system = "x86_64-linux"; };</span>
+<span>      in pkgs.mkShell {</span>
+<span>        buildInputs = with pkgs; [ nodejs_22 git ];</span>
+<span>      };</span>
+<span>  };</span>
+<span>}</span>
+<span></span>
+</pre>
+<blockquote>
+<p>If you’re using platforms other than <code>x86_64-linux</code>, feel free to change it
+accordingly, or use <code>flake-utils</code>
+(but Isabel <a href="https://bsky.app/profile/isabelroses.com/post/3ld4gbggzqs2l">will run after ya</a>).</p>
+</blockquote>
+<p>There are lots of build tools for JS, probably a new one every 2 months. I don’t
+even know anymore. As a result, there are also lots of <code>nix</code> tools for it. But
+I recently discovered <a href="https://github.com/NixOS/nixpkgs/blob/master/doc/languages-frameworks/javascript.section.md#buildnpmpackage-javascript-buildnpmpackage"><code>pkgs.buildNpmPackage</code></a>,
+and it was surprisingly simple so that’s what we’ll use here.</p>
+<pre><span># flake.nix</span>
+<span></span>
+<span>  # ...</span>
+<span>  outputs = { self, nixpkgs }: {</span>
+<span>    packages.x86_64-linux.default =</span>
+<span>      let</span>
+<span>        pkgs = import nixpkgs { system = "x86_64-linux"; };</span>
+<span>      in</span>
+<span>        pkgs.buildNpmPackage {</span>
+<span>          name = "foo-static";</span>
+<span>          version = "1.0.0";</span>
+<span>          src = ./.;</span>
+<span>          npmDepsHash = "???";</span>
+<span></span>
+<span>          installPhase = ''</span>
+<span>            mkdir $out</span>
+<span>            npm run build</span>
+<span>            cp -r public/ $out</span>
+<span>          '';</span>
+<span>        };</span>
+<span>  # ...</span>
+<span></span>
+</pre>
+<p><code>name</code>, <code>version</code>, and <code>src</code> are straightforward. But what’s <code>npmDepsHash</code>?</p>
+<p>According to the docs:</p>
+<blockquote>
+<p><code>npmDepsHash</code>: The output hash of the dependencies for this project. Can be
+calculated in advance with <code>prefetch-npm-deps</code>.</p>
+</blockquote>
+<p>Okay, nice. So I just need to add <code>prefetch-npm-deps</code> to the dev shell, and point
+the <code>package-lock.json</code> to it.</p>
+<pre><span># flake.nix</span>
+<span></span>
+<span># ...</span>
+<span>buildInputs = with pkgs; [ prefetch-npm-deps nodejs_22 git ];</span>
+<span># ...</span>
+<span></span>
+</pre>
+<p>And run it</p>
+<pre><span>$ prefetch-npm-deps package-lock.json</span>
+<span>sha256-xF5hnIqw3atLZCa8H88sVOF8nrHXH5Qfh9I1mfTpFvo=</span>
+<span></span>
+</pre><pre><span># flake.nix</span>
+<span></span>
+<span>  # ...</span>
+<span>  outputs = { self, nixpkgs }: {</span>
+<span>    packages.x86_64-linux.default =</span>
+<span>      let</span>
+<span>        pkgs = import nixpkgs { system = "x86_64-linux"; };</span>
+<span>      in</span>
+<span>        pkgs.buildNpmPackage {</span>
+<span>          name = "foo-static";</span>
+<span>          version = "1.0.0";</span>
+<span>          src = ./.;</span>
+<span>          npmDepsHash = "sha256-xF5hnIqw3atLZCa8H88sVOF8nrHXH5Qfh9I1mfTpFvo=";</span>
+<span></span>
+<span>          installPhase = ''</span>
+<span>            mkdir $out</span>
+<span>            npm run build</span>
+<span>            cp -r public/ $out</span>
+<span>          '';</span>
+<span>        };</span>
+<span>  # ...</span>
+<span></span>
+</pre>
+<p>Now we can run <code>nix build</code>, which gets us this:</p>
+<pre><span> 4096 B       ┌─ style.css</span>
+<span> 4096 B    ┌─ css</span>
+<span> 4096 B    │  ┌─ script.js</span>
+<span> 4096 B    ├─ script</span>
+<span> 4096 B    │  ┌─ style.css</span>
+<span> 4096 B    ├─ sass</span>
+<span>12288 B ┌─ public</span>
+<span>12288 B qydjw7ghmmz46lpcfa6sf4jj6sisl36z-foo-static</span>
+<span></span>
+</pre>
+<p>So now I’m able to use these as a dependency of another <code>nix</code> derivation. Neat!</p>
+<blockquote>
+<p>If you would like to check out the final result of everything in this article,
+you may find it under the <a href="https://github.com/sekunho/sekun.net/tree/main/examples/esbuild-build-api"><code>examples/esbuild-build-api</code></a> directory.</p>
+</blockquote>
+
+
+    <footer>
+  <div>
+    Copyright <a href="https://github.com/sekunho">SEKUN</a> 2022-2025.
+    Generated by <a href="https://github.com/sekunho/puggle"><code>puggle</code></a>.
+  </div>
+</footer>
+
+    <a rel="me" href="https://mastodon.social/@sekun" style="display: none;">Mastodon</a>
+    <script>
+      (function attachShadowRoots(root) {
+        root.querySelectorAll("template[shadowrootmode]").forEach(template => {
+          const mode = template.getAttribute("shadowrootmode");
+          const shadowRoot = template.parentNode.attachShadow({ mode });
+
+          shadowRoot.appendChild(template.content);
+          template.remove();
+          attachShadowRoots(shadowRoot);
+        });
+      })(document);
+    </script>
+  </body>
+</html>
