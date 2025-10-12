@@ -1,0 +1,35 @@
+@import '../components/tag.css';
+@import '../elements/codeblock.css';
+@import '../elements/blockquote.css';
+
+pre {
+  overflow-x: auto;
+}
+
+h2,h3,h4,h5,h6 {
+  &:hover::after {
+    content: " §";
+  }
+}
+
+h1 > a[href]:hover, h2 > a[href]:hover, h3 > a[href]:hover, h4 > a[href]:hover, h5 > a[href]:hover, h6 > a[href]:hover {
+  text-decoration: underline;
+}
+
+@media (prefers-color-scheme: light) {
+  h1 > a[href], h2 > a[href], h3 > a[href], h4 > a[href], h5 > a[href], h6 > a[href] {
+    color: black;
+    text-decoration: none;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  h1 > a[href], h2 > a[href], h3 > a[href], h4 > a[href], h5 > a[href], h6 > a[href] {
+    color: white;
+    text-decoration: none;
+  }
+}
+
+img {
+  width: 100%;
+}
