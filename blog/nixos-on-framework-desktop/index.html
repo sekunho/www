@@ -76,9 +76,9 @@
 Coincidentally, my Framework Desktop finally arrived. It’s a cute lil machine
 that I really love. Like any other machine I get my hands on (except macbooks
 lol), I install NixOS in it!</p>
-<p>I also redid bits and pieces of my website. I think as time goes on, the more
-utilitarian I become. But this is probably as barebones as it gets in terms of
-design.</p>
+<p>I also redid bits and pieces of my website. I think I got bored of gruvbox (yeah
+I know, I know). As time goes on, the more utilitarian I become. But this is
+probably as barebones as it gets in terms of design.</p>
 <hr />
 <p>You’ll need:</p>
 <ol>
@@ -112,7 +112,7 @@ you’re booting up your computer, and you’ll find the option under Secure boo
 <p>Since I haven’t gotten around to running an ethernet cable just yet, I need to
 connect to the internet through Wi-Fi. We’ll need the <code>wpa_supplicant</code> service
 for this.</p>
-<pre><span>[nixos@nixos:~]$ sudo systemctl start wpa_supplicant</span>
+<pre><code><span>[nixos@nixos:~]$ sudo systemctl start wpa_supplicant</span>
 <span>[nixos@nixos:~]$ wpa_cli</span>
 <span>wpa_cli v2.11</span>
 <span>Copyright (c) 2004-2024, Jouni Malinen <j@w1.fi> and contributors</span>
@@ -125,10 +125,9 @@ for this.</p>
 <span>Interactive mode</span>
 <span></span>
 <span>></span>
-<span></span>
-</pre>
+</code></pre>
 <p>First scan for available Wi-Fi networks</p>
-<pre><span>> scan</span>
+<pre><code><span>> scan</span>
 <span>OK</span>
 <span><3>CTRL-EVENT-SCAN-STARTED</span>
 <span><3>CTRL-EVENT-REGDOM-CHANGE init=BEACON_HINT type=UNKNOWN</span>
@@ -140,11 +139,10 @@ for this.</p>
 <span>> scan_results</span>
 <span>bssid / frequency / signal level / flags / ssid</span>
 <span>MAC ADDRESS    FREQUENCY   FLAGS  [WPA2-PSK-CCMP]     SSID_NAME</span>
-<span></span>
-</pre>
+</code></pre>
 <p>You’ll find your SSID at the end of each row. Just pick out which one matches
 your SSID, and connect to it.</p>
-<pre><span>> add_network</span>
+<pre><code><span>> add_network</span>
 <span>0</span>
 <span><3>CTRL-EVENT-NETWORK-ADDED 0</span>
 <span>> set_network 0 ssid "YOUR_SSID_NAME_HERE"</span>
@@ -165,8 +163,7 @@ your SSID, and connect to it.</p>
 <span><3>CTRL-EVENT-CONNECTED - Connection to YOUR_ROUTER_MAC_ADDRESS completed [id=0 id_str=]</span>
 <span>> ping google.com</span>
 <span>PONG</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Looks like we have internet now. :)</p>
 <h2 id="declarative-disk-partitioning"><a href="#declarative-disk-partitioning">Declarative disk partitioning</a></h2>
 <p>When I first installed NixOS a few years ago, I manually set up the partitions
@@ -174,18 +171,17 @@ which wasn’t too bad but I always thought that it would be nice to have some
 kind of declarative configuration for this since it didn’t seem so dynamic in
 nature. Fast forward to today, and we now have <code>disko</code>!</p>
 <p>Let’s yoink one of the example configurations on <code>disko</code>’s repository:</p>
-<pre><span>[nixos@nixos:~]$ curl \</span>
+<pre><code><span>[nixos@nixos:~]$ curl \</span>
 <span>  https://raw.githubusercontent.com/nix-community/disko/master/example/zfs-encrypted-root.nix \</span>
 <span>  -o /tmp/disk-config.nix</span>
-<span></span>
-</pre>
+</code></pre>
 <p>This one is a sample configuration for a <code>zfs</code> pool with an encrypted root. In
 the <code>disk</code> attribute, we need to define the physical devices in the system, and
 the logical partitions we would like them to have. I only have one physical disk
 under the name <code>/dev/nvme0n1</code> which I can verify with <code>lsblk</code>.</p>
 <p>For this disk, I need 2 partitions: a boot partition (<code>ESP</code>) for the bootloader,
 and a <code>zfs</code> partition for our pool.</p>
-<pre><span>{</span>
+<pre><code><span>{</span>
 <span>  disko.devices = {</span>
 <span>    disk = {</span>
 <span>      root = {</span>
@@ -216,7 +212,7 @@ and a <code>zfs</code> partition for our pool.</p>
 <span>        };</span>
 <span>      };</span>
 <span>    };</span>
-<details><summary>   zpool = {</summary><span>      zroot = {</span>
+<details><summary class="foldable">   zpool = {</summary><span>      zroot = {</span>
 <span>        type = "zpool";</span>
 <span>        rootFsOptions = {</span>
 <span>          mountpoint = "none";</span>
@@ -266,8 +262,7 @@ and a <code>zfs</code> partition for our pool.</p>
 </details><span>    };</span>
 <span>  };</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <blockquote class="markdown-alert-note">
 <p>I changed the <code>mountOptions</code> since I couldn’t get it to boot with <code>nofail</code>.</p>
 </blockquote>
@@ -282,9 +277,9 @@ using it. So for my datasets, I want:</p>
 </ul>
 <p>You could add more if you need it for other purposes like movies/film that have
 much larger file sizes that may benefit from a larger <code>recordsize</code>.</p>
-<pre><span>{</span>
+<pre><code><span>{</span>
 <span>  disko.devices = {</span>
-<details><summary>   disk = {</summary><span>      root = {</span>
+<details><summary class="foldable">   disk = {</summary><span>      root = {</span>
 <span>        type = "disk";</span>
 <span>        device = "/dev/nvme0n1";</span>
 <span>        content = {</span>
@@ -377,8 +372,7 @@ much larger file sizes that may benefit from a larger <code>recordsize</code>.</
 <span>      };</span>
 <span>  };</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Some notes:</p>
 <ul>
 <li>Set <code>atime="off"</code> for performance <a href="https://www.unixtutorial.org/zfs-performance-basics-disable-atime/">reasons</a></li>
@@ -387,18 +381,16 @@ much larger file sizes that may benefit from a larger <code>recordsize</code>.</
 <li>Added encryption for root</li>
 </ul>
 <p>If it all looks good, we can run <code>disko</code></p>
-<pre><span>[nixos@nixos:~]$ sudo nix --experimental-features "nix-command flakes" run \</span>
+<pre><code><span>[nixos@nixos:~]$ sudo nix --experimental-features "nix-command flakes" run \</span>
 <span>  github:nix-community/disko/latest -- \</span>
 <span>  --mode destroy,format,mount \</span>
 <span>  /tmp/disk-config.nix</span>
-<span></span>
-</pre>
+</code></pre>
 <p>…and somewhere along the process, it’s going to prompt you for the passphrase for
 encryption. So keep it somewhere safe (like a password manager)!</p>
-<pre><span>+ zpool create -f zroot -R /mnt -o ashift=12 -0 acltype=posixacl -0 atime=off -O compression=zstd -O encryption=aes-256-gcm -O keyformat=passphrase -O keylocation=prompt -O mountpoint=none -O xattr=sa /dev/disk/by-partitionlabel/disk-root-zfs</span>
+<pre><code><span>+ zpool create -f zroot -R /mnt -o ashift=12 -0 acltype=posixacl -0 atime=off -O compression=zstd -O encryption=aes-256-gcm -O keyformat=passphrase -O keylocation=prompt -O mountpoint=none -O xattr=sa /dev/disk/by-partitionlabel/disk-root-zfs</span>
 <span>Enter new passphrase:</span>
-<span></span>
-</pre>
+</code></pre>
 <p>After all that, double check with <code>lsblk</code> if your disk is present with 2 partitions,
 and all the datasets defined.</p>
 <picture>
@@ -434,27 +426,25 @@ and instead use the generated <code>configuration.nix</code>, <code>hardware-con
 and <code>disk-config.nix</code> in a new <code>nixosConfigurations</code> attribute.</p>
 </blockquote>
 <p>So to generate the initial config files:</p>
-<pre><span>[nixos@nixos:~]$ sudo nixos-generate-config --no-filesystems --flake --root /mnt</span>
+<pre><code><span>[nixos@nixos:~]$ sudo nixos-generate-config --no-filesystems --flake --root /mnt</span>
 <span>writing /mnt/etc/nixos/hardware-configuration.nix...</span>
 <span>writing /mnt/etc/nixos/flake.nix...</span>
 <span>writing /mnt/etc/nixos/configuration.nix...</span>
 <span>For more hardware-specific settings, see https://github.com/NixOS/nixos-hardware</span>
-<span></span>
-</pre>
+</code></pre>
 <p>The last line tells us something interesting. It makes sense that for pre-built
 machines, there has to be some bundle of configurations that already exists,
 preferably from the manufacturer, to make it run smoothly. It turns out for
 Framework machines, they have a bunch!</p>
 <p>Finally, copy the <code>disk-config.nix</code> to the same directory as all the other files.</p>
-<pre><span>[nixos@nixos:~]$ sudo cp /tmp/disk-config.nix /mnt/etc/nixos/disk-config.nix</span>
-<span></span>
-</pre><h3 id="integrating-<code>disko</code>-into-nixos-for-hardware-discovery"><a href="#integrating-<code>disko</code>-into-nixos-for-hardware-discovery">Integrating <code>disko</code> into NixOS for hardware discovery</a></h3>
+<pre><code><span>[nixos@nixos:~]$ sudo cp /tmp/disk-config.nix /mnt/etc/nixos/disk-config.nix</span>
+</code></pre><h3 id="integrating-<code>disko</code>-into-nixos-for-hardware-discovery"><a href="#integrating-<code>disko</code>-into-nixos-for-hardware-discovery">Integrating <code>disko</code> into NixOS for hardware discovery</a></h3>
 <p>Earlier, we used <code>disko</code> to create partitions, and manage the <code>zfs</code> pool. But
 we also need to integrate it into the NixOS configuration to make NixOS aware of
 the filesystem configuration. You can follow <code>nix-communituy/disko</code> for the
 latest setup guide but at the time of writing, add <code>disko</code> to the flake inputs,
 and add it to the list of <code>modules</code> in the <code>nixosConfiguration</code> entry:</p>
-<pre><span># flake.nix</span>
+<pre><code><span># flake.nix</span>
 <span>{</span>
 <span>  inputs = {</span>
 <span>    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";</span>
@@ -475,8 +465,7 @@ and add it to the list of <code>modules</code> in the <code>nixosConfiguration</
 <span>    };</span>
 <span>  };</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <blockquote class="markdown-alert-warning">
 <p>The default <code>flake.nix</code> comes with only an unstable version of <code>nixpkgs</code> included.
 Generally it’s preferable to have the latest release for the base instead, and
@@ -486,20 +475,18 @@ for.</p>
 </blockquote>
 <p>NixOS also has to be aware of the <code>disk-config.nix</code> file. To do so, in the
 <code>configuration.nix</code> file, add <code>./disk-config.nix</code> in the list of imports:</p>
-<pre><span>  imports =</span>
+<pre><code><span>  imports =</span>
 <span>    [</span>
 <span>      ./hardware-configuration.nix</span>
 <span style="background: green; color: white;">+     ./disk-config.nix</span>
 <span>    ];</span>
-<span></span>
-</pre>
+</code></pre>
 <p>and we want to tell <code>initrd</code> to load the <code>zfs</code> module:</p>
-<pre><span>boot.loader.systemd-boot.enable = true;</span>
+<pre><code><span>boot.loader.systemd-boot.enable = true;</span>
 <span>boot.loader.efi.canTouchEfiVariables = true;</span>
 <span style="background: green; color: white;">+ boot.supportedFilesystems = [ "zfs" ];</span>
 <span style="background: green; color: white;">+ boot.initrd.kernelModules = [ "zfs" ];</span>
-<span></span>
-</pre>
+</code></pre>
 <blockquote class="markdown-alert-caution">
 <p>You need to make sure that the current kernel version is supported by <code>zfs</code>.
 If you’re using the current stable in NixOS, chances are it’s fine. But double
@@ -511,23 +498,21 @@ check if you are manually setting the <code>boot.kernelPackages</code> attribute
 so we need to specify that.</p>
 <p>So this <a href="https://search.nixos.org/options?channel=25.05&amp;show=networking.hostId&amp;query=hostId">bit</a>
 says you can generate one like so:</p>
-<pre><span>head -c4 /dev/urandom | od -A none -t x4</span>
-<span></span>
-</pre>
+<pre><code><span>head -c4 /dev/urandom | od -A none -t x4</span>
+</code></pre>
 <p>and while we’re at it, you can also set your preferred host name. I named this
 one <code>litten</code> cause it’s tiny, and has a similar color scheme cause of its tiles
 lol.</p>
-<pre><span># networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";</span>
+<pre><code><span># networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";</span>
 <span style="background: green; color: white;">+ networking.hostName = "litten";</span>
 <span style="background: green; color: white;">+ networking.hostId = "REPLACE_ME";</span>
-<span></span>
-</pre>
+</code></pre>
 <p>On to the next!</p>
 <h3 id="framework-specific-configuration"><a href="#framework-specific-configuration">Framework-specific configuration</a></h3>
 <p>So circling back to existing configurations for the Framework Desktop, turns out
 there’s already one for it, and we just need to set it up in a similar way as
 <code>disko</code>. Pretty convenient!</p>
-<pre><span># flake.nix</span>
+<pre><code><span># flake.nix</span>
 <span>{</span>
 <span>  inputs = {</span>
 <span>    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";</span>
@@ -551,19 +536,17 @@ there’s already one for it, and we just need to set it up in a similar way as
 <span>    };</span>
 <span>  };</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>We’ll want to enable <code>networkmanager</code> to use Wi-Fi.</p>
-<pre><span># Pick only one of the below networking options.</span>
+<pre><code><span># Pick only one of the below networking options.</span>
 <span># networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.</span>
 <span style="background: red; color: white;">- # networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.</span>
 <span style="background: green; color: white;">+ networking.networkmanager.enable = true;</span>
-<span></span>
-</pre>
+</code></pre>
 <p>That’s pretty much it.</p>
 <h3 id="setting-up-a-user"><a href="#setting-up-a-user">Setting up a user</a></h3>
 <p>We’ll need a user to boot into</p>
-<pre><span># Define a user account. Don't forget to set a password with `passwd`.</span>
+<pre><code><span># Define a user account. Don't forget to set a password with `passwd`.</span>
 <span style="background: red; color: white;">- # users.users.alice = {</span>
 <span style="background: red; color: white;">- #   isNormalUser = true;</span>
 <span style="background: red; color: white;">- #   extraGroups = [ "wheel" ] # Enable `sudo` for the user.</span>
@@ -576,14 +559,13 @@ there’s already one for it, and we just need to set it up in a similar way as
 <span style="background: green; color: white;">+   extraGroups = [ "wheel" "networkmanager" ];</span>
 <span style="background: green; color: white;">+   packages = with pkgs; [];</span>
 <span style="background: green; color: white;">+ };</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Replace my name with whatever you want unless you’re also sekun then, woah.</p>
 <h3 id="desktop-environment"><a href="#desktop-environment">Desktop environment</a></h3>
 <p>Switching desktop environments is probably one of the easiest things to do in
 NixOS compared to other distros. Personally, I like KDE so I’m sticking with it.
 Gnome has too much padding for my taste. Looks pretty though.</p>
-<pre><span style="background: red; color: white;">- # Enable the X11 windowing system.</span>
+<pre><code><span style="background: red; color: white;">- # Enable the X11 windowing system.</span>
 <span style="background: red; color: white;">- # services.xserver.enable = true;</span>
 <span style="background: green; color: white;">+ services = {</span>
 <span style="background: green; color: white;">+   xserver.enable = true;</span>
@@ -592,8 +574,7 @@ Gnome has too much padding for my taste. Looks pretty though.</p>
 <span style="background: green; color: white;">+   displayManager.sddm.wayland.enable = true;</span>
 <span style="background: green; color: white;">+   desktopManager.plasma6.enable = true;</span>
 <span style="background: green; color: white;">+ };</span>
-<span></span>
-</pre>
+</code></pre>
 <p>I still like leaving <code>X11</code> available just in case I need something that doesn’t
 work on wayland.</p>
 <blockquote class="markdown-alert-note">
@@ -604,9 +585,8 @@ work on wayland.</p>
 <h2 id="installation"><a href="#installation">Installation</a></h2>
 <p>Do go over the <code>configuration.nix</code> file to see what else you would like enabled!
 If it all looks good, we’re ready to install NixOS!</p>
-<pre><span>sudo nixos-install --root /mnt --flake '/mnt/etc/nixos#litten'</span>
-<span></span>
-</pre>
+<pre><code><span>sudo nixos-install --root /mnt --flake '/mnt/etc/nixos#litten'</span>
+</code></pre>
 <p>and at the end of the installation, it’ll ask you to set the <code>root</code> user’s password.
 It should look something like this if everything goes well. <code>sudo reboot</code>, and
 boot into NixOS!</p>
@@ -624,15 +604,27 @@ boot into NixOS!</p>
   <img src="/assets/images/posts/nixos-on-framework-desktop/login-screen.png">
 </picture>
 <h2 id="conclusion"><a href="#conclusion">Conclusion</a></h2>
-<p>Well that was a lot. The nice thing is you more or less only have to set up the
-configuration once. After this, it’s best you keep it somewhere easily accessible
-(like GitHub) so that you can download it, and just run the disk partitioning,
-and OS install.</p>
-<p>I also like that there aren’t as much “imperative” steps to setting up NixOS.</p>
+<p>Documentation for ZFS in NixOS is still kind of sparse since I found answers
+in different places. It’s still enough to put something together but not without
+effort.</p>
+<p>The nice thing is you more or less only have to set up the configuration once.
+After this, it’s best to keep it somewhere easily accessible (like <code>git</code>) so that
+you can download it, and just run <code>disko</code>, and <code>nixos-install</code>. I like that there
+aren’t as much “imperative” steps to setting up NixOS. It’s one of the major
+reasons why I’ve completely stopped distrohopping.</p>
+<p>Managing KDE’s configuration probably isn’t the best experience even with the
+plasma manager project. One is better off with another DE if that’s important.
+I’m just satisfied enough with KDE to not switch over to others yet. Plus I
+mostly use stock KDE anyway.</p>
+<p>Finally, this little machine is also such a capable thing! KDE is so much more
+smoother vs my Ryzen 5950x + 3090ti back home. Well mainly because the Nvidia
+experience in Linux is horrible. Maybe I’ll benchmark a bunch of stuff in one of
+these weekends.</p>
 <hr />
 <p>So below are the complete files for <code>flake.nix</code>, <code>configuration.nix</code>, and <code>disk-config.nix</code>.
-Or checkout my configuration in <a href="https://github.com/sekunho/dotfiles"><code>sekunho/dotfiles</code></a>.</p>
-<pre><span># flake.nix</span>
+Or check out my configuration in <a href="https://github.com/sekunho/dotfiles"><code>sekunho/dotfiles</code></a>
+(if it’s already there).</p>
+<pre><code><span># flake.nix</span>
 <span>{</span>
 <span>  inputs = {</span>
 <span>    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";</span>
@@ -657,8 +649,7 @@ Or checkout my configuration in <a href="https://github.com/sekunho/dotfiles"><c
 <span>    };</span>
 <span>  };</span>
 <span>}</span>
-<span></span>
-</pre><pre><span># configuration.nix</span>
+</code></pre><pre><code><span># configuration.nix</span>
 <span>{ config, lib, pkgs, ... }: {</span>
 <span>  imports =</span>
 <span>    [</span>
@@ -726,8 +717,7 @@ Or checkout my configuration in <a href="https://github.com/sekunho/dotfiles"><c
 <span>  environment.systemPackages = with pkgs; [ vim ];</span>
 <span>  system.stateVersion = "25.05"; # Did you read the comment?</span>
 <span>}</span>
-<span></span>
-</pre><pre><span># disk-config.nix</span>
+</code></pre><pre><code><span># disk-config.nix</span>
 <span>{</span>
 <span>  disko.devices = {</span>
 <span>    disk = {</span>
@@ -802,8 +792,10 @@ Or checkout my configuration in <a href="https://github.com/sekunho/dotfiles"><c
 <span>    };</span>
 <span>  };</span>
 <span>}</span>
-<span></span>
-</pre><img style="width: 8rem;" src="/assets/images/not-by-ai.png">
+</code></pre><picture>
+  <source srcset="/assets/images/not-by-ai.webp" type="image/webp">
+  <img style="width: 8rem;" src="/assets/images/not-by-ai.png">
+</picture>
 
 
     <footer>

@@ -152,7 +152,7 @@ want to do, so I chose it.</p>
 <p>So, here’s how it went. (Spoiler: Kinda painful to setup)</p>
 <h2 id="starting-point"><a href="#starting-point">Starting point</a></h2>
 <p>This is the starting flake file:</p>
-<pre><span>{</span>
+<pre><code><span>{</span>
 <span>  description = "";</span>
 <span></span>
 <span>  inputs = {</span>
@@ -191,8 +191,7 @@ want to do, so I chose it.</p>
 <span>        };</span>
 <span>      });</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <ol>
 <li><a href="https://nixos.wiki/wiki/Nixpkgs"><code>nixpkgs</code></a> is like a package repository.
 This is where you get <code>rustc</code>, <code>cargo</code>, etc. for example.</li>
@@ -208,7 +207,7 @@ with reproducibility, it pins these inputs to a specific GitHub commit via a
 lock file. So no version numbers, but down to the commit. This is how projects
 can be built in the future in the exact same way as now.</p>
 <p>If you peek into <code>flake.lock</code>, you’ll find something like this:</p>
-<pre><span>"naersk": {</span>
+<pre><code><span>"naersk": {</span>
 <span>  "inputs": {</span>
 <span>    "nixpkgs": "nixpkgs"</span>
 <span>  },</span>
@@ -240,15 +239,14 @@ can be built in the future in the exact same way as now.</p>
 <span>    "type": "indirect"</span>
 <span>  }</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>There are more stuff in it, but hopefully this will make things a bit clearer.</p>
 <p>That’s the best ELI5 I can think of, so I recommend you check out the
 <a href="https://nixos.wiki/wiki/Flakes">documentation</a> for a more technical explanation.</p>
 <p>So, I run <code>nix build</code> and…</p>
 <h2 id="problem-0:-openssl"><a href="#problem-0:-openssl">Problem 0: OpenSSL</a></h2>
 <p>Bam.</p>
-<pre><span>error: builder for '/nix/store/pv9szkam1rawk40ywp3v89k53zg4b1l4-emojied-deps-0.1.0.drv' failed with exit code 101;</span>
+<pre><code><span>error: builder for '/nix/store/pv9szkam1rawk40ywp3v89k53zg4b1l4-emojied-deps-0.1.0.drv' failed with exit code 101;</span>
 <span>       last 10 log lines:</span>
 <span>       >   It looks like you're compiling on Linux and also targeting Linux. Currently this</span>
 <span>       >   requires the `pkg-config` utility to find OpenSSL but unfortunately `pkg-config`</span>
@@ -262,20 +260,18 @@ can be built in the future in the exact same way as now.</p>
 <span>       > [naersk] cargo returned with exit code 101, exiting</span>
 <span>       For full logs, run 'nix log /nix/store/pv9szkam1rawk40ywp3v89k53zg4b1l4-emojied-deps-0.1.0.drv'.</span>
 <span>error: 1 dependencies of derivation '/nix/store/r0h49v7i2vg5dckb9h2g8p7na048rk4g-emojied-0.1.0.drv' failed to build</span>
-<span></span>
-</pre>
+</code></pre>
 <p>I’ve seen this error before! Since <code>emojied</code> uses <code>native-tls</code>, and since it’s
 just a wrapper around OpenSSL, I need to have OpenSSL around. Thankfully,
 <code>naersk</code> has a <code>buildInputs</code> attribute for us to use.</p>
-<pre><span>packages.emojied = naersk-lib.buildPackage {</span>
+<pre><code><span>packages.emojied = naersk-lib.buildPackage {</span>
 <span>  pname = "emojied";</span>
 <span>  root = ./.;</span>
 <span>  buildInputs = with pkgs; [ openssl pkg-config ];</span>
 <span>};</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Ran <code>nix build</code>, and I’m greeted with another problem!</p>
-<h2 id="problem-1:-<code>git</code>-submodule-woes"><a href="#problem-1:-<code>git</code>-submodule-woes">Problem 1: <code>git</code> submodule woes</a></h2><pre><span>Compiling maud_macros v0.23.0 (https://github.com/lambda-fairy/maud?branch=main#e6787cd6)</span>
+<h2 id="problem-1:-<code>git</code>-submodule-woes"><a href="#problem-1:-<code>git</code>-submodule-woes">Problem 1: <code>git</code> submodule woes</a></h2><pre><code><span>Compiling maud_macros v0.23.0 (https://github.com/lambda-fairy/maud?branch=main#e6787cd6)</span>
 <span>error: could not compile `maud_macros` due to 3 previous errors</span>
 <span>warning: build failed, waiting for other jobs to finish...</span>
 <span>error: build failed</span>
@@ -303,8 +299,7 @@ just a wrapper around OpenSSL, I need to have OpenSSL around. Thankfully,
 <span>For more information about an error, try `rustc --explain E0425`.</span>
 <span></span>
 <span>[naersk] cargo returned with exit code 101, exiting</span>
-<span></span>
-</pre>
+</code></pre>
 <p>It’s telling me that <code>cargo</code> can’t resolve the <code>escape</code> module for <code>maud_macros</code>.
 I took a look at the <a href="https://github.com/lambda-fairy/maud/tree/main/maud_macros/src">source</a>,
 and initially seemed like it’s a submodule:</p>
@@ -338,13 +333,12 @@ and initially seemed like it’s a submodule:</p>
 pointing out that submodules isn’t supported by <code>naersk</code>. Fortunately, by the
 time I read this, there was a PR ready that fixed this. All it required was
 adding <code>gitSubmodules = true;</code>:</p>
-<pre><span>packages.emojied = naersk-lib.buildPackage {</span>
+<pre><code><span>packages.emojied = naersk-lib.buildPackage {</span>
 <span>  pname = "emojied";</span>
 <span>  root = ./.;</span>
 <span>  gitSubmodules = true;</span>
 <span>};</span>
-<span></span>
-</pre>
+</code></pre>
 <p>So this fixes everything then, right?</p>
 <p>Wrong.</p>
 <h2 id="problem-2:-symlink-woes"><a href="#problem-2:-symlink-woes">Problem 2: Symlink woes</a></h2>
@@ -358,10 +352,9 @@ the symlink for a copy instead. It’s only one file, so it isn’t that big of 
 deal.</p>
 <p>Kind of a hack, but it works now! A binary is available in <code>./result/bin/</code>,
 albeit a symlink. I ran it with:</p>
-<pre><span>PG__DBNAME="emojied_db" PG__HOST="localhost" PG__USER="sekun" PG__PORT="5432" \</span>
+<pre><code><span>PG__DBNAME="emojied_db" PG__HOST="localhost" PG__USER="sekun" PG__PORT="5432" \</span>
 <span>  ./result/bin/emojied</span>
-<span></span>
-</pre>
+</code></pre>
 <p>…and I was greeted with this unstyled page:</p>
 <div>
 
@@ -397,7 +390,7 @@ makes sense anyway cause it would be kinda weird to do things unrelated to Rust
 in a Rust builder.</p>
 <p>Now what?</p>
 <p>Well, I found out about <code>overrideAttrs</code> and it is wonderful.</p>
-<pre><span>{</span>
+<pre><code><span>{</span>
 <span>  # ...</span>
 <span></span>
 <span>  outputs = { self, nixpkgs, nixos-unstable, flake-utils, naersk }:</span>
@@ -455,19 +448,17 @@ in a Rust builder.</p>
 <span>        };</span>
 <span>      });</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>I removed <code>gitSubmodules = true</code> since it wasn’t necessary anymore. <code>buildPackage</code>
 just spits out an attribute set, I can override it to add more things. Here, I
 added new native build inputs (build time), new steps to <code>buildPhase</code>, and
 <code>installPhase</code> for the static assets.</p>
 <p>And I ran it like this:</p>
-<pre><span>cd result/bin</span>
+<pre><code><span>cd result/bin</span>
 <span></span>
 <span>PG__DBNAME="emojied_db" PG__HOST="localhost" PG__USER="sekun" PG__PORT="5432" \</span>
 <span>  ./emojied</span>
-<span></span>
-</pre><div>
+</code></pre><div>
 
   <x-img>
     <template shadowrootmode="open">
@@ -496,7 +487,7 @@ added new native build inputs (build time), new steps to <code>buildPhase</code>
 <p>Beautiful.</p>
 <p>Okay, so that seems to work but I have to run <code>emojied</code> in the same directory as
 <code>public/</code> cause otherwise it won’t find anything. Which is expected because:</p>
-<pre><span>pub async fn stylesheet() -> (StatusCode, HeaderMap, String) {</span>
+<pre><code><span>pub async fn stylesheet() -> (StatusCode, HeaderMap, String) {</span>
 <span>    let mut headers = HeaderMap::new();</span>
 <span></span>
 <span>    match fs::read_to_string("public/app.css") {</span>
@@ -513,8 +504,7 @@ added new native build inputs (build time), new steps to <code>buildPhase</code>
 <span>        Err(_e) => (StatusCode::NOT_FOUND, headers, String::from("Not found")),</span>
 <span>    }</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>I’m using relative paths! But other than that, it works. It’s not exactly an issue
 for the way I’m using it, which is:</p>
 <ol>
@@ -534,26 +524,24 @@ path during runtime!</p>
 <li>Use <code>nix run</code> without breaking anything.</li>
 </ol>
 <p>Something like this would be nice:</p>
-<pre><span>PG__DBNAME="emojied_db" \</span>
+<pre><code><span>PG__DBNAME="emojied_db" \</span>
 <span>PG__HOST="localhost" \</span>
 <span>PG__USER="sekun" \</span>
 <span>PG__PORT="5432" \</span>
 <span>APP__STATIC_ASSETS="/foo/bar/public/" \</span>
 <span>  ./emojied</span>
-<span></span>
-</pre>
+</code></pre>
 <p>I added another field to <code>AppConfig</code>, and checked if there’s an argument called
 <code>static_assets_path</code>:</p>
-<pre><span>// src/config.rs</span>
+<pre><code><span>// src/config.rs</span>
 <span></span>
 <span>struct AppConfig {</span>
 <span>    // ...</span>
 <span>    pub static_assets_path: String // See disclaimer below</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Loaded it from the environment:</p>
-<pre><span>// src/config.rs</span>
+<pre><code><span>// src/config.rs</span>
 <span></span>
 <span>let static_assets_path = env::var("APP__STATIC_ASSETS")</span>
 <span>    .map_err(|_| Error::MissingStaticAssetsPath)?;</span>
@@ -564,19 +552,17 @@ path during runtime!</p>
 <span>    // ...</span>
 <span>    static_assets_path, // New!</span>
 <span>})</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Add <code>AppConfig</code> to the middleware:</p>
-<pre><span>// ...</span>
+<pre><code><span>// ...</span>
 <span>let config = Arc::new(config);</span>
 <span></span>
 <span>let app = Router::new()</span>
 <span>    // ...</span>
 <span>    .layer(Extension(config));</span>
-<span></span>
-</pre>
+</code></pre>
 <p>And in the functions serving the files:</p>
-<pre><span>pub async fn js(</span>
+<pre><code><span>pub async fn js(</span>
 <span>    Extension(config): Extension<Arc<AppConfig>> // New</span>
 <span>) -> (StatusCode, HeaderMap, String) {</span>
 <span>    let mut headers = HeaderMap::new();</span>
@@ -598,8 +584,7 @@ path during runtime!</p>
 <span>        Err(_e) => (StatusCode::NOT_FOUND, headers, String::from("Not found")),</span>
 <span>    }</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>…which I then repeated in 2 more functions because I was too lazy to make one
 endpoint for static assets. Now, I feel the pain of my laziness.</p>
 <blockquote>
@@ -610,7 +595,7 @@ refactor which uses <code>PathBuf</code> rather than a <code>String</code>.</p>
 right? Currently, it’s not very convenient to do it every time it’s called with
 <code>nix run</code>. Turns out <a href="https://nixos.wiki/wiki/Nix_Cookbook"><code>makeWrapper</code></a> exists.
 (Thanks K900!)</p>
-<pre><span>{</span>
+<pre><code><span>{</span>
 <span>  # ...</span>
 <span></span>
 <span>        packages.emojied-unwrapped = emojied;</span>
@@ -631,11 +616,10 @@ right? Currently, it’s not very convenient to do it every time it’s called w
 <span></span>
 <span>  # ...</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>So I’ll get the “wrapped” version of emojied with <code>nix build</code>, which has the
 static assets path already applied. Doing so gets me this:</p>
-<pre><span>sekun@nixos ~/P/emojiurl (chore/nixify-package)> nix build</span>
+<pre><code><span>sekun@nixos ~/P/emojiurl (chore/nixify-package)> nix build</span>
 <span>sekun@nixos ~/P/emojiurl (chore/nixify-package)> ls -la result/bin</span>
 <span>total 20</span>
 <span>dr-xr-xr-x 3 root root 4096 Jan  1  1970 .</span>
@@ -648,15 +632,14 @@ static assets path already applied. Doing so gets me this:</p>
 <span># ...</span>
 <span>lrwxrwxrwx  1 sekun users      51 Apr 12 22:55 result -> /nix/store/300n6rjxm88asmqhv99hid9mi8148xjs-emojied</span>
 <span>#...</span>
-<span></span>
-</pre>
+</code></pre>
 <p>So, it symlinked <code>.emojied-wrapped</code> to the original <code>emojied</code>, and <code>result</code> is
 symlinked to a wrapped version of it. Is this another derivation? Seems like it,
 although I don’t really know since I’m not so familiar with this. I’ll have to
 do more reading. I’m just gonna manually test it to verify if it all works.
 <code>.#emojied-unwrapped</code> needs to complain about the missing assets path if I don’t
 provide one, and <code>.#emojied</code> shouldn’t.</p>
-<pre><span>sekun@nixos ~/P/emojiurl (chore/nixify-package)> PG__DBNAME="emojied_db" PG__HOST="localhost" PG__USER="sekun" PG__PORT="5432" nix run .#emojied-unwrapped</span>
+<pre><code><span>sekun@nixos ~/P/emojiurl (chore/nixify-package)> PG__DBNAME="emojied_db" PG__HOST="localhost" PG__USER="sekun" PG__PORT="5432" nix run .#emojied-unwrapped</span>
 <span>Loading configuration from environment</span>
 <span>Application config error: Missing environment variable: `APP__STATIC_ASSETS=<PATH_TO_FILES>`</span>
 <span></span>
@@ -664,8 +647,7 @@ provide one, and <code>.#emojied</code> shouldn’t.</p>
 <span>Loading configuration from environment</span>
 <span>Attempting to establish a database connection</span>
 <span>Database connection established</span>
-<span></span>
-</pre>
+</code></pre>
 <p>…and it works as expected. The second one also serves the static assets
 just fine! Hooray.</p>
 <h2 id="problem-5:-copy-all-that-to-a-docker-image"><a href="#problem-5:-copy-all-that-to-a-docker-image">Problem 5: Copy all that to a Docker image</a></h2>
@@ -679,7 +661,7 @@ image for me.</p>
 <p>Oh yeah, big time; <a href="https://nix.dev/tutorials/building-and-running-docker-images"><code>nix.dev</code></a>
 has a great starting point [^9] for doing so.</p>
 <p>Here’s what I ended up with:</p>
-<pre><span># flake.nix</span>
+<pre><code><span># flake.nix</span>
 <span></span>
 <span># ...</span>
 <span></span>
@@ -703,8 +685,7 @@ has a great starting point [^9] for doing so.</p>
 <span>    Cmd = [ "${packages.emojied}/bin/run" ];</span>
 <span>  };</span>
 <span>};</span>
-<span></span>
-</pre>
+</code></pre>
 <p>If you squint hard enough, the contents of <code>config</code> just looks like a Nix version
 of a <code>Dockerfile</code>, which it is! The other cool part is now the package versions
 are in sync no matter what environment it is in. <code>contents</code> allows me to throw
@@ -712,7 +693,7 @@ in Nix packages to the image. Since it seemed like the <code>PATH</code>s aren�
 I had to specify it in <code>Env</code> for <code>coreutils</code>, and <code>emojied</code>.</p>
 <p>It’s basically like the other packages created, like <code>emojied</code>, and
 <code>emojied-unwrapped</code>. Which means I can build it in the exact same way as them:</p>
-<pre><span># Don't mind the branch change. I ran this in the morning.</span>
+<pre><code><span># Don't mind the branch change. I ran this in the morning.</span>
 <span>sekun@nixos ~/P/emojiurl (main)> nix build .#emojied-docker</span>
 <span># some build-related output</span>
 <span></span>
@@ -720,22 +701,20 @@ I had to specify it in <code>Env</code> for <code>coreutils</code>, and <code>em
 <span># ...</span>
 <span>lrwxrwxrwx  1 sekun users      78 Apr 13 12:28 result -> /nix/store/vmrja5imhrfhvl082j5qkqahcfj85adk-docker-image-emojied-docker.tar.gz</span>
 <span># ...</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Instead, <code>result</code> is a symlink to some image tar file which you can load with
 <code>docker load &lt; result</code>.</p>
-<pre><span>sekun@nixos ~/P/emojiurl (main)> docker load < result</span>
+<pre><code><span>sekun@nixos ~/P/emojiurl (main)> docker load < result</span>
 <span>Loaded image: emojied-docker:latest</span>
 <span></span>
 <span>sekun@nixos ~/P/emojiurl (main)> docker images</span>
 <span># ...</span>
 <span>emojied-docker latest 1a9092013b19 52 years ago 50MB</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Sweet!</p>
 <p>All that’s left is to update the CI for these new steps, which is on the simpler
 side of things now:</p>
-<pre><span>name: CI/CD</span>
+<pre><code><span>name: CI/CD</span>
 <span></span>
 <span>on:</span>
 <span>  push:</span>
@@ -770,8 +749,7 @@ side of things now:</p>
 <span></span>
 <span>      - name: Push image</span>
 <span>        run: docker push hsekun/emojied:latest</span>
-<span></span>
-</pre>
+</code></pre>
 <p>It’s just so much easier, and I have more confidence that the CI will work
 as intended now that Nix is handling the important parts, which I can do
 locally. Not to say that Docker can’t do the same thing, but I found that there
@@ -815,6 +793,7 @@ static binary to begin with. But it does mean I can’t easily distribute it out
 <code>nix</code>, which is a bummer. Maybe I’ll hunt for a workaround in the future. Right
 now, I’m not too keen into sinking a lot of time into something I won’t benefit
 from.</p>
+<img style="width: 8rem;" src="/assets/images/not-by-ai.png">
 
 
     <footer>

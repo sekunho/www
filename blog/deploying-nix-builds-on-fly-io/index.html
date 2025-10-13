@@ -130,7 +130,7 @@ exact commit.</p>
 <p>The rest of the tools needed will be supplied by <code>nix</code> in a dev shell we’ll make.</p>
 <p>To start everything off, let’s make a <code>flake.nix</code> by running <code>nix flake init</code>
 in your directory of choice. This generates the file with the following:</p>
-<pre><span># flake.nix</span>
+<pre><code><span># flake.nix</span>
 <span>{</span>
 <span>  description = "A very basic flake";</span>
 <span></span>
@@ -146,8 +146,7 @@ in your directory of choice. This generates the file with the following:</p>
 <span>    packages.x86_64-linux.default = self.packages.x86_64-linux.hello;</span>
 <span>  };</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>The application that’s gonna run in the image is one that reads an environment
 variable <code>APP_ECHO_ME</code>, and renders it into an HTML page served by <code>axum</code>. The
 environment will be set through Fly secrets.</p>
@@ -158,7 +157,7 @@ section.</p>
 </blockquote>
 <p>The gist of it is <code>webecho</code> looks for the environment variable <code>APP_ECHO_ME</code>,
 and renders it into an HTML page that’s served by axum.</p>
-<pre><span>// main.rs</span>
+<pre><code><span>// main.rs</span>
 <span>use axum::{response::Html, routing, Router};</span>
 <span></span>
 <span>#[tokio::main]</span>
@@ -175,10 +174,9 @@ and renders it into an HTML page that’s served by axum.</p>
 <span>        Err(_) => Html(format!("bruh")),</span>
 <span>    }</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Which we packaged with <code>nix</code> like so</p>
-<pre><span># flake.nix</span>
+<pre><code><span># flake.nix</span>
 <span>{</span>
 <span>  inputs = {</span>
 <span>    # We set the nix packages repo to the latest stable (at the time of writing)</span>
@@ -241,8 +239,7 @@ and renders it into an HTML page that’s served by axum.</p>
 <span>      };</span>
 <span>    };</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>We can run <code>webecho</code> with <code>nix run .#webecho</code>, and then visit <code>http://localhost:8080/echo</code>.</p>
 <div>
 
@@ -312,7 +309,7 @@ and renders it into an HTML page that’s served by axum.</p>
 <code>pkgs.streamLayeredImage</code><sup class="footnote-reference"><a href="#2">2</a></sup>. It has a bunch of attributes in it but we’re only
 interested in a couple of them.</p>
 <p>Let’s define a new binding <code>webechoImg</code> that’s going to be our container image:</p>
-<pre><span># flake.nix</span>
+<pre><code><span># flake.nix</span>
 <span>let</span>
 <span>  # previous let..in bindings</span>
 <span>  webechoImg = pkgs.streamLayeredImage {</span>
@@ -326,8 +323,7 @@ interested in a couple of them.</p>
 <span>  }</span>
 <span>in</span>
 <span># snip</span>
-<span></span>
-</pre>
+</code></pre>
 <p>So the NixOS manual says this about the <code>contents</code> attribute:</p>
 <blockquote>
 <p>Directories whose contents will be added to the generated image. Things that
@@ -340,26 +336,24 @@ to the store paths). The actual files will be added in previous layers.</p>
 <p>Which is something we want for our <code>webecho</code> application since it’s what gets
 executed when the container runs.</p>
 <p>Now we add a new binding to <code>packages</code>:</p>
-<pre><span># flake.nix</span>
+<pre><code><span># flake.nix</span>
 <span># ... snip</span>
 <span>in</span>
 <span>{</span>
 <span>  packages.${system} = { inherit webecho webechoImg; };</span>
 <span># ... snip</span>
-<span></span>
-</pre>
+</code></pre>
 <blockquote>
 <p><code>inherit webecho;</code> is a shorthand for <code>webecho = webecho;</code>. If the name is the
 same, it can be useful for chaining a bunch of bindings instead of having to
 manually name, and bind values to it.</p>
 </blockquote>
 <p>and like <code>webecho</code>, this can be built like so:</p>
-<pre><span>$ nix build .#webechoImg</span>
-<span></span>
-</pre>
+<pre><code><span>$ nix build .#webechoImg</span>
+</code></pre>
 <p>The generated image is stored in a <code>tar</code> file named as <code>result</code> which we have
 To load into <code>docker</code> as an image.</p>
-<pre><span>$ ./result | docker image load</span>
+<pre><code><span>$ ./result | docker image load</span>
 <span>No 'fromImage' provided</span>
 <span>Creating layer 1 from paths: ['/nix/store/zvwpisszhpkkk8spqyya8n3bpm7wj39p-libunistring-1.1']</span>
 <span>Creating layer 2 from paths: ['/nix/store/9jivp79yv91fl1i6ayq2107a78q7k43i-libidn2-2.3.7']</span>
@@ -375,8 +369,7 @@ To load into <code>docker</code> as an image.</p>
 <span>18dc56492fda: Loading layer [==================================================>]  10.24kB/10.24kB</span>
 <span>The image webecho:latest already exists, renaming the old one with ID sha256:71901dfab2e5a591cf264891021db0bc258927788db5786f18fbbb8835fc6b5e to empty string</span>
 <span>Loaded image: webecho:latest</span>
-<span></span>
-</pre>
+</code></pre>
 <p>You can look around the image with <code>dive webecho:latest</code>.</p>
 <div>
 
@@ -405,27 +398,24 @@ To load into <code>docker</code> as an image.</p>
 
 </div>
 <p>Then you can run this image as if it were any other image created from a <code>Dockerfile</code>!</p>
-<pre><span>$ docker run -p 8080:8080 webecho:latest</span>
-<span></span>
-</pre>
+<pre><code><span>$ docker run -p 8080:8080 webecho:latest</span>
+</code></pre>
 <p>And when we try to <code>curl</code> it</p>
-<pre><span>$ curl http://localhost:8080/echo</span>
+<pre><code><span>$ curl http://localhost:8080/echo</span>
 <span>bruh⏎</span>
-<span></span>
-</pre>
+</code></pre>
 <p>So far looks pretty good.</p>
 <h2 id="deploying-to-fly.io"><a href="#deploying-to-fly.io">Deploying to Fly.io</a></h2>
 <p>This part shouldn’t differ too much from the usual deployment process.</p>
 <p>First, login your Fly account with <a href="https://fly.io/docs/flyctl/auth-login/"><code>flyctl auth login</code></a>.
 This opens a new tab in your browser for you to complete the login process.</p>
-<pre><span>$ fly auth login</span>
+<pre><code><span>$ fly auth login</span>
 <span>$ fly auth docker # authenticates your local docker to push to their container registry</span>
 <span>$ fly apps create webecho # create an application called webecho under your account</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Then we need to tag the image to something that Fly.io expects which is in the format
 of <code>registry.fly.io/&lt;APP_NAME&gt;:&lt;VERSION&gt;</code>, and push it to their registry.</p>
-<pre><span>$ docker image tag webecho:latest registry.fly.io/webecho:latest</span>
+<pre><code><span>$ docker image tag webecho:latest registry.fly.io/webecho:latest</span>
 <span>$ docker push registry.fly.io/webecho:latest</span>
 <span>The push refers to repository [registry.fly.io/webecho]</span>
 <span>18dc56492fda: Pushed</span>
@@ -437,10 +427,9 @@ of <code>registry.fly.io/&lt;APP_NAME&gt;:&lt;VERSION&gt;</code>, and push it to
 <span>905fa559f035: Pushed</span>
 <span>975a8857676b: Pushed</span>
 <span>latest: digest: <SHA265 OMITTED> size: 1995</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Finally, we create the <code>fly.toml</code> file</p>
-<pre><span># fly.toml</span>
+<pre><code><span># fly.toml</span>
 <span>app = 'webecho'</span>
 <span>primary_region = 'sea'</span>
 <span></span>
@@ -470,12 +459,10 @@ of <code>registry.fly.io/&lt;APP_NAME&gt;:&lt;VERSION&gt;</code>, and push it to
 <span>port = 8080</span>
 <span>interval = "5s"</span>
 <span>timeout = "5s"</span>
-<span></span>
-</pre>
+</code></pre>
 <p>And deploy!</p>
-<pre><span>$ flyctl deploy -c fly.toml -a webecho</span>
-<span></span>
-</pre><div>
+<pre><code><span>$ flyctl deploy -c fly.toml -a webecho</span>
+</code></pre><div>
 
   <x-img>
     <template shadowrootmode="open">
@@ -506,9 +493,8 @@ of <code>registry.fly.io/&lt;APP_NAME&gt;:&lt;VERSION&gt;</code>, and push it to
 dashboard just to be sure.</p>
 </blockquote>
 <p>Right. Forgot to set the environment variable!</p>
-<pre><span>$ fly secrets set "APP_ECHO_ME=nix fixes this" -c fly.toml -a webecho</span>
-<span></span>
-</pre><div>
+<pre><code><span>$ fly secrets set "APP_ECHO_ME=nix fixes this" -c fly.toml -a webecho</span>
+</code></pre><div>
 
   <x-img>
     <template shadowrootmode="open">
@@ -545,6 +531,7 @@ give this <a href="https://github.com/sekunho/webecho">GitHub repository</a> a l
 <div class="footnote-definition" id="2"><sup class="footnote-definition-label">2</sup>
 <p><a href="https://nixos.org/manual/nixpkgs/unstable/#ssec-pkgs-dockerTools-streamLayeredImage">Official NixOS manual for <code>streamLayeredImage</code></a></p>
 </div>
+<img style="width: 8rem;" src="/assets/images/not-by-ai.png">
 
 
     <footer>

@@ -186,7 +186,7 @@ about it.</p>
 <p>Okay, an example would be fetching a URL given an identifier, and incrementing
 the <code>clicks</code> column by one. Here’s an example of a procedure that does exactly
 that:</p>
-<pre><span>CREATE FUNCTION app.get_url(query TEXT)</span>
+<pre><code><span>CREATE FUNCTION app.get_url(query TEXT)</span>
 <span>                          -- ^ This contains the emoji sequence `identifier`</span>
 <span>  RETURNS TEXT</span>
 <span>  LANGUAGE sql</span>
@@ -203,8 +203,7 @@ that:</p>
 <span>      ON links.host = hosts.host_id</span>
 <span>      WHERE links.identifier = $1;</span>
 <span>  $$;</span>
-<span></span>
-</pre>
+</code></pre>
 <p>It’s a simple function that uses SQL as the language that expects any <code>TEXT</code>,
 and returns a <code>TEXT</code> as well, which is a sequence of emojis, and the URL it
 maps to respectively. Since whatever happens in this procedure is in the same
@@ -229,7 +228,7 @@ other <code>Error</code> types. For instance, there’s <code>tokio_postgres::Er
 <code>env::VarError</code>, and if I need to bubble up these errors to the binary, I’m gonna
 need a convenient enough way to do that otherwise I’m gonna have a difficult time.</p>
 <p>Let’s say I have two errors, a database one, and an application one.</p>
-<pre><span>enum AppError {</span>
+<pre><code><span>enum AppError {</span>
 <span>  Foo,</span>
 <span>  Baz</span>
 <span>}</span>
@@ -249,10 +248,9 @@ need a convenient enough way to do that otherwise I’m gonna have a difficult t
 <span></span>
 <span>    Ok(result1)</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>This fails to compile, here’s what <code>rustc</code> says:</p>
-<pre><span>error[E0277]: `?` couldn't convert the error to `AppError`</span>
+<pre><code><span>error[E0277]: `?` couldn't convert the error to `AppError`</span>
 <span>    |</span>
 <span>212 | fn app_action() -> Result<String, AppError> {</span>
 <span>    |                    ------------------------ expected `AppError` because of this</span>
@@ -266,8 +264,7 @@ need a convenient enough way to do that otherwise I’m gonna have a difficult t
 <span> for `Result<std::string::String, AppError>`</span>
 <span></span>
 <span>For more information about this error, try `rustc --explain E0277`.</span>
-<span></span>
-</pre>
+</code></pre>
 <p>So it tells me that using <code>?</code> implicitly converts <code>DbError</code> to <code>AppError</code> via
 the <code>From</code> trait. And because I do not have a trait instance like
 <code>impl From&lt;DbError&gt; for AppError</code>, it fails.</p>
@@ -276,26 +273,23 @@ error somehow. The method I ended up using is to just add a field to the
 <code>AppError</code> record. It’s a bit tiring to copy all the <code>DbError</code> variants over to
 the <code>AppError</code> enum. I mean, it’s fine for this one since it doesn’t have that
 many, but it becomes.</p>
-<pre><span>enum AppError {</span>
+<pre><code><span>enum AppError {</span>
 <span>    DbError(DbError), // Hooray!</span>
 <span>    Foo,</span>
 <span>    Baz</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>And then I can create a <code>From&lt;DbError&gt;</code> instance:</p>
-<pre><span>impl From<DbError> for AppError {</span>
+<pre><code><span>impl From<DbError> for AppError {</span>
 <span>    fn from(e: DbError) -> Self {</span>
 <span>        AppError::DbError(e)</span>
 <span>    }</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Which compiles!</p>
 <p>If I wanted to avoid <code>From</code>, I could do this:</p>
-<pre><span>let result1 = db_action().map_err(|_| AppError::Foo)?;</span>
-<span></span>
-</pre>
+<pre><code><span>let result1 = db_action().map_err(|_| AppError::Foo)?;</span>
+</code></pre>
 <p>Except it’s kinda annoying cause I have to do this at every call site. Although
 there are times when I did end up using this.</p>
 <h2 id="application-configuration"><a href="#application-configuration">Application configuration</a></h2>
@@ -311,7 +305,7 @@ I have to do is just change the environment variable, and I’m spared from
 touching the source code!</p>
 </blockquote>
 <p>Here’s <code>emojied</code>’s config for it to run:</p>
-<pre><span>pub struct AppConfig {</span>
+<pre><code><span>pub struct AppConfig {</span>
 <span>    /// Application host</span>
 <span>    pub host: String,</span>
 <span></span>
@@ -326,12 +320,11 @@ touching the source code!</p>
 <span></span>
 <span>    pub ca_cert_path: Option<String>,</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Then I created an associated function for it called <code>from_env/0</code> which returns
 a <code>Result&lt;AppConfig, Error&gt;</code>. I’ll talk about the <code>Error</code> part in the <code>Error Handling</code> section. Then I can use Rust’s <code>std::env</code> module to get a var’s value!</p>
 <p>Here’s a tiny example:</p>
-<pre><span>use std::env;</span>
+<pre><code><span>use std::env;</span>
 <span></span>
 <span>struct AppConfig {</span>
 <span>  pg_host: String,</span>
@@ -344,8 +337,7 @@ a <code>Result&lt;AppConfig, Error&gt;</code>. I’ll talk about the <code>Error
 <span>      Ok(AppConfig { pg_host: host })</span>
 <span>  }</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <blockquote>
 <p>Side note: This kinda looks monadic, where it binds <code>AppConfig</code> to <code>host</code>, and
 evaluates to <code>Error</code> and “exits” otherwise.</p>
@@ -353,11 +345,10 @@ evaluates to <code>Error</code> and “exits” otherwise.</p>
 …<h2 id="handling-databasehandler-in-<code>axum</code>"><a href="#handling-databasehandler-in-<code>axum</code>">Handling databasehandler in <code>axum</code></a></h2>
 <p>I created this database handle that has all the things I need to communicate
 with the database server:</p>
-<pre><span>pub struct Handle {</span>
+<pre><code><span>pub struct Handle {</span>
 <span>    pub pool: Pool,</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>It’s pretty simple. It’s a struct that has a <code>pool</code> field. Then I created two
 more functions to make things more convenient: <code>new/1</code>, and <code>client/1</code>.</p>
 <p><code>new(config: AppConfig) -&gt; Result&lt;Handle, Error&gt;</code> expects an <code>AppConfig</code> as an
@@ -365,7 +356,7 @@ argument, and if all goes well, then a new database handle with all the importan
 things in it. <code>client(&amp;self) -&gt; Result&lt;Pool, Error&gt;</code> expects a reference to
 <code>self</code>, which is <code>Handle</code> in this case. This uses the DB pool to create a new
 client. From this client, you can do DB queries with it.</p>
-<pre><span>// Grabs a client from the pool</span>
+<pre><code><span>// Grabs a client from the pool</span>
 <span>let client = handle.client().await?;</span>
 <span></span>
 <span>// Runs a query that gets a URL's stats</span>
@@ -383,25 +374,23 @@ client. From this client, you can do DB queries with it.</p>
 <span>    clicks: db_clicks,</span>
 <span>    url: db_url,</span>
 <span>})</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Okay, so I somehow need access to the database handle in the “controllers”, like
 in <code>controllers::leaderboard</code>.</p>
 <blockquote>
 <p>I’m only calling it a controller since it’s a common concept. <code>axum</code> doesn’t
 call it that.</p>
 </blockquote>
-<pre><span>let app = Router::new()</span>
+<pre><code><span>let app = Router::new()</span>
 <span>    .route("/leaderboard", routing::get(controllers::leaderboard));</span>
-<span></span>
-</pre>
+</code></pre>
 <p><code>axum</code> recommends <sup class="footnote-reference"><a href="#2">2</a></sup> mentions that you could use “request extensions” which
 looks like it acts like middleware. It recommends to have <code>Arc</code> inhabit
 <code>Extension</code> (<code>Extension&lt;Arc&lt;T&gt;&gt;</code>), but why?</p>
 <p>Time to do it in some wrong ways. This is fine since <code>rustc</code> is quite helpful
 with its error messages.</p>
 <p>I’ll try to move <code>handle</code> instead:</p>
-<pre><span>use axum::{extract::Extension, routing::get, Router};</span>
+<pre><code><span>use axum::{extract::Extension, routing::get, Router};</span>
 <span>use std::net::SocketAddr;</span>
 <span></span>
 <span>pub async fn run(handle: db::Handle) -> Result<(), hyper::Error> {</span>
@@ -417,10 +406,9 @@ with its error messages.</p>
 <span>        .with_graceful_shutdown(signal_shutdown())</span>
 <span>        .await</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Doing that gives me this error:</p>
-<pre><span>error[E0277]: the trait bound `db::Handle: Clone` is not satisfied</span>
+<pre><code><span>error[E0277]: the trait bound `db::Handle: Clone` is not satisfied</span>
 <span>  --> src/lib.rs:36:16</span>
 <span>   |</span>
 <span>36 |         .layer(Extension(handle));</span>
@@ -432,20 +420,18 @@ with its error messages.</p>
 <span>Handle>`</span>
 <span></span>
 <span>For more information about this error, try `rustc --explain E0277`.</span>
-<span></span>
-</pre>
+</code></pre>
 <p>It seems like I need to derive <code>Clone</code> for <code>db::Handle</code> since it probably gets
 cloned every time, although I’m not sure exactly when it does get cloned. In
 every new request?</p>
 <p>So what happens if I <em>do</em> derive <code>Clone</code>?</p>
-<pre><span>#[derive(Clone)]</span>
+<pre><code><span>#[derive(Clone)]</span>
 <span>struct Handle {</span>
 <span>  pub pool: Pool</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Then I need to make sure that the function’s type signature matches:</p>
-<pre><span>pub async fn leaderboard(</span>
+<pre><code><span>pub async fn leaderboard(</span>
 <span>    Extension(handle): Extension<db::Handle></span>
 <span> // ^ Here! axum seems to know exactly where to apply it to the args. Not sure</span>
 <span> // how this is done (yet).</span>
@@ -457,14 +443,13 @@ every new request?</p>
 <span>        Err(_e) => (StatusCode::INTERNAL_SERVER_ERROR, maud::html! {}),</span>
 <span>    }</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Well, it seems to compile just fine. The leaderboard page works fine as well.
 I don’t really have that much experience with this yet but my current assumption
 is that I’m required to derive <code>Clone</code> for <code>Handle</code> since there’s no way to do
 shared ownership. So what it does is that it ends up cloning it every time. But,
 what if I don’t want to clone it? What if I just pass around references?</p>
-<pre><span>pub async fn run(handle: db::Handle) -> Result<(), hyper::Error> {</span>
+<pre><code><span>pub async fn run(handle: db::Handle) -> Result<(), hyper::Error> {</span>
 <span>    let app = Router::new()</span>
 <span>        .route("/leaderboard", routing::get(controllers::leaderboard))</span>
 <span>        .layer(Extension(&handle));</span>
@@ -476,10 +461,9 @@ what if I don’t want to clone it? What if I just pass around references?</p>
 <span>        .serve(app.into_make_service())</span>
 <span>        .with_graceful_shutdown(signal_shutdown())</span>
 <span>        .await</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Compiles with this helpful error message:</p>
-<pre><span>error[E0597]: `handle` does not live long enough</span>
+<pre><code><span>error[E0597]: `handle` does not live long enough</span>
 <span>  --> src/lib.rs:36:26</span>
 <span>   |</span>
 <span>22 |       let app = Router::new()</span>
@@ -494,8 +478,7 @@ what if I don’t want to clone it? What if I just pass around references?</p>
 <span>   |   - `handle` dropped here while still borrowed</span>
 <span></span>
 <span>For more information about this error, try `rustc --explain E0597`.</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Unfortunately, I’m not too familiar with how lifetimes work in <code>async</code>/<code>await</code>.
 But it looks like since it’s non-blocking, <code>handle</code> gets dropped since the function
 reaches the end of its scope while the server is still running.</p>
@@ -505,7 +488,7 @@ reading on this topic.</p>
 </blockquote>
 <p>Wait, what about <code>app</code> then? Won’t this get dropped as well? I wanted to confirm
 if this did get moved, or if it did some other trickery I had no idea about:</p>
-<pre><span>    let app = Router::new()</span>
+<pre><code><span>    let app = Router::new()</span>
 <span>        .route("/leaderboard", routing::get(controllers::leaderboard))</span>
 <span>        .layer(Extension(handle));</span>
 <span></span>
@@ -520,11 +503,10 @@ if this did get moved, or if it did some other trickery I had no idea about:</p>
 <span>    println!("{:?}", app);</span>
 <span></span>
 <span>    foo</span>
-<span></span>
-</pre>
+</code></pre>
 <p>So if <code>app</code> does get moved, then <code>rustc</code> should complain about me accessing a
 variable with no ownership; which it does:</p>
-<pre><span>error[E0382]: borrow of moved value: `app`</span>
+<pre><code><span>error[E0382]: borrow of moved value: `app`</span>
 <span>   --> src/lib.rs:46:22</span>
 <span>    |</span>
 <span>22  |     let app = Router::new()</span>
@@ -537,13 +519,12 @@ variable with no ownership; which it does:</p>
 <span>    |                      ^^^ value borrowed here after move</span>
 <span>    |</span>
 <span>note: this function takes ownership of the receiver `self`, which moves `app`</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Phew! It’s almost like I’m encouraged to try out all the failed scenarios to
 learn a lot of things since the compiler is quite helpful.</p>
 <p>Okay, since I didn’t want this to get cloned all the time, I will just follow
 what <code>axum</code> used in its examples - the usage of <code>Arc&lt;T&gt;</code>:</p>
-<pre><span>pub async fn run(handle: db::Handle) -> Result<(), hyper::Error> {</span>
+<pre><code><span>pub async fn run(handle: db::Handle) -> Result<(), hyper::Error> {</span>
 <span>    let handle = Arc::new(handle);</span>
 <span>    //  ^ Shadow previous binding with `Arc<db::Handle>`</span>
 <span></span>
@@ -559,17 +540,15 @@ what <code>axum</code> used in its examples - the usage of <code>Arc&lt;T&gt;</c
 <span>        .with_graceful_shutdown(signal_shutdown())</span>
 <span>        .await</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>And then I’ll remove the <code>Clone</code> derivation:</p>
-<pre><span>pub struct Handle {</span>
+<pre><code><span>pub struct Handle {</span>
 <span>    pub pool: Pool,</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>So if I’m not mistaken, which I probably am, <code>Arc&lt;T&gt;</code> should allow me to share
 ownership of <code>db::Handle</code> without having to clone it <sup class="footnote-reference"><a href="#3">3</a></sup>.</p>
-<pre><span>pub async fn leaderboard(</span>
+<pre><code><span>pub async fn leaderboard(</span>
 <span>    Extension(handle): Extension<Arc<db::Handle>></span>
 <span>) -> (StatusCode, Markup) {</span>
 <span>    match leaderboard::fetch(&*handle).await {</span>
@@ -579,10 +558,9 @@ ownership of <code>db::Handle</code> without having to clone it <sup class="foot
 <span>        Err(_e) => (StatusCode::INTERNAL_SERVER_ERROR, maud::html! {}),</span>
 <span>    }</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Then in <code>leaderboard::fetch/1</code>:</p>
-<pre><span>pub async fn fetch_url(</span>
+<pre><code><span>pub async fn fetch_url(</span>
 <span>    handle: &db::Handle,</span>
 <span>    identifier: String</span>
 <span>) -> Result<String, Error> {</span>
@@ -593,8 +571,7 @@ ownership of <code>db::Handle</code> without having to clone it <sup class="foot
 <span></span>
 <span>    row.try_get(0).map_err(|e| Error::from(e))</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Although, I had to manually dereference it to get the reference to <code>Handle</code>. It’s
 also a good thing that I don’t have to mutate <code>handle</code> at all because otherwise
 this would’ve been a more painful experience.</p>
@@ -608,7 +585,7 @@ and <code>native-tls</code>. Oh, I also had a difficult time <sup class="footnot
 didn’t seem to like DO’s CA certificate, which is why I settled with <code>native-tls</code>.</p>
 <p><code>native-tls</code> needed OpenSSL setup, which I was able to do with Nix (for the
 dev environment):</p>
-<pre><span>  # ...</span>
+<pre><code><span>  # ...</span>
 <span>        devShell = pkgs.mkShell {</span>
 <span>          # inherit (self.checks.${system}.pre-commit-check) shellHook;</span>
 <span></span>
@@ -625,8 +602,7 @@ dev environment):</p>
 <span>        };</span>
 <span></span>
 <span>  # ...</span>
-<span></span>
-</pre>
+</code></pre>
 <p>So I had to provide the CA cert during runtime, not build-time since: 1) it’ll
 be easier to distribute the static binary and Docker image, and 2) some CA certs
 are only given during runtime (like DO if ever you’re using app platform). This
@@ -639,7 +615,7 @@ like one that contains the certificate contents, exist.</li>
 <li>Run <code>emojied</code></li>
 </ol>
 <p>This seems to be a pretty standard process, although this is fairly tedious.</p>
-<pre><span>// src/config.rs</span>
+<pre><code><span>// src/config.rs</span>
 <span>use tokio_postgres::config::SslMode;</span>
 <span></span>
 <span>let mut pg_config = tokio_postgres::Config::new();</span>
@@ -659,11 +635,10 @@ like one that contains the certificate contents, exist.</li>
 <span>        None</span>
 <span>    }</span>
 <span>};</span>
-<span></span>
-</pre>
+</code></pre>
 <p>I allowed it to continue running without the cert path in <code>PG__CA_CERT</code> for
 dev environments.</p>
-<pre><span>// Somewhere in src/db.rs</span>
+<pre><code><span>// Somewhere in src/db.rs</span>
 <span></span>
 <span>let manager = match app_config.ca_cert_path {</span>
 <span>    Some(ca_cert_path) => {</span>
@@ -692,8 +667,7 @@ dev environments.</p>
 <span>    .max_size(app_config.pool_size)</span>
 <span>    .build()</span>
 <span>    .map_err(|_| Error::FailedToBuildPool)?;</span>
-<span></span>
-</pre>
+</code></pre>
 <blockquote>
 <p>The process was quite similar with SQLx but there was something, that I don’t
 really remember anymore, which made it so frustrating to work with.</p>
@@ -702,7 +676,7 @@ really remember anymore, which made it so frustrating to work with.</p>
 reason, so cramming everything including the <code>BEGIN CERTIFICATE</code> and <code>END CERTIFICATE</code>
 into one line resulted in it getting rejected. So, I just got what’s in between,
 and manually appended it to the file instead.</p>
-<pre><span>echo "Dumping CA certificate to /app/ca-certificate.crt"</span>
+<pre><code><span>echo "Dumping CA certificate to /app/ca-certificate.crt"</span>
 <span>echo "-----BEGIN CERTIFICATE-----" > /app/ca-certificate.crt</span>
 <span>echo $CA_CERT >> /app/ca-certificate.crt</span>
 <span>echo "-----END CERTIFICATE-----" >> /app/ca-certificate.crt</span>
@@ -710,8 +684,7 @@ and manually appended it to the file instead.</p>
 <span>echo "Executing emojied"</span>
 <span></span>
 <span>./emojied</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Kind of hacky, and inconvenient especially if I forget. But it works!</p>
 <h2 id="url-redirect-woes"><a href="#url-redirect-woes">URL redirect woes</a></h2>
 <p>This is a short one. For the redirect, I returned an HTTP status 301 <sup class="footnote-reference"><a href="#4">5</a></sup> with
@@ -733,7 +706,7 @@ and that I needed to use <code>302</code>.</p>
 <p>I had a pleasant experience with server-side templating while I was building
 a Haskell project called <a href="https://swoogle.sekun.dev">swoogle</a>. I used <code>lucid</code>
 <sup class="footnote-reference"><a href="#6">7</a></sup> which was a pretty darn elegant HTML DSL.</p>
-<pre><span>-- Category options</span>
+<pre><code><span>-- Category options</span>
 <span>select_</span>
 <span>  [ id_ "category-options"</span>
 <span>  , name_ "resource"</span>
@@ -747,19 +720,17 @@ a Haskell project called <a href="https://swoogle.sekun.dev">swoogle</a>. I used
 <span>  option_ [value_ "vehicle"] "Vehicle"</span>
 <span>  option_ [value_ "species"] "Species"</span>
 <span>  option_ [value_ "planet"] "Planet"</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Well, I wanted something like that in Rust, and I found <code>maud</code> <sup class="footnote-reference"><a href="#7">8</a></sup>. I did run
 into a problem when I tried to use its latest version with <code>axum</code> since something
 must’ve changed in <code>axum</code>, so I had to pull from the <code>main</code> instead:</p>
-<pre><span>[dependencies]</span>
+<pre><code><span>[dependencies]</span>
 <span>...</span>
 <span>maud = { git = "https://github.com/lambda-fairy/maud", branch = "main", features = ["axum"] }</span>
 <span>...</span>
-<span></span>
-</pre>
+</code></pre>
 <p>So with this, I could do stuff like:</p>
-<pre><span>fn foo() -> Markup {</span>
+<pre><code><span>fn foo() -> Markup {</span>
 <span>  html! {</span>
 <span>    ("Hello")</span>
 <span>    h1 class="text-red-500" { ("Hello!") }</span>
@@ -767,15 +738,14 @@ must’ve changed in <code>axum</code>, so I had to pull from the <code>main</co
 <span>    h2 class=("font-semibold") { ("Hey") }</span>
 <span>  }</span>
 <span>}</span>
-<span></span>
-</pre><h2 id="<code><noscript></code>-tag,-and-problems-with-js-toggling-extensions"><a href="#<code><noscript></code>-tag,-and-problems-with-js-toggling-extensions"><code><noscript></code> tag, and problems with JS toggling extensions</a></h2>
+</code></pre><h2 id="<code><noscript></code>-tag,-and-problems-with-js-toggling-extensions"><a href="#<code><noscript></code>-tag,-and-problems-with-js-toggling-extensions"><code><noscript></code> tag, and problems with JS toggling extensions</a></h2>
 <p>I wanted to have the website work with JS disabled because, well, it was a very
 simple website. There was no reason why I couldn’t make all the important features
 work without JS!</p>
 <p>So I ended up making heavy use of the <code>&lt;noscript&gt;</code> tag, since it allowed me to
 display alternative content when the browser has JS disabled. You’ll see it
 littered all over the codebase, like so:</p>
-<pre><span>@match data {</span>
+<pre><code><span>@match data {</span>
 <span>    RootData::Auto(_) => {</span>
 <span>        noscript {</span>
 <span>            div class="w-full sm:w-4/5 mt-2 mx-auto text-su-fg-1 dark:text-su-dark-fg-1" {</span>
@@ -796,8 +766,7 @@ littered all over the codebase, like so:</p>
 <span>        }</span>
 <span>    }</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>These only get rendered by the browser when JS is disabled. But what do browser
 extensions like <code>NoScript</code> when it “disables” JS? It’s something like this:</p>
 <ol>

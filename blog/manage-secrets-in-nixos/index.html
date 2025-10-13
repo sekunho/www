@@ -139,7 +139,7 @@ you to create an age file, the CLI looks for a <code>secrets.nix</code> file in 
 directory for the <em>rules</em> to determine who is allowed to decrypt it.</p>
 <p>So, what are these rules?</p>
 <p>Let’s see what the <code>agenix</code> CLI says:</p>
-<pre><span>$ agenix</span>
+<pre><code><span>$ agenix</span>
 <span>agenix - edit and rekey age secret files</span>
 <span></span>
 <span>agenix -e FILE [-i PRIVATE_KEY]</span>
@@ -164,8 +164,7 @@ directory for the <em>rules</em> to determine who is allowed to decrypt it.</p>
 <span>agenix version: 0.13.0</span>
 <span>age binary path: /nix/store/kfasn0129ac0xn8wfvf7mq38rxhbc725-rage-0.8.1/bin/rage</span>
 <span>age version: rage 0.8.1</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Specifically:</p>
 <blockquote>
 <p>RULES environment variable with path to Nix file specifying recipient public keys.
@@ -173,17 +172,16 @@ Defaults to ‘./secrets.nix’</p>
 </blockquote>
 <p>In the aforementioned file, we’re able to say whose key can decrypt what age file.
 Let’s create this file first.</p>
-<pre><span># We'll store the rules, and age files in the `secrets` folder</span>
+<pre><code><span># We'll store the rules, and age files in the `secrets` folder</span>
 <span>mkdir secrets</span>
 <span></span>
 <span>touch secrets.nix</span>
-<span></span>
-</pre>
+</code></pre>
 <p>For the example later, I’ll need two files: one containing the DB CA certificate,
 and the DB password. So I’ll create a rule for each age file I’m going to generate
 later on.</p>
 <p>Here’s how it looks like:</p>
-<pre><span># secrets/secrets.nix</span>
+<pre><code><span># secrets/secrets.nix</span>
 <span></span>
 <span>let</span>
 <span>  peepeepoopoo = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB/Oxx/jZS7TRqjp2kwaYavzcxxKFTrStikFrtZq3q3l root@peepeepoopoo";</span>
@@ -191,8 +189,7 @@ later on.</p>
 <span>  "emojiedDBPassword.age".publicKeys = [ peepeepoopoo ];</span>
 <span>  "emojiedDBCACert.age".publicKeys = [ peepeepoopoo ];</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>When decrypting/creating <code>emojiedDBPassword.age</code> for example, <code>agenix</code> looks for
 the private key pair of the public key that was supplied. Otherwise, it prohibits
 the user from doing so, and will complain about there not being any matching keys.</p>
@@ -203,9 +200,8 @@ if you’re using the CLI for creating/updating an age file.</p>
 </blockquote>
 <p>We’ll need the <code>agenix</code> CLI to create an age file containing our encrypted secret,
 and run this:</p>
-<pre><span>$ agenix -e emojiedDBCACert.age</span>
-<span></span>
-</pre>
+<pre><code><span>$ agenix -e emojiedDBCACert.age</span>
+</code></pre>
 <p>This opens a text editor for you to put the secret in.</p>
 <div>
 
@@ -237,11 +233,10 @@ and run this:</p>
 file accordingly, and run <code>agenix -r</code>. Make sure you’re in the same directory
 as the <code>secrets.nix</code>, and age files.</p>
 <p>It would show you something like this if it succeeds:</p>
-<pre><span>$ agenix -r</span>
+<pre><code><span>$ agenix -r</span>
 <span>rekeying emojiedDBCACert.age...</span>
 <span>rekeying emojiedDBPassword.age...</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Now our age files are ready to be used!</p>
 <p>I mentioned earlier that my use case is for supplying the DB CA certificate, and
 DB password to the <a href="https://emojied.net"><code>emojied</code></a> app for it to connect with
@@ -257,7 +252,7 @@ running) are the ff:</p>
 <li>SSH key permitted to decrypt said age files</li>
 </ul>
 <p><code>flake.nix</code>:</p>
-<pre><span>{</span>
+<pre><code><span>{</span>
 <span>  description = "Example";</span>
 <span></span>
 <span>  inputs = {</span>
@@ -294,12 +289,11 @@ running) are the ff:</p>
 <span>      };</span>
 <span>    };</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>All that’s left to do is specify where the age files are located, and referencing
 the decrypted age files’ paths.</p>
 <p><code>hosts/peepeepoopoo/configuration.nix</code>:</p>
-<pre><span>{ modulesPath, lib, config, pkgs, ... }: {</span>
+<pre><code><span>{ modulesPath, lib, config, pkgs, ... }: {</span>
 <span>  imports = lib.optional (builtins.pathExists ./do-userdata.nix) ./do-userdata.nix ++ [</span>
 <span>    (modulesPath + "/virtualisation/digital-ocean-config.nix")</span>
 <span>  ];</span>
@@ -387,17 +381,15 @@ the decrypted age files’ paths.</p>
 <span></span>
 <span>  system.stateVersion = "22.05";</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Now we can move the <code>secrets</code> folder, and the SSH key (if it’s not already there)
 from our host machine to the remote server.</p>
-<pre><span>$ scp secrets root@<SERVER_IP>:/root/</span>
+<pre><code><span>$ scp secrets root@<SERVER_IP>:/root/</span>
 <span>$ scp ~/.ssh/<YOUR_KEY> root@<SERVER_IP>:/root/.ssh/id_ed25519</span>
 <span>$ scp ~/.ssh/<YOUR_KEY>.pub root@<SERVER_IP>:/root/.ssh/id_ed25519.pub</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Then hit build and apply the config:</p>
-<pre><span>$ nixos-rebuild switch \</span>
+<pre><code><span>$ nixos-rebuild switch \</span>
 <span>  --flake .#peepeepoopoo \</span>
 <span>  --target-host root@<SERVER_IP> \</span>
 <span>  --build-host localhost</span>
@@ -419,8 +411,7 @@ from our host machine to the remote server.</p>
 <span>setting up tmpfiles</span>
 <span>starting the following units: emojied.service</span>
 <span>the following new units were started: run-agenix.d.mount</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Which gives me this beautiful creation:</p>
 <div>
 
@@ -448,6 +439,7 @@ from our host machine to the remote server.</p>
   </x-img>
 
 </div>
+<img style="width: 8rem;" src="/assets/images/not-by-ai.png">
 
 
     <footer>

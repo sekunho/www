@@ -91,15 +91,14 @@ find a name for it so I ended up using a term I learned about recently —
 <h2 id="quick-start"><a href="#quick-start">Quick start</a></h2>
 <p>A <code>puggle</code> project starts with a configuration file <code>puggle.yml</code>. This config
 file allows us to define the pages we want to have for our static site.</p>
-<pre><span># ./puggle.yml</span>
+<pre><code><span># ./puggle.yml</span>
 <span>templates_dir: templates</span>
 <span>dest_dir: dist</span>
 <span></span>
 <span>pages:</span>
 <span>  - name: blog</span>
 <span>    template_path: layout/blog.html</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Here we defined a page called <code>blog</code>, as well as the relative path to the template
 that it should use. This template will be used to generate the HTML file for our
 blog page.</p>
@@ -107,7 +106,7 @@ blog page.</p>
 <code>template_path</code>s. So in our example, the actual relative path <code>puggle</code> will use
 is <code>./templates/layout/blog.html</code>.</p>
 <p>Next, let’s create our blog page’s template.</p>
-<pre><span><!-- ./templates/layout/blog.html --></span>
+<pre><code><span><!-- ./templates/layout/blog.html --></span>
 <span><!DOCTYPE html></span>
 <span><html></span>
 <span>  <head></span>
@@ -118,16 +117,14 @@ is <code>./templates/layout/blog.html</code>.</p>
 <span>    Welcome to my blog.</span>
 <span>  </body></span>
 <span></html></span>
-<span></span>
-</pre>
+</code></pre>
 <p>Running <code>puggle build</code> would create the following:</p>
-<pre><span>dist</span>
+<pre><code><span>dist</span>
 <span>└─ blog</span>
 <span>   └─ index.html</span>
-<span></span>
-</pre>
+</code></pre>
 <p>…with an <code>dist/blog/index.html</code></p>
-<pre><span><!-- ./dist/blog/index.html --></span>
+<pre><code><span><!-- ./dist/blog/index.html --></span>
 <span><!DOCTYPE html></span>
 <span><html></span>
 <span>  <head></span>
@@ -136,8 +133,7 @@ is <code>./templates/layout/blog.html</code>.</p>
 <span></span>
 <span>  <body>Welcome to my blog.</body></span>
 <span></html></span>
-<span></span>
-</pre>
+</code></pre>
 <p>This is not very interesting though because we want to have posts in our blog.
 We also want our template to be slightly different from our main blog page.
 So let’s create some entries!</p>
@@ -147,7 +143,7 @@ So let’s create some entries!</p>
 <li>Referencing the markdown file directly.</li>
 </ol>
 <p>Let’s update our <code>puggle.yml</code>.</p>
-<pre><span># ./puggle.yml</span>
+<pre><code><span># ./puggle.yml</span>
 <span>templates_dir: templates</span>
 <span>dest_dir: dist</span>
 <span></span>
@@ -158,12 +154,11 @@ So let’s create some entries!</p>
 <span>    entries:</span>
 <span>      - source_dir: blog/posts</span>
 <span>        template_path: layout/post.html</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Here we’re defining our source directory for our blog’s entries to be <code>./blog/posts</code>.
 <code>puggle</code> will search for every single markdown file under that directory.</p>
 <p>Then create <code>./blog/posts/first.md</code></p>
-<pre><span><!-- ./blog/posts/first.md --></span>
+<pre><code><span><!-- ./blog/posts/first.md --></span>
 <span>---</span>
 <span>title: First post</span>
 <span>summary: For my first blog post, I shall...</span>
@@ -176,8 +171,7 @@ So let’s create some entries!</p>
 <span># First post</span>
 <span></span>
 <span>Hello, world!</span>
-<span></span>
-</pre>
+</code></pre>
 <blockquote>
 <p>💡 You’ll notice a YAML-style metadata block at the top of the markdown file,
 and this is what allows you to do some pretty cool things with <code>puggle</code>. For
@@ -192,7 +186,7 @@ index a page’s entries.</li>
 </ul>
 </blockquote>
 <p>And a template for our blog’s entries</p>
-<pre><span><!-- ./templates/layout/post.html --></span>
+<pre><code><span><!-- ./templates/layout/post.html --></span>
 <span><!DOCTYPE html></span>
 <span><html></span>
 <span>  <head></span>
@@ -203,22 +197,20 @@ index a page’s entries.</li>
 <span>    {% block content %}{% endblock %}</span>
 <span>  </body></span>
 <span></html></span>
-<span></span>
-</pre>
+</code></pre>
 <p>The <code>{% block content %}{% endblock %}</code> defines a <code>block</code>
 statement for us to inject content into it. <code>puggle</code> requires the content block
 to be present in the entry template otherwise it would have nowhere to inject
 the generated HTML file into, and would result in a blank HTML file.</p>
 <p><code>puggle build</code> would then create the following:</p>
-<pre><span>dist</span>
+<pre><code><span>dist</span>
 <span>└─ blog</span>
 <span>   ├─ first</span>
 <span>   │  └─ index.html</span>
 <span>   └─ index.html</span>
-<span></span>
-</pre>
+</code></pre>
 <p>…with an <code>dist/blog/first/index.html</code></p>
-<pre><span><!-- ./dist/blog/first/index.html --></span>
+<pre><code><span><!-- ./dist/blog/first/index.html --></span>
 <span><!DOCTYPE html></span>
 <span><html></span>
 <span>  <head></span>
@@ -230,12 +222,11 @@ the generated HTML file into, and would result in a blank HTML file.</p>
 <span>    <p>Hello, world!</p></span>
 <span>  </body></span>
 <span></html></span>
-<span></span>
-</pre><h3 id="page-entry-metadata"><a href="#page-entry-metadata">Page entry metadata</a></h3>
+</code></pre><h3 id="page-entry-metadata"><a href="#page-entry-metadata">Page entry metadata</a></h3>
 <p>Metadata provides a lot of flexibility for you to inject data into your templates,
 or markdown files.</p>
 <p>Therefore changing our blog entry to</p>
-<pre><span><!-- ./blog/posts/first.md --></span>
+<pre><code><span><!-- ./blog/posts/first.md --></span>
 <span>---</span>
 <span>title: First post</span>
 <span>summary: For my first blog post, I shall...</span>
@@ -248,14 +239,13 @@ or markdown files.</p>
 <span># puggle</span>
 <span></span>
 <span>Hello, world!</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Would give us the same result because <code>puggle</code> understands that we’re referencing
 the <code>title</code> attribute defined in the entry’s metadata. <code>puggle</code> also allows you
 to use <em>all</em> page entries’ metadata in other pages.</p>
 <p>The entry’s template file can also reference the entry’s metadata so you could
 set the <code>title</code> tag to our entry title for example.</p>
-<pre><span><!-- ./templates/layout/post.html --></span>
+<pre><code><span><!-- ./templates/layout/post.html --></span>
 <span><!DOCTYPE html></span>
 <span><html></span>
 <span>  <head></span>
@@ -266,14 +256,13 @@ set the <code>title</code> tag to our entry title for example.</p>
 <span>    {% block content %}{% endblock %}</span>
 <span>  </body></span>
 <span></html></span>
-<span></span>
-</pre>
+</code></pre>
 <blockquote>
 <p>You can’t reference metadata attributes in a page entry from another entry
 because each entry can only know about its own metadata.</p>
 </blockquote>
 <p>Let’s index our blog’s entries in our blog page!</p>
-<pre><span><!-- ./templates/layout/blog.html --></span>
+<pre><code><span><!-- ./templates/layout/blog.html --></span>
 <span><!DOCTYPE html></span>
 <span><html></span>
 <span>  <head></span>
@@ -294,10 +283,9 @@ because each entry can only know about its own metadata.</p>
 <span>    {% endfor %}</span>
 <span>  </body></span>
 <span></html></span>
-<span></span>
-</pre>
+</code></pre>
 <p>Would result in this HTML page</p>
-<pre><span><!-- ./dist/blog/index.html --></span>
+<pre><code><span><!-- ./dist/blog/index.html --></span>
 <span><!DOCTYPE html></span>
 <span><html></span>
 <span>  <head></span>
@@ -312,8 +300,7 @@ because each entry can only know about its own metadata.</p>
 <span>    </ul></span>
 <span>  </body></span>
 <span></html></span>
-<span></span>
-</pre><h2 id="conclusion"><a href="#conclusion">Conclusion</a></h2>
+</code></pre><h2 id="conclusion"><a href="#conclusion">Conclusion</a></h2>
 <p>I think <code>puggle</code> is pretty simple, and in a way, limited in what it can do. But
 it’s flexible, and expressive enough especially thanks to <code>jinja2</code>, specifically
 <a href="https://github.com/mitsuhiko/minijinja"><code>mitsuhiko/minijinja</code></a>. This entire site
@@ -321,7 +308,7 @@ uses <code>puggle</code>! Perhaps, in the future, I could extend <code>puggle</c
 easier to work with.</p>
 <hr>
 <p>Here’s the <code>puggle.yml</code> complete manifest.</p>
-<pre><span># puggle.yml</span>
+<pre><code><span># puggle.yml</span>
 <span></span>
 <span>## Relative or absolute path to your templates' root directory.</span>
 <span>templates_dir: <DIR_PATH></span>
@@ -350,8 +337,7 @@ easier to work with.</p>
 <span>      ## Or you may directly reference a markdown file.</span>
 <span>      - markdown_path: <FILE_PATH></span>
 <span>        template_path: <FILE_PATH></span>
-<span></span>
-</pre>
+</code></pre>
 
     <footer>
   <div>

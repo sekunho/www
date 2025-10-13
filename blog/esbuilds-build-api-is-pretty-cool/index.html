@@ -110,7 +110,7 @@ and/or minifying CSS/JS files. I’d rather not have to run two CLI programs jus
 to prepare everything for me. Running one <code>esbuild</code> script is just more convenient.</p>
 <p>But first, a basic build file!</p>
 <p>Run <code>npm init</code>, and add <code>esbuild</code> to your project’s dependencies.</p>
-<pre><span>// package.json</span>
+<pre><code><span>// package.json</span>
 <span>{</span>
 <span>  "name": "foo",</span>
 <span>  "version": "1.0.0",</span>
@@ -126,23 +126,21 @@ to prepare everything for me. Running one <code>esbuild</code> script is just mo
 <span>    "esbuild": "^0.25.2",</span>
 <span>  }</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Then create our <code>esbuild</code> build file</p>
-<pre><span>// build.js</span>
+<pre><code><span>// build.js</span>
 <span>import * as esbuild from 'esbuild'</span>
 <span></span>
 <span>let result = await esbuild.build({</span>
 <span>    entryPoints: ["assets/**/*"],</span>
 <span>    outdir: "public",</span>
 <span>})</span>
-<span></span>
-</pre>
+</code></pre>
 <p>This watches the <code>assets</code> directory for any changes, and spits out the “final”
 assets in the <code>public</code> directory as is. Nothing too interesting at the moment.</p>
 <p>Then in the <code>package.json</code> file, add an entry to <code>scripts</code> that executes our
 <code>esbuild</code> script:</p>
-<pre><span>//package.json</span>
+<pre><code><span>//package.json</span>
 <span></span>
 <span>// ...</span>
 <span>"scripts": {</span>
@@ -150,20 +148,18 @@ assets in the <code>public</code> directory as is. Nothing too interesting at th
 <span>  "test": "echo \"Error: no test specified\" && exit 1"</span>
 <span>},</span>
 <span>// ...</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Let’s try running <code>npm run build</code> with this assets directory:</p>
-<pre><span> 4096 B    ┌─ style.css</span>
+<pre><code><span> 4096 B    ┌─ style.css</span>
 <span> 4096 B ┌─ css</span>
 <span> 4096 B │  ┌─ script.js</span>
 <span> 4096 B ├─ script</span>
 <span> 4096 B │  ┌─ style.scss</span>
 <span> 4096 B ├─ sass</span>
 <span>12288 B assets</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Well, I ran into this error:</p>
-<pre><span>> foo@1.0.0 watch</span>
+<pre><code><span>> foo@1.0.0 watch</span>
 <span>> node watch.js</span>
 <span></span>
 <span>✘ [ERROR] No loader is configured for ".scss" files: assets/sass/style.scss</span>
@@ -189,25 +185,23 @@ assets in the <code>public</code> directory as is. Nothing too interesting at th
 <span>}</span>
 <span></span>
 <span>Node.js v22.14.0</span>
-<span></span>
-</pre>
+</code></pre>
 <p>The error message does make sense. <code>esbuild</code> by default does not handle <code>scss</code>
 files. I suppose it should only care about “native” web technologies so fair
 enough. Fortunately, they have a <code>plugins</code> property in their API as well. Even
 better, someone already wrote a loader for it!</p>
-<pre><span>// package.json</span>
+<pre><code><span>// package.json</span>
 <span></span>
 <span>// ...</span>
 <span>"dependencies": {</span>
 <span>  "esbuild-sass-plugin": "^3.3.1"</span>
 <span>}</span>
 <span>// ...</span>
-<span></span>
-</pre>
+</code></pre>
 <p>The <code>esbuild</code> API has a <code>plugins</code> key that allows us to specify callbacks whenever
 the file matches the filter set by the plugin. For <code>esbuild-sass-plugin</code>, its
 default pattern is <code>/.(s[ac]ss|css)$/</code> which in this case works just fine.</p>
-<pre><span>import * as esbuild from 'esbuild'</span>
+<pre><code><span>import * as esbuild from 'esbuild'</span>
 <span>import { sassPlugin } from 'esbuild-sass-plugin'</span>
 <span></span>
 <span>let ctx = await esbuild.build({</span>
@@ -217,33 +211,30 @@ default pattern is <code>/.(s[ac]ss|css)$/</code> which in this case works just 
 <span>  treeShaking: true, // <-- 2</span>
 <span>  plugins: [sassPlugin()],</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <blockquote class="markdown-alert-note">
 <p>1 &amp; 2 are not necessary but I just added it to show that you could do more stuff
 as well.</p>
 </blockquote>
 <p>Runnng <code>npm run build</code> creates a <code>public</code> directory with our assets built, and
 transformed by <code>esbuild</code>!</p>
-<pre><span> 4096 B    ┌─ style.css</span>
+<pre><code><span> 4096 B    ┌─ style.css</span>
 <span> 4096 B ┌─ css</span>
 <span> 4096 B │  ┌─ script.js</span>
 <span> 4096 B ├─ script</span>
 <span> 4096 B │  ┌─ style.css</span>
 <span> 4096 B ├─ sass</span>
 <span>12288 B public</span>
-<span></span>
-</pre>
+</code></pre>
 <p>And we can verify this by taking a look at <code>./public/sass</code></p>
-<pre><span>.foo{color:#00f}@media (min-width: 40rem){.foo{color:red}}</span>
-<span></span>
-</pre><h2 id="packaging-the-build-script-with-<code>nix</code>"><a href="#packaging-the-build-script-with-<code>nix</code>">Packaging the build script with <code>nix</code></a></h2>
+<pre><code><span>.foo{color:#00f}@media (min-width: 40rem){.foo{color:red}}</span>
+</code></pre><h2 id="packaging-the-build-script-with-<code>nix</code>"><a href="#packaging-the-build-script-with-<code>nix</code>">Packaging the build script with <code>nix</code></a></h2>
 <p>The script has two dependencies: <code>esbuild</code>, and a <code>sass</code> loader plugin
 <code>esbuild-sass-plugin</code>. I could use <code>npm install</code> to fetch these dependencies for
 me (like a normal person) but I’m too far gone to do anything normally, and that’s
 no fun!</p>
 <p>Create a <code>flake.nix</code> file with this:</p>
-<pre><span># flake.nix</span>
+<pre><code><span># flake.nix</span>
 <span>{</span>
 <span>  inputs = {</span>
 <span>    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";</span>
@@ -258,8 +249,7 @@ no fun!</p>
 <span>      };</span>
 <span>  };</span>
 <span>}</span>
-<span></span>
-</pre>
+</code></pre>
 <blockquote>
 <p>If you’re using platforms other than <code>x86_64-linux</code>, feel free to change it
 accordingly, or use <code>flake-utils</code>
@@ -269,7 +259,7 @@ accordingly, or use <code>flake-utils</code>
 even know anymore. As a result, there are also lots of <code>nix</code> tools for it. But
 I recently discovered <a href="https://github.com/NixOS/nixpkgs/blob/master/doc/languages-frameworks/javascript.section.md#buildnpmpackage-javascript-buildnpmpackage"><code>pkgs.buildNpmPackage</code></a>,
 and it was surprisingly simple so that’s what we’ll use here.</p>
-<pre><span># flake.nix</span>
+<pre><code><span># flake.nix</span>
 <span></span>
 <span>  # ...</span>
 <span>  outputs = { self, nixpkgs }: {</span>
@@ -290,8 +280,7 @@ and it was surprisingly simple so that’s what we’ll use here.</p>
 <span>          '';</span>
 <span>        };</span>
 <span>  # ...</span>
-<span></span>
-</pre>
+</code></pre>
 <p><code>name</code>, <code>version</code>, and <code>src</code> are straightforward. But what’s <code>npmDepsHash</code>?</p>
 <p>According to the docs:</p>
 <blockquote>
@@ -300,18 +289,16 @@ calculated in advance with <code>prefetch-npm-deps</code>.</p>
 </blockquote>
 <p>Okay, nice. So I just need to add <code>prefetch-npm-deps</code> to the dev shell, and point
 the <code>package-lock.json</code> to it.</p>
-<pre><span># flake.nix</span>
+<pre><code><span># flake.nix</span>
 <span></span>
 <span># ...</span>
 <span>buildInputs = with pkgs; [ prefetch-npm-deps nodejs_22 git ];</span>
 <span># ...</span>
-<span></span>
-</pre>
+</code></pre>
 <p>And run it</p>
-<pre><span>$ prefetch-npm-deps package-lock.json</span>
+<pre><code><span>$ prefetch-npm-deps package-lock.json</span>
 <span>sha256-xF5hnIqw3atLZCa8H88sVOF8nrHXH5Qfh9I1mfTpFvo=</span>
-<span></span>
-</pre><pre><span># flake.nix</span>
+</code></pre><pre><code><span># flake.nix</span>
 <span></span>
 <span>  # ...</span>
 <span>  outputs = { self, nixpkgs }: {</span>
@@ -332,10 +319,9 @@ the <code>package-lock.json</code> to it.</p>
 <span>          '';</span>
 <span>        };</span>
 <span>  # ...</span>
-<span></span>
-</pre>
+</code></pre>
 <p>Now we can run <code>nix build</code>, which gets us this:</p>
-<pre><span> 4096 B       ┌─ style.css</span>
+<pre><code><span> 4096 B       ┌─ style.css</span>
 <span> 4096 B    ┌─ css</span>
 <span> 4096 B    │  ┌─ script.js</span>
 <span> 4096 B    ├─ script</span>
@@ -343,13 +329,13 @@ the <code>package-lock.json</code> to it.</p>
 <span> 4096 B    ├─ sass</span>
 <span>12288 B ┌─ public</span>
 <span>12288 B qydjw7ghmmz46lpcfa6sf4jj6sisl36z-foo-static</span>
-<span></span>
-</pre>
+</code></pre>
 <p>So now I’m able to use these as a dependency of another <code>nix</code> derivation. Neat!</p>
 <blockquote>
 <p>If you would like to check out the final result of everything in this article,
 you may find it under the <a href="https://github.com/sekunho/sekun.net/tree/main/examples/esbuild-build-api"><code>examples/esbuild-build-api</code></a> directory.</p>
 </blockquote>
+<img style="width: 8rem;" src="/assets/images/not-by-ai.png">
 
 
     <footer>
