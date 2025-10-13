@@ -41,8 +41,8 @@
     ${pkgs.brotli}/bin/brotli --best public/projects/**/*.html -f
     ${pkgs.brotli}/bin/brotli --best public/projects/*.html -f
     ${pkgs.brotli}/bin/brotli --best public/*.html -f
-    ${pkgs.brotli}/bin/brotli --best public/**/*.css -f
-    ${pkgs.brotli}/bin/brotli --best public/*.css -f
+    ${pkgs.brotli}/bin/brotli --best $out/assets/**/*.css -f
+    ${pkgs.brotli}/bin/brotli --best $out/assets/*.css -f
 
     # gzip
     ${pkgs.gzip}/bin/gzip --best --keep public/blog/**/*.html -f
@@ -52,8 +52,8 @@
     ${pkgs.gzip}/bin/gzip --best --keep public/projects/**/*.html -f
     ${pkgs.gzip}/bin/gzip --best --keep public/projects/*.html -f
     ${pkgs.gzip}/bin/gzip --best --keep public/*.html -f
-    ${pkgs.gzip}/bin/gzip --best --keep public/**/*.css -f
-    ${pkgs.gzip}/bin/gzip --best --keep public/*.css -f
+    ${pkgs.gzip}/bin/gzip --best --keep $out/assets/**/*.css -f
+    ${pkgs.gzip}/bin/gzip --best --keep $out/assets/*.css -f
 
     mv public/* $out
   '';
