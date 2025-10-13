@@ -1,1 +1,1 @@
-pre{padding:1rem}pre>details{cursor:pointer}@media (prefers-color-scheme: light){pre{background:#00000006}}@media (prefers-color-scheme: dark){pre{background:#ffffff06}}
+pre{padding:1rem}pre>code>details{cursor:pointer}@media (prefers-color-scheme: light){pre{background:#00000006}}@media (prefers-color-scheme: dark){pre{background:#ffffff06}}
