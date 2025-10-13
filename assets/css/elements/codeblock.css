@@ -2,6 +2,10 @@ pre {
   padding: 1rem;
 }
 
+pre > details {
+  cursor: pointer;
+}
+
 @media (prefers-color-scheme: light) {
   pre {
     background: rgba(0,0,0,0.025);

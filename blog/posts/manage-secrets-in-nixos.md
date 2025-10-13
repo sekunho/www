@@ -362,3 +362,5 @@ Which gives me this beautiful creation:
 <div>
 {{ img(src="/assets/images/posts/manage-secrets-in-nixos/emojied-leaderboard.png", alt="Screenshot of emojied.net's leaderboard") }}
 </div>
+
+<img style="width: 8rem;" src="/assets/images/not-by-ai.png">

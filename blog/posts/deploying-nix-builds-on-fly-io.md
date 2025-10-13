@@ -400,3 +400,5 @@ $ fly secrets set "APP_ECHO_ME=nix fixes this" -c fly.toml -a webecho
 [^1]: [`ryantm`'s NixOS manual](https://ryantm.github.io/nixpkgs/builders/images/dockertools)
 
 [^2]: [Official NixOS manual for `streamLayeredImage`](https://nixos.org/manual/nixpkgs/unstable/#ssec-pkgs-dockerTools-streamLayeredImage)
+
+<img style="width: 8rem;" src="/assets/images/not-by-ai.png">

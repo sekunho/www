@@ -725,3 +725,5 @@ static binary to begin with. But it does mean I can't easily distribute it outsi
 `nix`, which is a bummer. Maybe I'll hunt for a workaround in the future. Right
 now, I'm not too keen into sinking a lot of time into something I won't benefit
 from.
+
+<img style="width: 8rem;" src="/assets/images/not-by-ai.png">
