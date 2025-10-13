@@ -30,9 +30,9 @@ Coincidentally, my Framework Desktop finally arrived. It's a cute lil machine
 that I really love. Like any other machine I get my hands on (except macbooks
 lol), I install NixOS in it!
 
-I also redid bits and pieces of my website. I think as time goes on, the more
-utilitarian I become. But this is probably as barebones as it gets in terms of
-design.
+I also redid bits and pieces of my website. I think I got bored of gruvbox (yeah
+I know, I know). As time goes on, the more utilitarian I become. But this is
+probably as barebones as it gets in terms of design.
 
 ---
 
@@ -663,17 +663,31 @@ Here it asks us for the `zfs` pool's encryption passphrase. Nice.
 
 ## Conclusion
 
-Well that was a lot. The nice thing is you more or less only have to set up the
-configuration once. After this, it's best you keep it somewhere easily accessible
-(like GitHub) so that you can download it, and just run the disk partitioning,
-and OS install.
+Documentation for ZFS in NixOS is still kind of sparse since I found answers
+in different places. It's still enough to put something together but not without
+effort.
 
-I also like that there aren't as much "imperative" steps to setting up NixOS.
+The nice thing is you more or less only have to set up the configuration once.
+After this, it's best to keep it somewhere easily accessible (like `git`) so that
+you can download it, and just run `disko`, and `nixos-install`. I like that there
+aren't as much "imperative" steps to setting up NixOS. It's one of the major
+reasons why I've completely stopped distrohopping.
+
+Managing KDE's configuration probably isn't the best experience even with the
+plasma manager project. One is better off with another DE if that's important.
+I'm just satisfied enough with KDE to not switch over to others yet. Plus I
+mostly use stock KDE anyway.
+
+Finally, this little machine is also such a capable thing! KDE is so much more
+smoother vs my Ryzen 5950x + 3090ti back home. Well mainly because the Nvidia
+experience in Linux is horrible. Maybe I'll benchmark a bunch of stuff in one of
+these weekends.
 
 ---
 
 So below are the complete files for `flake.nix`, `configuration.nix`, and `disk-config.nix`.
-Or checkout my configuration in [`sekunho/dotfiles`](https://github.com/sekunho/dotfiles).
+Or check out my configuration in [`sekunho/dotfiles`](https://github.com/sekunho/dotfiles)
+(if it's already there).
 
 ```nix
 # flake.nix
@@ -852,5 +866,7 @@ Or checkout my configuration in [`sekunho/dotfiles`](https://github.com/sekunho/
 }
 ```
 
-
-<img style="width: 8rem;" src="/assets/images/not-by-ai.png">
+<picture>
+  <source srcset="/assets/images/not-by-ai.webp" type="image/webp">
+  <img style="width: 8rem;" src="/assets/images/not-by-ai.png">
+</picture>
