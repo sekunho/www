@@ -2,7 +2,7 @@ pre {
   padding: 1rem;
 }
 
-pre > details {
+pre > code > details {
   cursor: pointer;
 }
 
