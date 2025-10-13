@@ -301,16 +301,16 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1760314163,
+        "lastModified": 1760317312,
         "narHash": "sha256-Cqge6gSyrLrhAdME/MDHQeU61azSBqbJIhMvRmdsar8=",
         "owner": "sekunho",
         "repo": "puggle",
-        "rev": "f9080bbf1a60c49fd1e63c9cd4c28b32969fe298",
+        "rev": "4b22cb1a11dec8740819c8606c538d43108af300",
         "type": "github"
       },
       "original": {
         "owner": "sekunho",
-        "ref": "feat/themes",
+        "ref": "main",
         "repo": "puggle",
         "type": "github"
       }
