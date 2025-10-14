@@ -13,7 +13,7 @@ custom:
 # {{ metadata.title }}
 
 <picture>
-    <img src="{{ metadata.cover }}">
+    <img src="{{ metadata.cover }}" alt="a framework desktop with a mini Hiro on top" loading="lazy">
 </picture>
 
 <span class="post-metadata">
@@ -54,14 +54,14 @@ Here you'll be greeted with the boot selector (just choose any of the kernel ver
 
 <picture>
   <source srcset="/assets/images/posts/nixos-on-framework-desktop/boot-selector.webp" type="image/webp">
-  <img src="/assets/images/posts/nixos-on-framework-desktop/boot-selector.png">
+  <img src="/assets/images/posts/nixos-on-framework-desktop/boot-selector.png" alt="a boot selector for NixOS with different kernel versions" loading="lazy">
 </picture>
 
 after choosing one, you'll see the terminal
 
 <picture>
   <source srcset="/assets/images/posts/nixos-on-framework-desktop/terminal.webp" type="image/webp">
-  <img src="/assets/images/posts/nixos-on-framework-desktop/terminal.png">
+  <img src="/assets/images/posts/nixos-on-framework-desktop/terminal.png" alt="a terminal that shows up once you boot into a minimal NixOS ISO" loading="lazy">
 </picture>
 
 Great!
@@ -389,7 +389,7 @@ and all the datasets defined.
 
 <picture>
   <source srcset="/assets/images/posts/nixos-on-framework-desktop/disk-check.webp" type="image/webp">
-  <img src="/assets/images/posts/nixos-on-framework-desktop/disk-check.png">
+  <img src="/assets/images/posts/nixos-on-framework-desktop/disk-check.png" alt="results after running lsblk and zfs list" loading="lazy">
 </picture>
 
 So far everything looks good!
@@ -645,20 +645,20 @@ boot into NixOS!
 
 <picture>
   <source srcset="/assets/images/posts/nixos-on-framework-desktop/installation-done.webp" type="image/webp">
-  <img src="/assets/images/posts/nixos-on-framework-desktop/installation-done.png">
+  <img src="/assets/images/posts/nixos-on-framework-desktop/installation-done.png" alt="terminal after installing NixOS" loading="lazy">
 </picture>
 
 Here it asks us for the `zfs` pool's encryption passphrase. Nice.
 
 <picture>
   <source srcset="/assets/images/posts/nixos-on-framework-desktop/root-unlock.webp" type="image/webp">
-  <img src="/assets/images/posts/nixos-on-framework-desktop/root-unlock.png">
+  <img src="/assets/images/posts/nixos-on-framework-desktop/root-unlock.png" alt="prompt asking for zpool root passphrase" loading="lazy">
 </picture>
 
 
 <picture>
   <source srcset="/assets/images/posts/nixos-on-framework-desktop/login-screen.webp" type="image/webp">
-  <img src="/assets/images/posts/nixos-on-framework-desktop/login-screen.png">
+  <img src="/assets/images/posts/nixos-on-framework-desktop/login-screen.png" alt="sddm login screen" loading="lazy">
 </picture>
 
 ## Conclusion
@@ -868,5 +868,5 @@ Or check out my configuration in [`sekunho/dotfiles`](https://github.com/sekunho
 
 <picture>
   <source srcset="/assets/images/not-by-ai.webp" type="image/webp">
-  <img style="width: 8rem;" src="/assets/images/not-by-ai.png">
+  <img style="width: 8rem;" src="/assets/images/not-by-ai.png" alt="not by AI" loading="lazy">
 </picture>
