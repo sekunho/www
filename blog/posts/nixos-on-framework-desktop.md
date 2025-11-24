@@ -5,6 +5,7 @@ updated_at:
 tags: ["nixos", "nix", "computer", "framework"]
 cover: "/assets/images/posts/nixos-on-framework-desktop/cover.webp"
 custom:
+    slug: nixos-on-framework-desktop
     summary: |
       Hi, it's been a while (again). I've been feeling better over the past few weeks. Coincidentally, my Framework Desktop finally arrived. It's a cute lil machine that I really love. Like any other machine I get my hands on (except macbooks lol), I install NixOS in it!
 
