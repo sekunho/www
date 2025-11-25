@@ -1,6 +1,7 @@
 templates_dir: templates
 dest_dir: public
 assets_dir: assets
+base_url: https://localhost:3000
 
 pages:
   - name: .
@@ -11,6 +12,8 @@ pages:
 
   - name: blog
     template_path: layout/blog.html
+    rss_feed: true
+    rss_feed_name: sekun's blog
 
     entries:
       - source_dir: blog/posts

@@ -1,15 +1,13 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
-    puggle-flake.url = "github:sekunho/puggle?ref=main";
+    puggle-flake.url = "github:sekunho/puggle?ref=feat/rss-atom";
     flake-utils.url = "github:numtide/flake-utils";
 
     tacopkgs = {
       url = "git+ssh://git@github.com/tacohirosystems/tacopkgs";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        # flake-parts.follows = "flake-parts";
-        # git-hooks.follows = "git-hooks";
       };
     };
   };
