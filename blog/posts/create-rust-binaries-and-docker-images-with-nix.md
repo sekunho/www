@@ -37,7 +37,7 @@ custom:
 
 ## Introduction
 
-A few days ago, I [released](/posts/what-i-learned-from-building-a-rust-emoji-url-shortener)
+A few days ago, I [released](/blog/what-i-learned-from-building-a-rust-emoji-url-shortener)
 ~~the abomination of~~ a project called `emojied`
 ([website](https://emojied.net), [repo](https://github.com/sekunho/emojied)) to
 the world. It went great, I'm glad people found it funny. However, I'm not too

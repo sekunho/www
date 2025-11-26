@@ -8,8 +8,6 @@
       url = "git+ssh://git@github.com/tacohirosystems/tacopkgs";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        # flake-parts.follows = "flake-parts";
-        # git-hooks.follows = "git-hooks";
       };
     };
   };
