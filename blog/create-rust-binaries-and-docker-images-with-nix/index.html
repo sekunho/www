@@ -62,33 +62,12 @@ of community effort to make this less painful.
   </ul>
 </nav>
     
-<h1 id="create-rust-binaries,-and-docker-images-with-nix"><a href="#create-rust-binaries,-and-docker-images-with-nix">Create Rust binaries, and Docker images with Nix</a></h1><div>
+<h1 id="create-rust-binaries,-and-docker-images-with-nix"><a href="https://sekun.net/create-rust-binaries,-and-docker-images-with-nix">Create Rust binaries, and Docker images with Nix</a></h1><div>
 
 </div>
 <div>
 
-  <x-img>
-    <template shadowrootmode="open">
-      <img src="/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/cover.png" alt="Nix logo with arrows pointing from it to the Rust logo, and the Docker logo"/>
-
-      <style>
-        x-img-foo:not(:defined) > template[shadowrootmode] ~ * {
-          display: none;
-        }
-
-        img {
-          
-
-          
-          width: 100%;
-          
-
-          display: block;
-          margin: 1rem auto;
-        }
-      </style>
-    </template>
-  </x-img>
+  <img src="/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/cover.png" alt="Nix logo with arrows pointing from it to the Rust logo, and the Docker logo">
 
 </div>
 <span class="post-metadata">
@@ -112,8 +91,8 @@ of community effort to make this less painful.
   </div>
 
 </div>
-<h2 id="introduction"><a href="#introduction">Introduction</a></h2>
-<p>A few days ago, I <a href="/posts/what-i-learned-from-building-a-rust-emoji-url-shortener">released</a>
+<h2 id="introduction"><a href="https://sekun.net/introduction">Introduction</a></h2>
+<p>A few days ago, I <a href="/blog/what-i-learned-from-building-a-rust-emoji-url-shortener">released</a>
 <del>the abomination of</del> a project called <code>emojied</code>
 (<a href="https://emojied.net">website</a>, <a href="https://github.com/sekunho/emojied">repo</a>) to
 the world. It went great, I’m glad people found it funny. However, I’m not too
@@ -150,7 +129,7 @@ manage permissions, annoying to wait for it to pull an entire image. On the othe
 hand, while Nix is pretty difficult, it seems like a saner approach for what I
 want to do, so I chose it.</p>
 <p>So, here’s how it went. (Spoiler: Kinda painful to setup)</p>
-<h2 id="starting-point"><a href="#starting-point">Starting point</a></h2>
+<h2 id="starting-point"><a href="https://sekun.net/starting-point">Starting point</a></h2>
 <p>This is the starting flake file:</p>
 <pre><code><span>{</span>
 <span>  description = "";</span>
@@ -244,7 +223,7 @@ can be built in the future in the exact same way as now.</p>
 <p>That’s the best ELI5 I can think of, so I recommend you check out the
 <a href="https://nixos.wiki/wiki/Flakes">documentation</a> for a more technical explanation.</p>
 <p>So, I run <code>nix build</code> and…</p>
-<h2 id="problem-0:-openssl"><a href="#problem-0:-openssl">Problem 0: OpenSSL</a></h2>
+<h2 id="problem-0:-openssl"><a href="problem-0:-openssl">Problem 0: OpenSSL</a></h2>
 <p>Bam.</p>
 <pre><code><span>error: builder for '/nix/store/pv9szkam1rawk40ywp3v89k53zg4b1l4-emojied-deps-0.1.0.drv' failed with exit code 101;</span>
 <span>       last 10 log lines:</span>
@@ -271,7 +250,7 @@ just a wrapper around OpenSSL, I need to have OpenSSL around. Thankfully,
 <span>};</span>
 </code></pre>
 <p>Ran <code>nix build</code>, and I’m greeted with another problem!</p>
-<h2 id="problem-1:-<code>git</code>-submodule-woes"><a href="#problem-1:-<code>git</code>-submodule-woes">Problem 1: <code>git</code> submodule woes</a></h2><pre><code><span>Compiling maud_macros v0.23.0 (https://github.com/lambda-fairy/maud?branch=main#e6787cd6)</span>
+<h2 id="problem-1:-git-submodule-woes"><a href="problem-1:-git-submodule-woes">Problem 1: git submodule woes</a></h2><pre><code><span>Compiling maud_macros v0.23.0 (https://github.com/lambda-fairy/maud?branch=main#e6787cd6)</span>
 <span>error: could not compile `maud_macros` due to 3 previous errors</span>
 <span>warning: build failed, waiting for other jobs to finish...</span>
 <span>error: build failed</span>
@@ -305,28 +284,7 @@ I took a look at the <a href="https://github.com/lambda-fairy/maud/tree/main/mau
 and initially seemed like it’s a submodule:</p>
 <div>
 
-  <x-img>
-    <template shadowrootmode="open">
-      <img src="/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/maud-dir.png" alt="Screenshot of maud's GitHub repository"/>
-
-      <style>
-        x-img-foo:not(:defined) > template[shadowrootmode] ~ * {
-          display: none;
-        }
-
-        img {
-          
-
-          
-          width: 100%;
-          
-
-          display: block;
-          margin: 1rem auto;
-        }
-      </style>
-    </template>
-  </x-img>
+  <img src="/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/maud-dir.png" alt="Screenshot of maud's GitHub repository">
 
 </div>
 <p>Turns out there’s a ticket (<a href="https://github.com/nix-community/naersk/issues/110">#110</a>)
@@ -341,7 +299,7 @@ adding <code>gitSubmodules = true;</code>:</p>
 </code></pre>
 <p>So this fixes everything then, right?</p>
 <p>Wrong.</p>
-<h2 id="problem-2:-symlink-woes"><a href="#problem-2:-symlink-woes">Problem 2: Symlink woes</a></h2>
+<h2 id="problem-2:-symlink-woes"><a href="problem-2:-symlink-woes">Problem 2: Symlink woes</a></h2>
 <p>Remember how I said it was a submodule? Well, it turns out that <code>escape.rs</code> is
 actually a symlink (the icons look too similar!). <code>cargo</code> handles it just fine
 so running <code>cargo build</code> will work out. But this isn’t the case for <code>naersk</code>. I
@@ -358,31 +316,10 @@ albeit a symlink. I ran it with:</p>
 <p>…and I was greeted with this unstyled page:</p>
 <div>
 
-  <x-img>
-    <template shadowrootmode="open">
-      <img src="/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/no-static-assets.png" alt="Unstyled emojied.net frontpage"/>
-
-      <style>
-        x-img-foo:not(:defined) > template[shadowrootmode] ~ * {
-          display: none;
-        }
-
-        img {
-          
-
-          
-          width: 100%;
-          
-
-          display: block;
-          margin: 1rem auto;
-        }
-      </style>
-    </template>
-  </x-img>
+  <img src="/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/no-static-assets.png" alt="Unstyled emojied.net frontpage">
 
 </div>
-<h2 id="problem-3:-static-assets"><a href="#problem-3:-static-assets">Problem 3: Static assets</a></h2>
+<h2 id="problem-3:-static-assets"><a href="problem-3:-static-assets">Problem 3: Static assets</a></h2>
 <p><code>emojied</code> is comprised of two things: a server binary, and static assets. These
 static assets are built using <code>tailwindcss</code>’s CLI, and <code>esbuild</code>… which was
 not handled by <code>naersk</code>. It does not seem to provide an escape hatch, which
@@ -460,28 +397,7 @@ added new native build inputs (build time), new steps to <code>buildPhase</code>
 <span>  ./emojied</span>
 </code></pre><div>
 
-  <x-img>
-    <template shadowrootmode="open">
-      <img src="/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/has-static-assets.png" alt="STyled emojied.net frontpage"/>
-
-      <style>
-        x-img-foo:not(:defined) > template[shadowrootmode] ~ * {
-          display: none;
-        }
-
-        img {
-          
-
-          
-          width: 100%;
-          
-
-          display: block;
-          margin: 1rem auto;
-        }
-      </style>
-    </template>
-  </x-img>
+  <img src="/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/has-static-assets.png" alt="STyled emojied.net frontpage">
 
 </div>
 <p>Beautiful.</p>
@@ -514,7 +430,7 @@ for the way I’m using it, which is:</p>
 </ol>
 <p>But with <code>nix run</code>, it gives me broken styles again. I don’t want it to depend
 on where I run it! So. Close.</p>
-<h2 id="problem-4:-making-it-work™"><a href="#problem-4:-making-it-work™">Problem 4: Making it work™</a></h2>
+<h2 id="problem-4:-making-it-work™"><a href="problem-4:-making-it-work%E2%84%A2">Problem 4: Making it work™</a></h2>
 <p>So the problem is that the file paths are relative which makes it depend on
 where I run the binary. The plan then is to provide the static asset directory
 path during runtime!</p>
@@ -650,7 +566,7 @@ provide one, and <code>.#emojied</code> shouldn’t.</p>
 </code></pre>
 <p>…and it works as expected. The second one also serves the static assets
 just fine! Hooray.</p>
-<h2 id="problem-5:-copy-all-that-to-a-docker-image"><a href="#problem-5:-copy-all-that-to-a-docker-image">Problem 5: Copy all that to a Docker image</a></h2>
+<h2 id="problem-5:-copy-all-that-to-a-docker-image"><a href="problem-5:-copy-all-that-to-a-docker-image">Problem 5: Copy all that to a Docker image</a></h2>
 <p>The final step is copying what was built by Nix to a Docker image. I’m currently
 using a <code>Dockerfile</code> for that but this won’t work with this new setup. The problem
 now is that Docker doesn’t resolve symlinks that point outside the context, which
@@ -756,31 +672,10 @@ locally. Not to say that Docker can’t do the same thing, but I found that ther
 were some differences with volumes that made it painful to debug.</p>
 <div>
 
-  <x-img>
-    <template shadowrootmode="open">
-      <img src="/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/sweet-green-gh-actions.png" alt="A screenshot of a GitHub actions job"/>
-
-      <style>
-        x-img-foo:not(:defined) > template[shadowrootmode] ~ * {
-          display: none;
-        }
-
-        img {
-          
-
-          
-          width: 100%;
-          
-
-          display: block;
-          margin: 1rem auto;
-        }
-      </style>
-    </template>
-  </x-img>
+  <img src="/assets/images/posts/create-rust-binaries-and-docker-images-with-nix/sweet-green-gh-actions.png" alt="A screenshot of a GitHub actions job">
 
 </div>
-<h2 id="conclusion"><a href="#conclusion">Conclusion</a></h2>
+<h2 id="conclusion"><a href="https://sekun.net/conclusion">Conclusion</a></h2>
 <p>While it did simplify things such as dependency management across different
 environments, and the deploy process, setting up is pretty complicated. I had
 to look through different references and the Nix matrix channel just to find a

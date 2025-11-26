@@ -50,7 +50,7 @@
   </ul>
 </nav>
     
-<h1 id="NixOS on the Framework Desktop"><a href="#NixOS on the Framework Desktop">NixOS on the Framework Desktop</a></h1><picture>
+<h1 id="NixOS on the Framework Desktop"><a href="https://sekun.net/%7B%7B-metadata.title-%7D%7D">NixOS on the Framework Desktop</a></h1><picture>
     <img src="/assets/images/posts/nixos-on-framework-desktop/cover.webp" alt="a framework desktop with a mini Hiro on top" loading="lazy">
 </picture>
 <span class="post-metadata">
@@ -108,7 +108,7 @@ you’re booting up your computer, and you’ll find the option under Secure boo
   <img src="/assets/images/posts/nixos-on-framework-desktop/terminal.png" alt="a terminal that shows up once you boot into a minimal NixOS ISO" loading="lazy">
 </picture>
 <p>Great!</p>
-<h2 id="connecting-through-wi-fi"><a href="#connecting-through-wi-fi">Connecting through Wi-Fi</a></h2>
+<h2 id="connecting-through-wi-fi"><a href="https://sekun.net/connecting-through-wi-fi">Connecting through Wi-Fi</a></h2>
 <p>Since I haven’t gotten around to running an ethernet cable just yet, I need to
 connect to the internet through Wi-Fi. We’ll need the <code>wpa_supplicant</code> service
 for this.</p>
@@ -165,7 +165,7 @@ your SSID, and connect to it.</p>
 <span>PONG</span>
 </code></pre>
 <p>Looks like we have internet now. :)</p>
-<h2 id="declarative-disk-partitioning"><a href="#declarative-disk-partitioning">Declarative disk partitioning</a></h2>
+<h2 id="declarative-disk-partitioning"><a href="https://sekun.net/declarative-disk-partitioning">Declarative disk partitioning</a></h2>
 <p>When I first installed NixOS a few years ago, I manually set up the partitions
 which wasn’t too bad but I always thought that it would be nice to have some
 kind of declarative configuration for this since it didn’t seem so dynamic in
@@ -401,7 +401,7 @@ and all the datasets defined.</p>
 <blockquote class="markdown-alert-note">
 <p>I added a <code>root/media</code> dataset but did not include it in the post.</p>
 </blockquote>
-<h2 id="os-configuration"><a href="#os-configuration">OS configuration</a></h2>
+<h2 id="os-configuration"><a href="https://sekun.net/os-configuration">OS configuration</a></h2>
 <p>The fun part about NixOS is that majority of it can be configured with <code>nix</code>!</p>
 <p>For demonstration purposes, we’ll set up a basic, and minimal configuration for
 booting into NixOS. Feel free to add more things later, or if you prefer to have
@@ -438,7 +438,7 @@ preferably from the manufacturer, to make it run smoothly. It turns out for
 Framework machines, they have a bunch!</p>
 <p>Finally, copy the <code>disk-config.nix</code> to the same directory as all the other files.</p>
 <pre><code><span>[nixos@nixos:~]$ sudo cp /tmp/disk-config.nix /mnt/etc/nixos/disk-config.nix</span>
-</code></pre><h3 id="integrating-<code>disko</code>-into-nixos-for-hardware-discovery"><a href="#integrating-<code>disko</code>-into-nixos-for-hardware-discovery">Integrating <code>disko</code> into NixOS for hardware discovery</a></h3>
+</code></pre><h3 id="integrating-disko-into-nixos-for-hardware-discovery"><a href="https://sekun.net/integrating-disko-into-nixos-for-hardware-discovery">Integrating disko into NixOS for hardware discovery</a></h3>
 <p>Earlier, we used <code>disko</code> to create partitions, and manage the <code>zfs</code> pool. But
 we also need to integrate it into the NixOS configuration to make NixOS aware of
 the filesystem configuration. You can follow <code>nix-communituy/disko</code> for the
@@ -508,7 +508,7 @@ lol.</p>
 <span style="background: green; color: white;">+ networking.hostId = "REPLACE_ME";</span>
 </code></pre>
 <p>On to the next!</p>
-<h3 id="framework-specific-configuration"><a href="#framework-specific-configuration">Framework-specific configuration</a></h3>
+<h3 id="framework-specific-configuration"><a href="https://sekun.net/framework-specific-configuration">Framework-specific configuration</a></h3>
 <p>So circling back to existing configurations for the Framework Desktop, turns out
 there’s already one for it, and we just need to set it up in a similar way as
 <code>disko</code>. Pretty convenient!</p>
@@ -544,7 +544,7 @@ there’s already one for it, and we just need to set it up in a similar way as
 <span style="background: green; color: white;">+ networking.networkmanager.enable = true;</span>
 </code></pre>
 <p>That’s pretty much it.</p>
-<h3 id="setting-up-a-user"><a href="#setting-up-a-user">Setting up a user</a></h3>
+<h3 id="setting-up-a-user"><a href="https://sekun.net/setting-up-a-user">Setting up a user</a></h3>
 <p>We’ll need a user to boot into</p>
 <pre><code><span># Define a user account. Don't forget to set a password with `passwd`.</span>
 <span style="background: red; color: white;">- # users.users.alice = {</span>
@@ -561,7 +561,7 @@ there’s already one for it, and we just need to set it up in a similar way as
 <span style="background: green; color: white;">+ };</span>
 </code></pre>
 <p>Replace my name with whatever you want unless you’re also sekun then, woah.</p>
-<h3 id="desktop-environment"><a href="#desktop-environment">Desktop environment</a></h3>
+<h3 id="desktop-environment"><a href="https://sekun.net/desktop-environment">Desktop environment</a></h3>
 <p>Switching desktop environments is probably one of the easiest things to do in
 NixOS compared to other distros. Personally, I like KDE so I’m sticking with it.
 Gnome has too much padding for my taste. Looks pretty though.</p>
@@ -582,7 +582,7 @@ work on wayland.</p>
 <a href="https://wiki.nixos.org/wiki/Category:Desktop_environment">Category:Desktop environment</a>.</p>
 <p>You can also browse the available <a href="https://search.nixos.org/options?query=desktopManager">options</a>.</p>
 </blockquote>
-<h2 id="installation"><a href="#installation">Installation</a></h2>
+<h2 id="installation"><a href="https://sekun.net/installation">Installation</a></h2>
 <p>Do go over the <code>configuration.nix</code> file to see what else you would like enabled!
 If it all looks good, we’re ready to install NixOS!</p>
 <pre><code><span>sudo nixos-install --root /mnt --flake '/mnt/etc/nixos#litten'</span>
@@ -603,7 +603,7 @@ boot into NixOS!</p>
   <source srcset="/assets/images/posts/nixos-on-framework-desktop/login-screen.webp" type="image/webp">
   <img src="/assets/images/posts/nixos-on-framework-desktop/login-screen.png" alt="sddm login screen" loading="lazy">
 </picture>
-<h2 id="conclusion"><a href="#conclusion">Conclusion</a></h2>
+<h2 id="conclusion"><a href="https://sekun.net/conclusion">Conclusion</a></h2>
 <p>Documentation for ZFS in NixOS is still kind of sparse since I found answers
 in different places. It’s still enough to put something together but not without
 effort.</p>

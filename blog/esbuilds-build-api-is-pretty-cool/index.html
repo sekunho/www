@@ -53,33 +53,12 @@ As a sweet treat, how to package these all up with nix.
   </ul>
 </nav>
     
-<h1 id="esbuild's build API is pretty cool"><a href="#esbuild's build API is pretty cool">esbuild's build API is pretty cool</a></h1><div>
+<h1 id="esbuild's build API is pretty cool"><a href="https://sekun.net/%7B%7B-metadata.title-%7D%7D">esbuild's build API is pretty cool</a></h1><div>
 
 </div>
 <div>
 
-  <x-img>
-    <template shadowrootmode="open">
-      <img src="/assets/images/posts/esbuilds-build-api-is-pretty-cool/cover.jpg" alt="2 esbuild logo side by side in white and dark backgrounds"/>
-
-      <style>
-        x-img-foo:not(:defined) > template[shadowrootmode] ~ * {
-          display: none;
-        }
-
-        img {
-          
-
-          
-          width: 100%;
-          
-
-          display: block;
-          margin: 1rem auto;
-        }
-      </style>
-    </template>
-  </x-img>
+  <img src="/assets/images/posts/esbuilds-build-api-is-pretty-cool/cover.jpg" alt="2 esbuild logo side by side in white and dark backgrounds">
 
 </div>
 <span class="post-metadata">
@@ -228,7 +207,7 @@ transformed by <code>esbuild</code>!</p>
 </code></pre>
 <p>And we can verify this by taking a look at <code>./public/sass</code></p>
 <pre><code><span>.foo{color:#00f}@media (min-width: 40rem){.foo{color:red}}</span>
-</code></pre><h2 id="packaging-the-build-script-with-<code>nix</code>"><a href="#packaging-the-build-script-with-<code>nix</code>">Packaging the build script with <code>nix</code></a></h2>
+</code></pre><h2 id="packaging-the-build-script-with-nix"><a href="https://sekun.net/packaging-the-build-script-with-nix">Packaging the build script with nix</a></h2>
 <p>The script has two dependencies: <code>esbuild</code>, and a <code>sass</code> loader plugin
 <code>esbuild-sass-plugin</code>. I could use <code>npm install</code> to fetch these dependencies for
 me (like a normal person) but I’m too far gone to do anything normally, and that’s

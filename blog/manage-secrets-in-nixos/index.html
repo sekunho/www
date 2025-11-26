@@ -62,34 +62,13 @@ I can't just hardcode these!
   </ul>
 </nav>
     
-<h1 id="manage-secrets-in-nixos"><a href="#manage-secrets-in-nixos">Manage secrets in NixOS</a></h1><div>
+<h1 id="manage-secrets-in-nixos"><a href="https://sekun.net/manage-secrets-in-nixos">Manage secrets in NixOS</a></h1><div>
 
 
 </div>
 <div>
 
-  <x-img>
-    <template shadowrootmode="open">
-      <img src="/assets/images/posts/manage-secrets-in-nixos/cover.png" alt="NixOS logo, and a lock icon"/>
-
-      <style>
-        x-img-foo:not(:defined) > template[shadowrootmode] ~ * {
-          display: none;
-        }
-
-        img {
-          
-
-          
-          width: 100%;
-          
-
-          display: block;
-          margin: 1rem auto;
-        }
-      </style>
-    </template>
-  </x-img>
+  <img src="/assets/images/posts/manage-secrets-in-nixos/cover.png" alt="NixOS logo, and a lock icon">
 
 </div>
 <span class="post-metadata">
@@ -122,7 +101,7 @@ different things, and my example isn’t exactly the simplest.</p>
 <p>ℹ️ I’m not saying this is the best way to do things. Please let me know
 if there are any glaring issues you find!</p>
 </blockquote>
-<h2 id="prerequisites"><a href="#prerequisites">Prerequisites</a></h2>
+<h2 id="prerequisites"><a href="https://sekun.net/prerequisites">Prerequisites</a></h2>
 <p>Here’s a checklist for what’s needed:</p>
 <ul>
 <li><code>agenix</code> CLI present in your computer</li>
@@ -132,7 +111,7 @@ in the machine you want the secrets to be read in</li>
 </ul>
 <p>Installing <code>agenix</code> is documented well in their README so feel free to consult
 it.</p>
-<h2 id="about-<code>agenix</code>"><a href="#about-<code>agenix</code>">About <code>agenix</code></a></h2>
+<h2 id="about-agenix"><a href="https://sekun.net/about-agenix">About agenix</a></h2>
 <p>Secrets are encrypted and stored by <code>agenix</code> in these things called <em>age files</em>.
 These files have the <code>.age</code> format which is created by the <code>agenix</code> CLI. For
 you to create an age file, the CLI looks for a <code>secrets.nix</code> file in the current
@@ -205,28 +184,7 @@ and run this:</p>
 <p>This opens a text editor for you to put the secret in.</p>
 <div>
 
-  <x-img>
-    <template shadowrootmode="open">
-      <img src="/assets/images/posts/manage-secrets-in-nixos/agenix-edit.png" alt="Screenshot of a text editor showing the secret censored"/>
-
-      <style>
-        x-img-foo:not(:defined) > template[shadowrootmode] ~ * {
-          display: none;
-        }
-
-        img {
-          
-
-          
-          width: 100%;
-          
-
-          display: block;
-          margin: 1rem auto;
-        }
-      </style>
-    </template>
-  </x-img>
+  <img src="/assets/images/posts/manage-secrets-in-nixos/agenix-edit.png" alt="Screenshot of a text editor showing the secret censored">
 
 </div>
 <p>If you need to add public keys for existing age files, update the <code>secrets.nix</code>
@@ -415,28 +373,7 @@ from our host machine to the remote server.</p>
 <p>Which gives me this beautiful creation:</p>
 <div>
 
-  <x-img>
-    <template shadowrootmode="open">
-      <img src="/assets/images/posts/manage-secrets-in-nixos/emojied-leaderboard.png" alt="Screenshot of emojied.net's leaderboard"/>
-
-      <style>
-        x-img-foo:not(:defined) > template[shadowrootmode] ~ * {
-          display: none;
-        }
-
-        img {
-          
-
-          
-          width: 100%;
-          
-
-          display: block;
-          margin: 1rem auto;
-        }
-      </style>
-    </template>
-  </x-img>
+  <img src="/assets/images/posts/manage-secrets-in-nixos/emojied-leaderboard.png" alt="Screenshot of emojied.net's leaderboard">
 
 </div>
 <img style="width: 8rem;" src="/assets/images/not-by-ai.png">

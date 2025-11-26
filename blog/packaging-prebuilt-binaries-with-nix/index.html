@@ -65,33 +65,12 @@ builds it from source?
   </ul>
 </nav>
     
-<h1 id="packaging-pre-built-binaries-with-nix"><a href="#packaging-pre-built-binaries-with-nix">Packaging pre-built binaries with nix</a></h1><div>
+<h1 id="packaging-pre-built-binaries-with-nix"><a href="https://sekun.net/packaging-pre-built-binaries-with-nix">Packaging pre-built binaries with nix</a></h1><div>
 
 </div>
 <div>
 
-  <x-img>
-    <template shadowrootmode="open">
-      <img src="/assets/images/posts/packaging-prebuilt-binaries-with-nix/cover.jpg" alt="Text "Packaging prebuilt static binaries with Nix flakes""/>
-
-      <style>
-        x-img-foo:not(:defined) > template[shadowrootmode] ~ * {
-          display: none;
-        }
-
-        img {
-          
-
-          
-          width: 100%;
-          
-
-          display: block;
-          margin: 1rem auto;
-        }
-      </style>
-    </template>
-  </x-img>
+  <img src="/assets/images/posts/packaging-prebuilt-binaries-with-nix/cover.jpg" alt="Text "Packaging prebuilt static binaries with Nix flakes"">
 
 </div>
 <span class="post-metadata">
@@ -128,7 +107,7 @@ instead? And that’s what I set off to do today.</p>
 <blockquote>
 <p>Disclaimer: I’m a Nix newbie.</p>
 </blockquote>
-<h2 id="setup"><a href="#setup">Setup</a></h2>
+<h2 id="setup"><a href="https://sekun.net/setup">Setup</a></h2>
 <p>I need to import the <code>postgrest</code> flake to an existing flake of another project.
 The project’s directory has a <code>nix</code> folder for all the packages that don’t
 exist in <code>nixpkgs</code>, like so:</p>
@@ -251,7 +230,7 @@ especially in the wild.</p>
 <p><code>rec</code> allows me to refer to the set’s own fields within it. I’m using the
 field <code>version</code> and interpolated it in <code>name</code>!</p>
 <p>Alright that’s it for the setup. Time to fetch the binary.</p>
-<h2 id="fetching-the-binary"><a href="#fetching-the-binary">Fetching the binary</a></h2>
+<h2 id="fetching-the-binary"><a href="https://sekun.net/fetching-the-binary">Fetching the binary</a></h2>
 <p>The wiki has an example for fetching stuff from a URL, and using it in
 <code>mkDerivation</code> <sup class="footnote-reference"><a href="#4">4</a></sup>.</p>
 <pre><code><span>src = fetchurl {</span>
@@ -291,7 +270,7 @@ got. So let’s yoink that and slap it in the schema.</p>
 <span>};</span>
 </code></pre>
 <p>Now that we have the binary, all that’s left is to install it.</p>
-<h2 id="installing"><a href="#installing">Installing</a></h2>
+<h2 id="installing"><a href="https://sekun.net/installing">Installing</a></h2>
 <p>Going back to the example in <sup class="footnote-reference"><a href="#4">4</a></sup>:</p>
 <pre><code><span>stdenv.mkDerivation rec {</span>
 <span>  name = "studio-link-${version}";</span>
@@ -411,7 +390,7 @@ No idea what else to do here so I’ll just follow the suggestion of adding
 <span>      };</span>
 <span>  };</span>
 <span>}</span>
-</code></pre><h2 id="importing-a-local-flake-to-another-flake"><a href="#importing-a-local-flake-to-another-flake">Importing a local flake to another flake</a></h2>
+</code></pre><h2 id="importing-a-local-flake-to-another-flake"><a href="https://sekun.net/importing-a-local-flake-to-another-flake">Importing a local flake to another flake</a></h2>
 <p>Here’s the flake file that needs <code>postgrest</code>:</p>
 <pre><code><span>{</span>
 <span>  description = "An independent MouseHunt marketplace";</span>
@@ -518,14 +497,14 @@ this in the <code>let</code> expression:</p>
 <code>nix develop</code>, look into <code>direnv</code>, and <code>nix-direnv</code>! I’ll probably write about
 that too since it’s so damn handy that I can’t live without it. It’s like
 <code>virtualenv</code> on crack.</p>
-<h2 id="conclusion"><a href="#conclusion">Conclusion</a></h2>
+<h2 id="conclusion"><a href="https://sekun.net/conclusion">Conclusion</a></h2>
 <p>Could’ve been easier if everything was in the manual. But it isn’t so the
 entire process of figuring it out involved a lot of Google-fu + <code>man</code> +
 GitHub code search.</p>
 <p>That’s it from me for now. It’s a relatively basic thing to do in Nix
 since this is in many leagues easier than building a project with it. Still
 useful though since there’s a <em>lot</em> of pre-built, static binaries out there.</p>
-<h2 id="footnotes"><a href="#footnotes">Footnotes</a></h2>
+<h2 id="footnotes"><a href="https://sekun.net/footnotes">Footnotes</a></h2>
 <div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
 <p><a href="https://nixos.wiki/wiki/Flakes">https://nixos.wiki/wiki/Flakes</a></p>
 </div>
