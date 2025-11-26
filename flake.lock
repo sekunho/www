@@ -301,16 +301,16 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1764031527,
-        "narHash": "sha256-dFfv2INd2B1nLdj112VUVKVwZxuFcRe1agnbeL2ycXg=",
+        "lastModified": 1764117425,
+        "narHash": "sha256-Jx/FuuZ1cRaLL5SnO9gEnJ4D7CLoerhoMd7WNbBwlTA=",
         "owner": "sekunho",
         "repo": "puggle",
-        "rev": "20d9ba59f58503ed5664511ab60002a2a4c21cb5",
+        "rev": "90eb9cd04278d97076e1423fd6aedf205c82ce5a",
         "type": "github"
       },
       "original": {
         "owner": "sekunho",
-        "ref": "feat/rss-atom",
+        "ref": "main",
         "repo": "puggle",
         "type": "github"
       }

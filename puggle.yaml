@@ -1,7 +1,7 @@
 templates_dir: templates
 dest_dir: public
 assets_dir: assets
-base_url: https://localhost:3000
+base_url: https://sekun.net
 
 pages:
   - name: .
@@ -11,9 +11,10 @@ pages:
     template_path: layout/contact.html
 
   - name: blog
+    description: Technical writings, and ramblings about computers
     template_path: layout/blog.html
-    rss_feed: true
-    rss_feed_name: sekun's blog
+    rss: true
+    rss_name: sekun's blog
 
     entries:
       - source_dir: blog/posts
