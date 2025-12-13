@@ -42,6 +42,8 @@
               erdtree
               just
 
+              caddy
+
               graphicsmagick
               libjxl
               libavif
@@ -51,6 +53,8 @@
               gzip
               brotli
               zstd
+
+              imagemagick
             ];
           };
         };

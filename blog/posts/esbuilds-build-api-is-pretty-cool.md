@@ -3,7 +3,7 @@ title: "esbuild's build API is pretty cool"
 created_at: 2025-04-19T12:56:17Z
 updated_at: 2025-04-19T12:56:17Z
 tags: ["esbuild", "sass", "javascript", "nix"]
-cover: /assets/images/posts/esbuilds-build-api-is-pretty-cool/cover.jpg
+cover: /assets/images/posts/esbuilds-build-api-is-pretty-cool/cover.webp
 custom:
     slug: esbuilds-build-api-is-pretty-cool
     summary: |

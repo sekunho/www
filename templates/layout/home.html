@@ -12,9 +12,13 @@
     with different languages/tools to gain new perspectives on how to solve problems.
   </p>
 
-  {% call figure(src="/assets/images/hiro.webp", alt="Hiro the shiba inu, sleeping", size="sm") %}
-    <span>Hiro is sleeping! <em>Ssshhh...</em></span>
-  {% endcall %}
+  <picture>
+    <source srcset="/assets/images/hiro-alt.webp">
+    <img src="/assets/images/hiro.webp" alt="Hiro, the shiba inu, sleeping">
+  </picture>
+  <p>
+    <em>Hiro's sleeping...</em>
+  </p>
 </section>
 
 {% if pages.blog %}

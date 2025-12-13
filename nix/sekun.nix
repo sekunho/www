@@ -3,57 +3,42 @@
   name = "sekun";
   src = ../.;
   buildInputs = [ ];
-  nativeBuildInputs = with pkgs; [ esbuild gzip puggle brotli ];
+  nativeBuildInputs = with pkgs; [ esbuild gzip puggle brotli imagemagick minhtml ];
 
   buildPhase = ''
+    mkdir $out
+
+    # HTML
+    puggle build
+    minhtml --minify-js --minify-css public/**/*.html
+    find public -name '*.html' -execdir brotli --best {} -f \;
+
+    # Images
+    mkdir -p $out/assets/images
+    cp -r assets/images $out/assets
+
+    ## favicons
+    find $out/assets/images -name 'apple-*.png' -execdir mogrify -sampling-factor 4:2:0 -strip -quality 35 -interlace JPEG -colorspace gray -format jpg {} \;
+    find $out/assets/images -name 'favicon-*.png' -execdir mogrify -sampling-factor 4:2:0 -strip -quality 35 -interlace JPEG -colorspace gray -format jpg {} \;
+
+
+    ## Other images
+    # find $out -name '*.jpg' -execdir mogrify -sampling-factor 4:2:0 -strip -quality 85 -interlace JPEG -colorspace RGB -format jpg {} \;
+    # find $out -name '*.png' -execdir mogrify -strip {} \;
+    # find $out -name '*.webp' -execdir mogrify -quality 5 -strip {} \;
+
+    find $out -name 'hiro-alt.webp' -execdir mogrify \
+      -colorspace gray -quality 75 -resize 60% -strip {} \;
+
+    ## Post images
+    find $out/assets/images/posts -name 'cover.*' -execdir mogrify \
+      -quality 75 -resize 1280x720 -strip -format webp {} \;
+
+    # CSS
     mkdir -p $out/assets/css
-    mkdir $out/assets/fonts
-
-    ${pkgs.esbuild}/bin/esbuild \
-      ./assets/css/**/*.css \
-      --minify \
-      --outdir=$out/assets/css
-
-    ${pkgs.esbuild}/bin/esbuild \
-      ./assets/css/*.css \
-      --minify \
-      --outdir=$out/assets/css
-
-    mkdir $out/assets/images
-
-    # Copy images and fonts
-    cp -r ./assets/images/* $out/assets/images
-    cp ./assets/fonts/* $out/assets/fonts
-
-    ${puggle}/bin/puggle build
-
-    ${minhtml}/bin/minhtml \
-      --minify-js \
-      --minify-css \
-      public/**/*.html
-
-    # compression stuff
-    ## brotli
-    ${pkgs.brotli}/bin/brotli --best public/blog/**/*.html -f
-    ${pkgs.brotli}/bin/brotli --best public/blog/*.html -f
-    ${pkgs.brotli}/bin/brotli --best public/contact/**/*.html -f
-    ${pkgs.brotli}/bin/brotli --best public/contact/*.html -f
-    ${pkgs.brotli}/bin/brotli --best public/projects/**/*.html -f
-    ${pkgs.brotli}/bin/brotli --best public/projects/*.html -f
-    ${pkgs.brotli}/bin/brotli --best public/*.html -f
-    ${pkgs.brotli}/bin/brotli --best $out/assets/**/*.css -f
-    ${pkgs.brotli}/bin/brotli --best $out/assets/*.css -f
-
-    # gzip
-    ${pkgs.gzip}/bin/gzip --best --keep public/blog/**/*.html -f
-    ${pkgs.gzip}/bin/gzip --best --keep public/blog/*.html -f
-    ${pkgs.gzip}/bin/gzip --best --keep public/contact/**/*.html -f
-    ${pkgs.gzip}/bin/gzip --best --keep public/contact/*.html -f
-    ${pkgs.gzip}/bin/gzip --best --keep public/projects/**/*.html -f
-    ${pkgs.gzip}/bin/gzip --best --keep public/projects/*.html -f
-    ${pkgs.gzip}/bin/gzip --best --keep public/*.html -f
-    ${pkgs.gzip}/bin/gzip --best --keep $out/assets/**/*.css -f
-    ${pkgs.gzip}/bin/gzip --best --keep $out/assets/*.css -f
+    esbuild ./assets/css/*.css --minify --outdir=$out/assets/css
+    esbuild ./assets/css/**/*.css --minify --outdir=$out/assets/css
+    find $out/assets/css -name '*.css' -execdir brotli --best {} -f \;
 
     mv public/* $out
   '';
