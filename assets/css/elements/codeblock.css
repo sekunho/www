@@ -1,5 +1,6 @@
 pre {
   padding: 1rem;
+  font-size-adjust: 0.5;
 }
 
 pre > code > details {
