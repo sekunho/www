@@ -303,16 +303,16 @@
       "locked": {
         "lastModified": 1764117425,
         "narHash": "sha256-Jx/FuuZ1cRaLL5SnO9gEnJ4D7CLoerhoMd7WNbBwlTA=",
-        "owner": "sekunho",
-        "repo": "puggle",
+        "ref": "main",
         "rev": "90eb9cd04278d97076e1423fd6aedf205c82ce5a",
-        "type": "github"
+        "revCount": 15,
+        "type": "git",
+        "url": "https://forgejo.quoll-owl.ts.net/tacohirosystems/puggle"
       },
       "original": {
-        "owner": "sekunho",
         "ref": "main",
-        "repo": "puggle",
-        "type": "github"
+        "type": "git",
+        "url": "https://forgejo.quoll-owl.ts.net/tacohirosystems/puggle"
       }
     },
     "root": {

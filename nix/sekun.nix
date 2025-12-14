@@ -10,7 +10,7 @@
 
     # HTML
     puggle build
-    find public -name '*.html' -execdir minhtml --keep-closing-tags --minify-js --minify-css {} --output {} \;
+    find public -name '*.html' -execdir minhtml --keep-closing-tag --minify-js --minify-css {} --output {} \;
     find public -name '*.html' -execdir brotli --best {} -f \;
     find public -name '*.html' -execdir gzip --best --keep {} -f \;
 

@@ -77,7 +77,7 @@ for this.
 [nixos@nixos:~]$ sudo systemctl start wpa_supplicant
 [nixos@nixos:~]$ wpa_cli
 wpa_cli v2.11
-Copyright (c) 2004-2024, Jouni Malinen <j@w1.fi> and contributors
+Copyright (c) 2004-2024, Jouni Malinen j@w1.fi and contributors
 
 This software may be distributed under the terms of the BSD license.
 See README for more details.

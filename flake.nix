@@ -1,7 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
-    puggle-flake.url = "github:sekunho/puggle?ref=main";
+    puggle-flake.url = "git+https://forgejo.quoll-owl.ts.net/tacohirosystems/puggle?ref=main";
     flake-utils.url = "github:numtide/flake-utils";
 
     tacopkgs = {
