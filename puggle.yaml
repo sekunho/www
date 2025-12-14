@@ -1,7 +1,7 @@
 templates_dir: templates
 dest_dir: public
 assets_dir: assets
-base_url: https://sekun.net
+base_url: https://www.sekun.net
 
 pages:
   - name: .
