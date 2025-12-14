@@ -301,11 +301,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1764117425,
-        "narHash": "sha256-Jx/FuuZ1cRaLL5SnO9gEnJ4D7CLoerhoMd7WNbBwlTA=",
+        "lastModified": 1765747054,
+        "narHash": "sha256-UAynp+UwP+Ju03LtZO6tk7zU4AIG0S1RI1R12mrcwxw=",
         "ref": "main",
-        "rev": "90eb9cd04278d97076e1423fd6aedf205c82ce5a",
-        "revCount": 15,
+        "rev": "2b672648ef470067898874cd886db92af60832f5",
+        "revCount": 16,
         "type": "git",
         "url": "https://forgejo.quoll-owl.ts.net/tacohirosystems/puggle"
       },
