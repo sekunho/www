@@ -12,6 +12,7 @@
     puggle build
     find public -name '*.html' -execdir minhtml --keep-closing-tags --minify-js --minify-css {} --output {} \;
     find public -name '*.html' -execdir brotli --best {} -f \;
+    find public -name '*.html' -execdir gzip --best --keep {} -f \;
 
     # Images
     mkdir -p $out/assets/images
@@ -20,7 +21,6 @@
     ## favicons
     find $out/assets/images -name 'apple-*.png' -execdir mogrify -sampling-factor 4:2:0 -strip -quality 35 -interlace JPEG -colorspace gray -format jpg {} \;
     find $out/assets/images -name 'favicon-*.png' -execdir mogrify -sampling-factor 4:2:0 -strip -quality 35 -interlace JPEG -colorspace gray -format jpg {} \;
-
 
     ## Other images
     # find $out -name '*.jpg' -execdir mogrify -sampling-factor 4:2:0 -strip -quality 85 -interlace JPEG -colorspace RGB -format jpg {} \;
