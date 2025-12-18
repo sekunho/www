@@ -241,11 +241,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1763948260,
-        "narHash": "sha256-dY9qLD0H0zOUgU3vWacPY6Qc421BeQAfm8kBuBtPVE0=",
+        "lastModified": 1765687488,
+        "narHash": "sha256-7YAJ6xgBAQ/Nr+7MI13Tui1ULflgAdKh63m1tfYV7+M=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "1c8ba8d3f7634acac4a2094eef7c32ad9106532c",
+        "rev": "d02bcc33948ca19b0aaa0213fe987ceec1f4ebe1",
         "type": "github"
       },
       "original": {
@@ -301,11 +301,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1765747054,
-        "narHash": "sha256-UAynp+UwP+Ju03LtZO6tk7zU4AIG0S1RI1R12mrcwxw=",
+        "lastModified": 1766018045,
+        "narHash": "sha256-XWwbEgivHmjomStyHLQb6XBjLDjGP7UBIksUqPX8ABc=",
         "ref": "main",
-        "rev": "2b672648ef470067898874cd886db92af60832f5",
-        "revCount": 16,
+        "rev": "f17016ba7ef039a8b5d0c7681ac0d99c7bf5992a",
+        "revCount": 17,
         "type": "git",
         "url": "https://forgejo.quoll-owl.ts.net/tacohirosystems/puggle"
       },
