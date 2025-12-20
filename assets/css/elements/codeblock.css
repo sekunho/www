@@ -3,6 +3,10 @@ pre {
   font-size-adjust: 0.5;
 }
 
+code {
+  font-size-adjust: 0.5;
+}
+
 pre > code > details {
   cursor: pointer;
 }
