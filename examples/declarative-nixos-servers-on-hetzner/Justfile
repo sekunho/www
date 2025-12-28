@@ -1,0 +1,41 @@
+hetzner-server-delete:
+  hcloud server delete server-a
+
+hetzner-server-create:
+  hcloud server create \
+      --image ubuntu-24.04 \
+      --name server-a \
+      --ssh-key user-a \
+      --type cx23 \
+      --location nbg1 \
+      --user-data-from-file ./user_data.yaml
+
+export TMP_HOST_DIR := `echo $(mktemp -d)`
+install-nixos SERVER_USER SERVER_IPV4:
+  @echo Initializing a temporary directory "${TMP_HOST_DIR}/etc/ssh"
+  # 1. Create a temporary directory for the files we want to move to the server.
+  mkdir -p $TMP_HOST_DIR/etc/ssh
+  mkdir -p $TMP_HOST_DIR/persist/secrets
+
+  @echo Copying server SSH keys to "${TMP_HOST_DIR}/etc/ssh"
+  # 2. Copy `server-a`'s SSH key that we generated earlier to the temp directory.
+  cp ~/.ssh/id_server-a_ed25519* $TMP_HOST_DIR/etc/ssh
+
+  # 3. Decrypt and copy server-a's disk key
+  sops decrypt --extract '["disk-key"]' hosts/server-a/secrets/init.yaml > $TMP_HOST_DIR/persist/secrets/disk-key
+
+  # 4. nixos-anywhere also factors in the permissions of the file so we're making it
+  # so that only the owner is able to read and write its private key.
+  chmod 600 $TMP_HOST_DIR/etc/ssh/id_server-a_ed25519
+
+  @echo Installing NixOS "{{ SERVER_USER }}@{{ SERVER_IPV4 }}"
+  # Run the installation
+  nix run github:nix-community/nixos-anywhere -- \
+        --flake .#server-a --target-host {{ SERVER_USER }}@{{ SERVER_IPV4 }} \
+        -i ~/.ssh/id_ed25519 \
+        --extra-files $TMP_HOST_DIR \
+        --chown /etc/ssh/id_server-a_ed25519.pub 1000:1000 \
+        --chown /etc/ssh/id_server-a_ed25519 1000:1000 \
+        --build-on local \
+        --generate-hardware-config nixos-generate-config ./modules/hetzner/hardware-configuration.nix \
+        --disk-encryption-keys /persist/secrets/disk-key "$TMP_HOST_DIR/persist/secrets/disk-key"

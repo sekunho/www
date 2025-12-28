@@ -1,0 +1,39 @@
+#cloud-config
+timezone: UTC
+# 1 - https://docs.cloud-init.io/en/latest/reference/yaml_examples/user_groups.html
+users:
+  - name: tmp
+    groups:
+      - users
+      - admin
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - <USER_A_PUBLIC_SSH_KEY>
+# 2 - https://docs.cloud-init.io/en/latest/reference/yaml_examples/package_update_upgrade.html#cce-update-upgrade
+packages:
+  - fail2ban
+  - ufw
+package_update: true
+package_upgrade: true
+# 3 - https://docs.cloud-init.io/en/latest/reference/yaml_examples/write_files.html
+write_files:
+  - path: /etc/ssh/sshd_config.d/ssh-hardening.conf
+    content: |
+      PermitRootLogin no
+      PasswordAuthentication no
+      KbdInteractiveAuthentication no
+      ChallengeResponseAuthentication no
+      AllowTcpForwarding no
+      X11Forwarding no
+      AllowAgentForwarding no
+      AuthorizedKeysFile .ssh/authorized_keys
+      MaxAuthTries 2
+      AllowUsers tmp
+# 4 - https://docs.cloud-init.io/en/latest/reference/modules.html#runcmd
+runcmd:
+  - printf "[sshd]\nenabled = true\nport = ssh, 22\nbanaction = iptables-multiport" > /etc/fail2ban/jail.local
+  - systemctl enable fail2ban
+  - ufw allow 22
+  - ufw enable
+  - reboot
