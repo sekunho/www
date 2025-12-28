@@ -1,12 +1,12 @@
-:8081 {
-  root * result
+:8080 {
+  root * public
   file_server {
     precompressed br zstd gzip
   }
 }
 
-:8080 {
-  root * public
+:8081 {
+  root * result
   file_server {
     precompressed br zstd gzip
   }

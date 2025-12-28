@@ -15,19 +15,28 @@
   outputs = { self, nixpkgs, puggle-flake, flake-utils, tacopkgs }:
     flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-darwin" ] (system:
       let
+        version = "2024-10-16";
         pkgs = import nixpkgs { inherit system; };
         puggle = puggle-flake.packages.${system}.puggle;
-        sekun = import ./nix/sekun.nix {
-          inherit pkgs puggle system;
+        sekun-www = import ./nix/sekun.nix {
+          inherit pkgs puggle system version;
           inherit (tacopkgs.packages.${system}) minhtml;
-          version = "2024-10-16";
         };
       in
       {
         packages = {
-          inherit sekun;
+          sekun = sekun-www;
           inherit (tacopkgs.packages.${system}) minhtml;
-          default = sekun;
+          default = sekun-www;
+
+          sekun-www-image = pkgs.dockerTools.streamLayeredImage {
+            name = "sekun-www";
+            tag = version;
+            contents = [ sekun-www pkgs.caddy ];
+            config = {
+              Cmd = ["/bin/caddy" "file-server" "--root" "www" "--precompressed" "br" "zstd" "gzip"];
+            };
+          };
         };
 
         devShells = {
@@ -53,6 +62,8 @@
               gzip
               brotli
               zstd
+              dive
+              yq
 
               imagemagick
             ];
