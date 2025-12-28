@@ -16,15 +16,7 @@ custom:
         that's completely FREE. How crazy is that? My wallet is spared!
 ---
 
-# What I learned from building an emoji URL shortener in Rust
-
-<div>
-{% from "component/img.html" import img %}
-</div>
-
-<div>
-{{ img(src=metadata.cover, alt="HackerNews URL pointing to a shortened emojied.net URL") }}
-</div>
+# {{ metadata.title }}
 
 <span class="post-metadata">
   {{ metadata.created_at|published_on(format="short") }}
@@ -33,6 +25,14 @@ custom:
 <div>
 {% from "component/tags.html" import tags %}
 {{ tags(metadata.tags) }}
+</div>
+
+<div>
+{% from "component/img.html" import img %}
+</div>
+
+<div>
+{{ img(src=metadata.cover, alt="HackerNews URL pointing to a shortened emojied.net URL") }}
 </div>
 
 So, I made an emoji URL shortener with Rust and shared it in some places

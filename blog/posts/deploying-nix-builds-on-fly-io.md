@@ -18,15 +18,6 @@ custom:
 
 # {{ metadata.title }}
 
-<div>
-{% from "component/img.html" import img %}
-{% from "component/figure.html" import figure %}
-</div>
-
-<div>
-{{ img(src=metadata.cover, alt="Fly.io, and NixOS logos shaking hands") }}
-</div>
-
 <span class="post-metadata">
   {{ metadata.created_at|published_on(format="short") }}
 </span>
@@ -34,6 +25,15 @@ custom:
 <div>
 {% from "component/tags.html" import tags %}
 {{ tags(metadata.tags) }}
+</div>
+
+<div>
+{% from "component/img.html" import img %}
+{% from "component/figure.html" import figure %}
+</div>
+
+<div>
+{{ img(src=metadata.cover, alt="Fly.io, and NixOS logos shaking hands") }}
 </div>
 
 _In 9 days it would've been 2 years since I last posted. Wow time does... **Fly**_.

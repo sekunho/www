@@ -13,14 +13,6 @@ custom:
 
 # {{ metadata.title }}
 
-<div>
-{% from "component/img.html" import img %}
-</div>
-
-<div>
-{{ img(src=metadata.cover, alt="2 esbuild logo side by side in white and dark backgrounds") }}
-</div>
-
 <span class="post-metadata">
   {{ metadata.created_at|published_on(format="short") }}
 </span>
@@ -28,6 +20,14 @@ custom:
 <div>
 {% from "component/tags.html" import tags %}
 {{ tags(metadata.tags) }}
+</div>
+
+<div>
+{% from "component/img.html" import img %}
+</div>
+
+<div>
+{{ img(src=metadata.cover, alt="2 esbuild logo side by side in white and dark backgrounds") }}
 </div>
 
 Happy new year (for this blog)! I know I'm 4 months late but hey, it's fine.

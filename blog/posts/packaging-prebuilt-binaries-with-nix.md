@@ -16,15 +16,7 @@ custom:
         builds it from source?
 ---
 
-# Packaging pre-built binaries with nix
-
-<div>
-{% from "component/img.html" import img %}
-</div>
-
-<div>
-{{ img(src=metadata.cover, alt="Text \"Packaging prebuilt static binaries with Nix flakes\"")}}
-</div>
+# {{ metadata.title }}
 
 <span class="post-metadata">
   {{ metadata.created_at|published_on(format="short") }}
@@ -33,6 +25,14 @@ custom:
 <div>
 {% from "component/tags.html" import tags %}
 {{ tags(metadata.tags) }}
+</div>
+
+<div>
+{% from "component/img.html" import img %}
+</div>
+
+<div>
+{{ img(src=metadata.cover, alt="Text \"Packaging prebuilt static binaries with Nix flakes\"")}}
 </div>
 
 Here's the scenario: You have a nix environment all set up with all the

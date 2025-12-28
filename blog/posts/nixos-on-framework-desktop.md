@@ -13,10 +13,6 @@ custom:
 
 # {{ metadata.title }}
 
-<picture>
-    <img src="{{ metadata.cover }}" alt="a framework desktop with a mini Hiro on top" loading="lazy">
-</picture>
-
 <span class="post-metadata">
   {{ metadata.created_at|published_on(format="short") }}
 </span>
@@ -25,6 +21,10 @@ custom:
 {% from "component/tags.html" import tags %}
 {{ tags(metadata.tags) }}
 </div>
+
+<picture>
+    <img src="{{ metadata.cover }}" alt="a framework desktop with a mini Hiro on top" loading="lazy">
+</picture>
 
 Hi, it's been a while (again). I've been feeling better over the past few weeks.
 Coincidentally, my Framework Desktop finally arrived. It's a cute lil machine

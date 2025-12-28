@@ -18,14 +18,6 @@ custom:
 
 # Create Rust binaries, and Docker images with Nix
 
-<div>
-{% from "component/img.html" import img %}
-</div>
-
-<div>
-{{ img(src=metadata.cover, alt="Nix logo with arrows pointing from it to the Rust logo, and the Docker logo") }}
-</div>
-
 <span class="post-metadata">
   {{ metadata.created_at|published_on(format="short") }}
 </span>
@@ -33,6 +25,14 @@ custom:
 <div>
 {% from "component/tags.html" import tags %}
 {{ tags(metadata.tags) }}
+</div>
+
+<div>
+{% from "component/img.html" import img %}
+</div>
+
+<div>
+{{ img(src=metadata.cover, alt="Nix logo with arrows pointing from it to the Rust logo, and the Docker logo") }}
 </div>
 
 ## Introduction

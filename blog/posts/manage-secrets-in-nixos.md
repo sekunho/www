@@ -14,16 +14,7 @@ custom:
         I can't just hardcode these!
 ---
 
-# Manage secrets in NixOS
-
-<div>
-{% from "component/img.html" import img %}
-{% from "component/figure.html" import figure %}
-</div>
-
-<div>
-{{ img(src=metadata.cover, alt="NixOS logo, and a lock icon") }}
-</div>
+# {{ metadata.title }}
 
 <span class="post-metadata">
   {{ metadata.created_at|published_on(format="short") }}
@@ -32,6 +23,15 @@ custom:
 <div>
 {% from "component/tags.html" import tags %}
 {{ tags(metadata.tags) }}
+</div>
+
+<div>
+{% from "component/img.html" import img %}
+{% from "component/figure.html" import figure %}
+</div>
+
+<div>
+{{ img(src=metadata.cover, alt="NixOS logo, and a lock icon") }}
 </div>
 
 Recently, I experimented with running NixOS on a DigitalOcean droplet (which I
