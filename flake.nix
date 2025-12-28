@@ -15,7 +15,7 @@
   outputs = { self, nixpkgs, puggle-flake, flake-utils, tacopkgs }:
     flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-darwin" ] (system:
       let
-        version = "2024-10-16";
+        version = "2025-12-13";
         pkgs = import nixpkgs { inherit system; };
         puggle = puggle-flake.packages.${system}.puggle;
         sekun-www = import ./nix/sekun.nix {
@@ -25,7 +25,7 @@
       in
       {
         packages = {
-          sekun = sekun-www;
+          sekun-www = sekun-www;
           inherit (tacopkgs.packages.${system}) minhtml;
           default = sekun-www;
 
@@ -34,7 +34,16 @@
             tag = version;
             contents = [ sekun-www pkgs.caddy ];
             config = {
-              Cmd = ["/bin/caddy" "file-server" "--root" "www" "--precompressed" "br" "zstd" "gzip"];
+              Cmd = ["/bin/caddy" "run" "--config" "Caddyfile"];
+            };
+          };
+
+          sekun-www-image-latest = pkgs.dockerTools.streamLayeredImage {
+            name = "sekun-www";
+            tag = "latest";
+            contents = [ sekun-www pkgs.caddy ];
+            config = {
+              Cmd = ["/bin/caddy" "run" "--config" "Caddyfile"];
             };
           };
         };

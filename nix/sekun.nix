@@ -40,6 +40,7 @@
     esbuild ./assets/css/**/*.css --minify --outdir=$out/www/assets/css
     find $out/www/assets/css -name '*.css' -execdir brotli --best {} -f \;
 
+    cp Caddyfile.prod $out/Caddyfile
     mv public/* $out/www
   '';
 }

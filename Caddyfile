@@ -1,13 +1,14 @@
 :8080 {
   root * public
   file_server {
-    precompressed br zstd gzip
+    disable_canonical_uris
   }
 }
 
 :8081 {
-  root * result
+  root * result/www
   file_server {
     precompressed br zstd gzip
+    disable_canonical_uris
   }
 }
