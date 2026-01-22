@@ -44,6 +44,12 @@
   <p>A collection of projects that I had fun working on, and found interesting.</p>
 
   <ul>
+    <li>
+      <a href="https://www.remotehiro.com">remotehiro</a>
+      - A no-nonsense, and lightweight job board with accessible data, and
+      mandatory salary ranges.
+    </li>
+
     {% for project in (pages.projects|sort(attribute="unix_created_at", reverse=true))[:5] %}
       <li>
         <a href="/projects/{{ project.file_name }}">{{ project.title }}</a>
