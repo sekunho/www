@@ -40,6 +40,10 @@
     esbuild ./assets/css/**/*.css --minify --outdir=$out/www/assets/css
     find $out/www/assets/css -name '*.css' -execdir brotli --best {} -f \;
 
+    # Vendored JS
+    mkdir -p $out/www/assets/scripts
+    cp -r ./assets/scripts $out/www/assets
+
     cp Caddyfile.prod $out/Caddyfile
     mv public/* $out/www
   '';
