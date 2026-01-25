@@ -4,26 +4,90 @@
 
 {% block content %}
 <section>
-  <h1>Welcome!</h1>
-
+  <h1>hi, i'm sekun</h1>
   <p>
-    I'm sekun <em>(sek·un)</em>. I build stuff for fun, and if I learn something
-    interesting from the experience, I write about it in my blog. I experiment
-    with different languages/tools to gain new perspectives on how to solve problems.
+    A software engineer with a specialty in backend systems and infrastructure.
+    I like learning and making stuff with computers.
   </p>
 
-  <picture>
-    <source srcset="/assets/images/hiro-alt.webp">
-    <img src="/assets/images/hiro.webp" alt="Hiro, the shiba inu, sleeping">
-  </picture>
+  <ul>
+    <li>current residence: 🇪🇸 spain</li>
+    <li>email for business/consultancy: <a href="mailto:hi@tacohiro.systems">hi@tacohiro.systems</a></li>
+    <li>github: <a href="https://github.com/sekunho">sekunho</a></li>
+  </ul>
+</section>
+
+
+<section>
+  <h2>Featured projects</h2>
   <p>
-    <em>Hiro's sleeping...</em>
+    A collection of projects that I had fun working on, and found interesting.
+    I frequently dabble in languages with strong type systems.
   </p>
+
+  <ul>
+    <li>
+      remotehiro
+      (<a href="https://www.remotehiro.com">website</a>)
+      - <code>rust axum sqlite moneyman nix nixos terraform hetzner</code>
+      <br>
+      A no-nonsense and lightweight job board with accessible data, and
+      mandatory salary ranges.
+    </li>
+
+    <li>
+      moneyman
+      (<a href="https://github.com/tacohirosystems/moneyman">source code</a>,
+      <a href="https://crates.io/crates/moneyman">crate (lib)</a>,
+      <a href="https://crates.io/crates/moneyman_cli">crate (bin)</a>)
+      - <code>rust nix</code>
+      <br>
+      A currency converter library for <code>rust</code> based on market data from the European Central Bank.
+    </li>
+
+    <li>
+      www.sekun.net
+      (<a href="/">website</a>,
+      <a href="https://github.com/sekunho/www">source code</a>)
+      - <code>puggle html nix</code>
+      <br>
+      My personal website
+    </li>
+
+    <li>
+      puggle
+      (<a href="https://github.com/sekunho/puggle">source code</a>)
+      - <code>rust markdown html</code>
+      <br>
+      A personal and experimental static site generator. Generated <em>this</em> website!
+    </li>
+
+    <li>
+      postgres-effectful
+      (<a href="https://github.com/sekunho/postgres-effectful">source code</a>)
+      - <code>haskell hasql</code>
+      <br>
+      A postgresql library that provides a safe interface for a haskell effect system
+    </li>
+
+    <li>
+      emojied
+      (<a href="/blog/what-i-learned-from-building-a-rust-emoji-url-shortener">article</a>,
+      <a href="https://github.com/sekunho/emojied">source code</a>,
+      <a href="https://hub.docker.com/r/hsekun/emojied">container</a>)
+      - <code>rust axum postgres nix nixos container</code>
+      <br>
+      A nonsensical URL shortener that uses emojis instead of normal text.
+    </li>
+  </ul>
+
+  <a href="https://github.com/sekunho">View all projects (GitHub)</a>
 </section>
 
 {% if pages.blog %}
 <section>
-  <h2>Recent posts</h2>
+  <h2>Latest posts</h2>
+  <p>I write about my technical decisions, and things I learned.</p>
   <ul>
     {% for post in (pages.blog|sort(attribute="unix_created_at", reverse=true))[:8] %}
       <li>
@@ -34,37 +98,8 @@
       </li>
     {% endfor %}
   </ul>
-</section>
-{% endif %}
 
-
-{% if pages.projects %}
-<section>
-  <h2>Project showcase</h2>
-  <p>A collection of projects that I had fun working on, and found interesting.</p>
-
-  <ul>
-    <li>
-      <a href="https://www.remotehiro.com">remotehiro</a>
-      - A no-nonsense, and lightweight job board with accessible data, and
-      mandatory salary ranges.
-    </li>
-
-    {% for project in (pages.projects|sort(attribute="unix_created_at", reverse=true))[:5] %}
-      <li>
-        <a href="/projects/{{ project.file_name }}">{{ project.title }}</a>
-
-        {% if project.summary is not none %}
-          - {{ project.summary }}
-        {% endif %}
-      </li>
-    {% endfor %}
-
-    <li>
-      <a href="https://github.com/sekunho/hasql-effectful">hasql-effectful</a>
-      - A postgresql effect library using <code>effectful</code>
-    </li>
-  </ul>
+  <a href="/blog">View all posts</a>
 </section>
 {% endif %}
 
@@ -72,5 +107,15 @@
   <h2>I'm also on...</h2>
 
   {% include "partial/social.html" %}
+</section>
+
+<section>
+  <picture>
+    <source srcset="/assets/images/hiro-alt.webp">
+    <img src="/assets/images/hiro.webp" alt="Hiro, the shiba inu, sleeping">
+  </picture>
+  <p>
+    <em>Hiro's sleeping...</em>
+  </p>
 </section>
 {% endblock %}
