@@ -6,82 +6,97 @@
 <section>
   <h1>hi, i'm sekun</h1>
   <p>
-    A software engineer with a specialty in backend systems and infrastructure.
+    A software engineer with ~5 years experience in web backend, databases, and infrastructure.
     I like learning and making stuff with computers.
   </p>
 
+  <p>
+    I work with but not limited to <code>rust nix golang js ts elixir sql terraform git</code>.
+  </p>
+
   <ul>
-    <li>current residence: 🇪🇸 spain</li>
+    <li>current residence: 🇪🇺/🇪🇸 spain</li>
     <li>email for business/consultancy: <a href="mailto:hi@tacohiro.systems">hi@tacohiro.systems</a></li>
     <li>github: <a href="https://github.com/sekunho">sekunho</a></li>
   </ul>
 </section>
 
-
 <section>
   <h2>Featured projects</h2>
   <p>
-    A collection of projects that I had fun working on, and found interesting.
-    I frequently dabble in languages with strong type systems.
+    Some projects I had fun working on! I frequently dabble in programming languages
+    with strong type systems.
   </p>
 
-  <ul>
-    <li>
-      <b>remotehiro</b>
-      (<a href="https://www.remotehiro.com">website</a>)
-      - <code>rust axum sqlite moneyman nix nixos terraform hetzner</code>
-      <br>
-      A no-nonsense and lightweight job board with accessible data, and
-      mandatory salary ranges.
-    </li>
-
-    <li>
-      <b>moneyman</b>
-      (<a href="https://github.com/tacohirosystems/moneyman">source code</a>,
-      <a href="https://crates.io/crates/moneyman">crate (lib)</a>,
-      <a href="https://crates.io/crates/moneyman_cli">crate (bin)</a>)
-      - <code>rust nix</code>
-      <br>
-      A currency converter library for <code>rust</code> based on market data from the European Central Bank.
-    </li>
-
-    <li>
-      <b>www.sekun.net</b>
-      (<a href="/">website</a>,
-      <a href="https://github.com/sekunho/www">source code</a>)
-      - <code>puggle html nix</code>
-      <br>
-      My personal website
-    </li>
-
-    <li>
-      <b>puggle</b>
-      (<a href="https://github.com/sekunho/puggle">source code</a>)
-      - <code>rust markdown html</code>
-      <br>
-      A personal and experimental static site generator. Generated <em>this</em> website!
-    </li>
-
-    <li>
-      <b>postgres-effectful</b>
-      (<a href="https://github.com/sekunho/postgres-effectful">source code</a>)
-      - <code>haskell hasql</code>
-      <br>
-      A postgresql library that provides a safe interface for a haskell effect system
-    </li>
-
-    <li>
-      <b>emojied</b>
-      (<a href="/blog/what-i-learned-from-building-a-rust-emoji-url-shortener">article</a>,
-      <a href="https://github.com/sekunho/emojied">source code</a>,
-      <a href="https://hub.docker.com/r/hsekun/emojied">container</a>)
-      - <code>rust axum postgres nix nixos container</code>
-      <br>
-      A nonsensical URL shortener that uses emojis instead of normal text.
-    </li>
-  </ul>
-
-  <a href="https://github.com/sekunho">View all projects (GitHub)</a>
+  <table class="projects">
+    <caption>
+      You may view all my projects on
+      <a href="https://github.com/sekunho">GitHub</a>.
+    </caption>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>remotehiro</td>
+        <td>
+          A lightweight job board with mandatory salary ranges.
+          <br>
+          <code>rust js moneyman sqlite nix terraform hetzner</code>
+        </td>
+        <td><a href="https://www.remotehiro.com">website</a></td>
+      </tr>
+      <tr>
+        <td>moneyman</td>
+        <td>
+          A currency converter using the ECB for market data.
+          <br>
+          <code>rust sqlite nix</code>
+        </td>
+        <td>
+          <a href="https://github.com/tacohirosystems/moneyman">source code</a>,
+          <a href="https://crates.io/crates/moneyman">crate</a>
+        </td>
+      </tr>
+      <tr>
+        <td>sekun.net</td>
+        <td>
+          My personal website
+          <br>
+          <code>puggle html css js nix</code>
+        </td>
+        <td>
+          <a href="https://github.com/sekunho/www">source code</a>
+        </td>
+      </tr>
+      <tr>
+        <td>puggle</td>
+        <td>
+          An experimental static site generator. Made this website!
+          <br>
+          <code>rust markdown html</code>
+        </td>
+        <td>
+          <a href="https://github.com/sekunho/puggle">source code</a>
+        </td>
+      </tr>
+      <tr>
+        <td>postgres-effectful</td>
+        <td>
+          A postgres library for haskell effectful.
+          <br>
+          <code>haskell</code>
+        </td>
+        <td>
+          <a href="https://github.com/sekunho/postgres-effectful">source code</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </section>
 
 {% if pages.blog %}
