@@ -8,6 +8,40 @@ body {
   width: 95%;
 }
 
+table.projects {
+  width: 100%;
+}
+
+table.projects caption {
+  padding: 0.25rem;
+  caption-side: bottom;
+}
+
+table.projects td, table.projects th {
+  padding: 0.15rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  table, tbody, thead, th, td {
+    border-collapse: collapse;
+    border: 1px solid gray;
+  }
+}
+
+@media(prefers-color-scheme: light) {
+  table, tbody, thead, th, td {
+    border-collapse: collapse;
+    border: 1px solid black;
+  }
+}
+
+table.projects th {
+  text-align: left;
+}
+
+table.projects tr > td:nth-child(2) {
+}
+
 @media(prefers-color-scheme: dark) {
   body {
     background: black;
@@ -46,7 +80,7 @@ section:has(nav) {
 
 @media (width >= 80rem) {
   body {
-    width: 60%;
+    width: 45%;
   }
 }
 
