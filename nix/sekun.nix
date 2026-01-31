@@ -41,11 +41,11 @@
     find $out/www/assets/css -name '*.css' -execdir brotli --best {} -f \;
     find $out/www/assets/css -name '*.css' -execdir gzip --best {} --keep -f \;
 
-    # Vendored JS
-    mkdir -p $out/www/assets/scripts
-    cp -r ./assets/scripts $out/www/assets
-    find $out/www/assets/scripts -name '*.js' -execdir brotli --best {} -f \;
-    find $out/www/assets/scripts -name '*.js' -execdir gzip --best --keep {} -f \;
+    ## Vendored JS
+    # mkdir -p $out/www/assets/scripts
+    # cp -r ./assets/scripts $out/www/assets
+    # find $out/www/assets/scripts -name '*.js' -execdir brotli --best {} -f \;
+    # find $out/www/assets/scripts -name '*.js' -execdir gzip --best --keep {} -f \;
 
     cp Caddyfile.prod $out/Caddyfile
     mv public/* $out/www
