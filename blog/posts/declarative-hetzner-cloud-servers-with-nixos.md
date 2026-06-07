@@ -214,7 +214,16 @@ to be configured separately.
     settings = {
       PermitRootLogin = "no";
       PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
+      X11Forwarding = false;
+      AllowUsers = [ "operator" ];
     };
+    extraConfig = ''
+      MaxAuthTries 2
+      ChallengeResponseAuthentication no
+      AllowTcpForwarding no
+      AllowAgentForwarding no
+    '';
   };
 
   # 2
@@ -976,12 +985,16 @@ $ nix run github:nix-community/nixos-anywhere -- \
       --print-build-logs \
       --flake .#server-a \
       --target-host tmp@$IPV4 \
+      -i /path/to/private/ssh/key \
       --generate-hardware-config nixos-generate-config ./modules/hetzner/hardware-configuration.nix
 ```
 
 - `--print-build-logs` is a purely debugging thing. I usually disable this after
 I know the installation goes well once.
 - `--flake .#server-a` uses the `server-a` configuration
+- `-i /path/to/private/ssh/key`: since we restricted the `MaxAuthRetries` to 2,
+we need to specify which SSH key we want to use otherwise `ssh` will try every
+single key in `~/.ssh`.
 - `--generate-hardware-config` generates the hardware configuration that we
 needed earlier.
 
@@ -1447,6 +1460,7 @@ $ nix run github:nix-community/nixos-anywhere -- \
       --print-build-logs \
       --flake .#server-a \
       --target-host tmp@$IPV4 \
+      -i /path/to/private/ssh/key \
       --generate-hardware-config nixos-generate-config ./modules/hetzner/hardware-configuration.nix \
       --disk-encryption-keys /persist/secrets/disk-key "$TMP_HOST_DIR/persist/secrets/disk-key"
 ```
