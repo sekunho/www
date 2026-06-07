@@ -1002,11 +1002,11 @@ You'll see something like this if it all goes well:
 
 ```sh
 # ...
-SSH COMMAND: ssh -t -o IdentitiesOnly=yes -i /tmp/tmp.o3owFaxvfz/nixos-anywhere -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@<SERVER_IP>
+SSH COMMAND: ssh -t -o IdentitiesOnly=yes -i /tmp/tmp.o3owFaxvfz/nixos-anywhere -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@<SERVER_IPV4>
 9 sh
 
 Pseudo-terminal will not be allocated because stdin is not a terminal.
-Warning: Permanently added '<SERVER_IP>' (ED25519) to the list of known hosts.
+Warning: Permanently added '<SERVER_IPV4>' (ED25519) to the list of known hosts.
 umount: /mnt/nix (zroot/root/nix) unmounted
 umount: /mnt/boot unmounted
 umount: /mnt (zroot/root) unmounted
@@ -1014,29 +1014,29 @@ umount: /mnt (zroot/root) unmounted
 + echo '### Waiting for the machine to become unreachable due to reboot ###'
 ### Waiting for the machine to become unreachable due to reboot ###
 + runSshTimeout -- exit 0
-+ timeout 10 ssh -o IdentitiesOnly=yes -i /tmp/tmp.o3owFaxvfz/nixos-anywhere -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no tmp@<SERVER_IP> -
++ timeout 10 ssh -o IdentitiesOnly=yes -i /tmp/tmp.o3owFaxvfz/nixos-anywhere -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no tmp@<SERVER_IPV4> -
 - exit 0
-Warning: Permanently added '<SERVER_IP>' (ED25519) to the list of known hosts.
+Warning: Permanently added '<SERVER_IPV4>' (ED25519) to the list of known hosts.
 + sleep 1
 + runSshTimeout -- exit 0
-+ timeout 10 ssh -o IdentitiesOnly=yes -i /tmp/tmp.o3owFaxvfz/nixos-anywhere -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no tmp@<SERVER_IP> -
++ timeout 10 ssh -o IdentitiesOnly=yes -i /tmp/tmp.o3owFaxvfz/nixos-anywhere -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no tmp@<SERVER_IPV4> -
 - exit 0
-Warning: Permanently added '<SERVER_IP>' (ED25519) to the list of known hosts.
+Warning: Permanently added '<SERVER_IPV4>' (ED25519) to the list of known hosts.
 + sleep 1
 + runSshTimeout -- exit 0
-+ timeout 10 ssh -o IdentitiesOnly=yes -i /tmp/tmp.o3owFaxvfz/nixos-anywhere -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no tmp@<SERVER_IP> -
++ timeout 10 ssh -o IdentitiesOnly=yes -i /tmp/tmp.o3owFaxvfz/nixos-anywhere -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no tmp@<SERVER_IPV4> -
 - exit 0
-Warning: Permanently added '<SERVER_IP>' (ED25519) to the list of known hosts.
+Warning: Permanently added '<SERVER_IPV4>' (ED25519) to the list of known hosts.
 + sleep 1
 + runSshTimeout -- exit 0
-+ timeout 10 ssh -o IdentitiesOnly=yes -i /tmp/tmp.o3owFaxvfz/nixos-anywhere -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no tmp@<SERVER_IP> -
++ timeout 10 ssh -o IdentitiesOnly=yes -i /tmp/tmp.o3owFaxvfz/nixos-anywhere -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no tmp@<SERVER_IPV4> -
 - exit 0
-Warning: Permanently added '<SERVER_IP>' (ED25519) to the list of known hosts.
+Warning: Permanently added '<SERVER_IPV4>' (ED25519) to the list of known hosts.
 + sleep 1
 + runSshTimeout -- exit 0
-+ timeout 10 ssh -o IdentitiesOnly=yes -i /tmp/tmp.o3owFaxvfz/nixos-anywhere -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no tmp@<SERVER_IP> -
++ timeout 10 ssh -o IdentitiesOnly=yes -i /tmp/tmp.o3owFaxvfz/nixos-anywhere -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no tmp@<SERVER_IPV4> -
 - exit 0
-ssh: connect to host <SERVER_IP> port 22: Connection refused
+ssh: connect to host <SERVER_IPV4> port 22: Connection refused
 + step 'Done!'
 + echo '### Done! ###'
 ### Done! ###
@@ -1044,12 +1044,12 @@ ssh: connect to host <SERVER_IP> port 22: Connection refused
 ```
 
 ```sh
-$ ssh operator@<SERVER_IP>
-The authenticity of host '<SERVER_IP> (<SERVER_IP>)' can't be established.
+$ ssh operator@<SERVER_IPV4> -i /path/to/ssh-key
+The authenticity of host '<SERVER_IPV4> (<SERVER_IPV4>)' can't be established.
 ED25519 key fingerprint is: <FINGERPRINT>
 This key is not known by any other names.
 Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
-Warning: Permanently added '<SERVER_IP>' (ED25519) to the list of known hosts.
+Warning: Permanently added '<SERVER_IPV4>' (ED25519) to the list of known hosts.
 
 [operator@server-a:~]$ echo hi
 hi
@@ -1062,8 +1062,8 @@ So now we have our operator user! Our `caddy` service is also running. If we try
 to login as `root`, it'll kick us out:
 
 ```sh
-$ ssh root@<SERVER_IP>
-root@<SERVER_IP>: Permission denied (publickey,keyboard-interactive).
+$ ssh root@<SERVER_IPV4>
+root@<SERVER_IPV4>: Permission denied (publickey,keyboard-interactive).
 ```
 
 <h2 id="encrypting-the-zfs-root">
@@ -1434,7 +1434,7 @@ When the installation is complete, we can verify that ZFS actually encrypted
 our datasets:
 
 ```sh
-$ ssh operator@<SERVER_IPV4>
+$ ssh operator@<SERVER_IPV4> -i /path/to/ssh-key
 The authenticity of host '<SERVER_IPV4> (<SERVER_IPV4>)' can't be established.
 ED25519 key fingerprint is: SHA256:<FINGERPRINT>
 This key is not known by any other names.
