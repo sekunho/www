@@ -1118,7 +1118,7 @@ file. Let's uncomment the relevant options that we commented out earlier:
           compression = "zstd";
           acltype = "posixacl";
           xattr = "sa";
--         "com.sun:auto-snapshot" = "true";
+          atime = "off";
         };
         options.ashift = "12";
         datasets = {
@@ -1133,7 +1133,6 @@ file. Let's uncomment the relevant options that we commented out earlier:
 +             keylocation = "file:///persist/secrets/disk-key";
             };
             mountpoint = "/";
--
           };
 
 ### FOLD_START
@@ -1141,26 +1140,6 @@ file. Let's uncomment the relevant options that we commented out earlier:
             type = "zfs_fs";
             options.mountpoint = "/nix";
             mountpoint = "/nix";
-### FOLD_END
-          };
-
-          # README MORE: https://wiki.archlinux.org/title/ZFS#Swap_volume
-### FOLD_START
-          "root/swap" = {
-            type = "zfs_volume";
-            size = "10M";
-            content = {
-              type = "swap";
-            };
-            options = {
-              volblocksize = "4096";
-              compression = "zle";
-              logbias = "throughput";
-              sync = "always";
-              primarycache = "metadata";
-              secondarycache = "none";
-              "com.sun:auto-snapshot" = "false";
-            };
 ### FOLD_END
           };
         };
@@ -1224,6 +1203,7 @@ it but if you feel that you'll need it then read the wiki link first.
           compression = "zstd";
           acltype = "posixacl";
           xattr = "sa";
+          atime = "off";
         };
         options.ashift = "12";
         datasets = {
@@ -1249,24 +1229,6 @@ it but if you feel that you'll need it then read the wiki link first.
 +           type = "zfs_fs";
 +           mountpoint = "/persist";
 +         };
--
--         # README MORE: https://wiki.archlinux.org/title/ZFS#Swap_volume
--         "root/swap" = {
--           type = "zfs_volume";
--           size = "10M";
--           content = {
--             type = "swap";
--           };
--           options = {
--             volblocksize = "4096";
--             compression = "zle";
--             logbias = "throughput";
--             sync = "always";
--             primarycache = "metadata";
--             secondarycache = "none";
--             "com.sun:auto-snapshot" = "false";
--           };
--         };
         };
       };
     };
