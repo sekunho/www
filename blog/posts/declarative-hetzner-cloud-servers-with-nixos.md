@@ -2,7 +2,7 @@
 title: "Declarative Hetzner Cloud Servers with NixOS"
 created_at: 2026-06-07T19:15:00Z
 updated_at:
-tags: ["nixos", "nix", "hetzner", "tailscale", "terraform", "opentofu", "infrastructure"]
+tags: ["nixos", "nix", "hetzner", "infrastructure"]
 cover: "/assets/images/posts/installing-nixos-on-hetzner-cloud/cover.jpg"
 custom:
     slug: declarative-hetzner-cloud-servers-with-nixos
