@@ -2,10 +2,9 @@
 @import 'components/footer.css';
 
 body {
-  margin: 0 auto!important;
   font-weight: regular;
-  font-family: serif;
-  width: 95%;
+  font-family: sans-serif;
+  padding: 1rem;
 }
 
 table.projects {
@@ -43,7 +42,7 @@ table.projects tr > td:nth-child(2) {
 }
 
 section > img {
-  width: 100%;
+  width: 50%;
   height: 300px;
   object-fit: cover;
 }
@@ -74,13 +73,7 @@ section:has(nav) {
 
 @media (width >= 80rem) {
   body {
-    width: 45%;
-  }
-}
-
-@media (width >= 96rem) {
-  body {
-    width: 50rem;
+    width: 55%;
   }
 }
 

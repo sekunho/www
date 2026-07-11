@@ -31,7 +31,7 @@ h1 > a[href]:hover, h2 > a[href]:hover, h3 > a[href]:hover, h4 > a[href]:hover, 
 }
 
 img {
-  width: 100%;
+  width: 75%;
 }
 
 figure {
