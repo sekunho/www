@@ -1,3 +1,7 @@
+.overview {
+  display: grid;
+}
+
 @media (width >= 40rem) {
   body {
     width: 95%;
@@ -14,6 +18,10 @@
   body {
     width: 75%;
   }
+
+  .overview {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (width >= 80rem) {
@@ -21,3 +29,4 @@
     width: 60%;
   }
 }
+
