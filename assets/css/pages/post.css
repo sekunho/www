@@ -43,3 +43,27 @@ figure {
   flex-direction: column;
   gap: 1rem;
 }
+
+@media (width >= 40rem) {
+  body {
+    width: 95%;
+  }
+}
+
+@media (width >= 48rem) {
+  body {
+    width: 90%;
+  }
+}
+
+@media (width >= 64rem) {
+  body {
+    width: 75%;
+  }
+}
+
+@media (width >= 80rem) {
+  body {
+    width: 60%;
+  }
+}

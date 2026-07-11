@@ -53,30 +53,6 @@ section:has(nav) {
   justify-content: space-between;
 }
 
-@media (width >= 40rem) {
-  body {
-    width: 95%;
-  }
-}
-
-@media (width >= 48rem) {
-  body {
-    width: 90%;
-  }
-}
-
-@media (width >= 64rem) {
-  body {
-    width: 75%;
-  }
-}
-
-@media (width >= 80rem) {
-  body {
-    width: 55%;
-  }
-}
-
 h1,h2,h3,h4,h5,h6 {
   font-weight: bold;
   text-decoration: none!important;

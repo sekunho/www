@@ -2,6 +2,10 @@
 {% from "component/figure.html" import figure %}
 {% block title %}Home{% endblock %}
 
+{% block head %}
+  <link rel="stylesheet" href="/assets/css/pages/home.css"/>
+{% endblock %}
+
 {% block content %}
 <section>
   <h1>sekun ho</h1>
@@ -18,57 +22,55 @@
 </section>
 
 <section style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+  {% if pages.blog %}
+    <div>
+      <h2>Blog posts</h2>
+      <p>I write about my technical decisions, and things I learned.</p>
+      <ul>
+        {% for post in pages.blog|sort(attribute="unix_created_at", reverse=true) %}
+          <li>
+            <time datetime="{{ post.created_at }}">{{ post.created_at|dateformat(format="short") }}</time> -
+            <a href="/blog/{{ post.file_name }}">
+              {{ post.title }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
 
-{% if pages.blog %}
-<div>
-  <h2>Blog posts</h2>
-  <p>I write about my technical decisions, and things I learned.</p>
-  <ul>
-    {% for post in pages.blog|sort(attribute="unix_created_at", reverse=true) %}
-      <li>
-        <time datetime="{{ post.created_at }}">{{ post.created_at|dateformat(format="short") }}</time> -
-        <a href="/blog/{{ post.file_name }}">
-          {{ post.title }}
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
-</div>
+  <div>
+    <h2>Projects</h2>
+    <p>
+      Projects I had fun working on.
 
-<div>
-  <h2>Projects</h2>
-  <p>
-    Projects I had fun working on.
+      <ul>
+        <li><a href="">remotehiro</a> - A lightweight job aggregator with mandatory salary ranges.</li>
+        <li><a href="">moneyman</a> - A currency converter and ECB data fetcher for local forex rates access.</li>
+        <li><a href="">puggle</a> - An experimental static site generator with `jinja2` as the templating engine.</li>
+      </ul>
+    </p>
 
+    <br>
+
+    <a href="https://github.com/sekunho">View all projects (GitHub)</a>
+  </div>
+
+  <div>
+    <h2>Videos</h2>
+    <p>
     <ul>
-      <li><a href="">remotehiro</a> - A lightweight job aggregator with mandatory salary ranges.</li>
-      <li><a href="">moneyman</a> - A currency converter and ECB data fetcher for local forex rates access.</li>
-      <li><a href="">puggle</a> - An experimental static site generator with `jinja2` as the templating engine.</li>
+      <li>2022-04-12 - <a href="https://www.youtube.com/watch?v=vtqNhatQCIo">How Dangerous Is This Cave? (José Valim's Advent of Code: Day 9)</a></li>
+      <li>2021-12-13 - <a href="https://www.youtube.com/watch?v=GWmGp5V11mk">Day 8 is just ridiculous (José Valim's Advent of Code)</a></li>
+      <li>2021-12-11 - <a href="https://www.youtube.com/watch?v=9kunVfIyJt0">This may be the HARDEST one yet. (José Valim's Advent of Code Day 6: Lanternfish)</a></li>
+      <li>2021-12-09 - <a href="https://www.youtube.com/watch?v=K6SFEoRaTNE">Safely Navigate The Submarine with Elixir (José Valim's Advent of Code Day 5: Hydrothermal Venture)</a></li>
+      <li>2021-12-08 - <a href="https://www.youtube.com/watch?v=8_HGMrAZykw">Is Functional Programming Better For This Bingo Problem? (José Valim's Advent of Code Day 4)</a></li>
+      <li>2021-12-05 - <a href="https://www.youtube.com/watch?v=SGQFAn4HtAI">José Valim Solves the Hardest Day Yet with Elixir! (José Valim's Advent of Code Day 3)</a></li>
+      <li>2021-12-04 - <a href="https://www.youtube.com/watch?v=1rFlhFbJ1_s">José Valim Pilots a Submarine with Elixir (José Valim's Advent of Code Day 2: Dive!)</a></li>
+      <li>2021-12-04 - <a href="https://www.youtube.com/watch?v=mDxJjqx5-ns">How José Valim Solved Advent of Code 2021 with Elixir and LiveBook (José Valim's Day 1: Sonar Sweep)</a></li>
     </ul>
-  </p>
-
-  <br>
-
-  <a href="https://github.com/sekunho">View all projects (GitHub)</a>
-</div>
-
-<div>
-  <h2>Videos</h2>
-  <p>
-  <ul>
-    <li>2022-04-12 - <a href="https://www.youtube.com/watch?v=vtqNhatQCIo">How Dangerous Is This Cave? (José Valim's Advent of Code: Day 9)</a></li>
-    <li>2021-12-13 - <a href="https://www.youtube.com/watch?v=GWmGp5V11mk">Day 8 is just ridiculous (José Valim's Advent of Code)</a></li>
-    <li>2021-12-11 - <a href="https://www.youtube.com/watch?v=9kunVfIyJt0">This may be the HARDEST one yet. (José Valim's Advent of Code Day 6: Lanternfish)</a></li>
-    <li>2021-12-09 - <a href="https://www.youtube.com/watch?v=K6SFEoRaTNE">Safely Navigate The Submarine with Elixir (José Valim's Advent of Code Day 5: Hydrothermal Venture)</a></li>
-    <li>2021-12-08 - <a href="https://www.youtube.com/watch?v=8_HGMrAZykw">Is Functional Programming Better For This Bingo Problem? (José Valim's Advent of Code Day 4)</a></li>
-    <li>2021-12-05 - <a href="https://www.youtube.com/watch?v=SGQFAn4HtAI">José Valim Solves the Hardest Day Yet with Elixir! (José Valim's Advent of Code Day 3)</a></li>
-    <li>2021-12-04 - <a href="https://www.youtube.com/watch?v=1rFlhFbJ1_s">José Valim Pilots a Submarine with Elixir (José Valim's Advent of Code Day 2: Dive!)</a></li>
-    <li>2021-12-04 - <a href="https://www.youtube.com/watch?v=mDxJjqx5-ns">How José Valim Solved Advent of Code 2021 with Elixir and LiveBook (José Valim's Day 1: Sonar Sweep)</a></li>
-  </ul>
-  </p>
-</div>
-{% endif %}
-
+    </p>
+  </div>
 </section>
 
 <section>
