@@ -23,10 +23,3 @@
     grid-template-columns: 1fr 1fr;
   }
 }
-
-@media (width >= 80rem) {
-  body {
-    width: 60%;
-  }
-}
-
