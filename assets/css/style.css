@@ -4,7 +4,7 @@
 body {
   font-weight: regular;
   font-family: sans-serif;
-  padding: 1rem;
+  padding: 0 1rem;
 }
 
 table.projects {
@@ -58,3 +58,21 @@ h1,h2,h3,h4,h5,h6 {
   text-decoration: none!important;
 }
 
+
+@media (width >= 40rem) {
+  body {
+    font-size: 1rem;
+  }
+}
+
+@media (width >= 48rem) {
+  body {
+    font-size: 1rem;
+  }
+}
+
+@media (width >= 64rem) {
+  body {
+    font-size: 1.15rem;
+  }
+}
