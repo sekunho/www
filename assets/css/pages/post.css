@@ -45,6 +45,16 @@ img {
   width: 100%;
 }
 
+picture {
+  width: 100%;
+  display: block;
+}
+
+picture > img {
+  margin: 0 auto;
+  display: block;
+}
+
 @media (width >= 40rem) {
   body {
     width: 95%;
@@ -61,7 +71,7 @@ img {
   }
 
   img {
-    width: 60%;
+    width: 100%;
   }
 }
 
@@ -71,7 +81,7 @@ img {
   }
 
   img {
-    width: 35%;
+    width: 70%;
   }
 
   .overview {
