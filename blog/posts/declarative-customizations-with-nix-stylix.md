@@ -95,8 +95,10 @@ I also need to have it use the base `stylix.image` setting for it to change:
   stylix = {
     image = ../../wallpapers/jupiter.jpg;
 
-    targets.gnome = {
-      image.enable = true;
+    targets = {
+      gnome = {
+        image.enable = true;
+      };
     };
   };
 }
