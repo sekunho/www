@@ -6,7 +6,7 @@ tags: ["nixos", "stylix", "gnome", "home-manager"]
 cover: "/assets/images/posts/declarative-customizations-with-nix-stylix/cover.png"
 custom:
     slug: declarative-operating-system-customizations-with-stylix
-    summary: Learn how to run NixOS servers on Hetzner Cloud. From ZFS disk configuration with disko, sops secrets management, and other gotchas along the way.
+    summary: Declaratively customize GNOME and other desktop environments with NixOS and stylix!
 
 ---
 
