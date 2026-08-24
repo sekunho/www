@@ -256,7 +256,7 @@ And our file app's icons are shiny and new!
 <figure>
   <img src="/assets/images/posts/declarative-customizations-with-nix-stylix/icon-theme-morewaita.png">
   <caption>
-      Figure 6 - More Adwaita icons <3
+      Figure 6 - More Adwaita icons
   </caption>
 </figure>
 
